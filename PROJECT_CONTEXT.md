@@ -14,7 +14,7 @@
 
 ## Current phase
 
-Phase 9 — Persistent SmokingData and Nicotine Rush.
+Phase 10 — Withdrawal scheduler.
 
 The Phase 0 skeleton loads with Create on both the development client and the
 dedicated development server. Phase 1 added the requested basic items,
@@ -81,6 +81,22 @@ Nicotine Rush grants 5% movement speed and its separate server damage hook
 reduces incoming damage by 5%. Withdrawal episodes and brand-specific effects
 remain unimplemented.
 
+Phase 10 adds a server-side episodic Withdrawal scheduler. Dependence tiers are
+none below 20, Mild at 20–39.999, Moderate at 40–59.999, High at 60–79.999,
+and Severe at 80–100. After a completed smoking item, active online safe times
+are respectively 30, 20, 15, and 10 minutes. Once safe time ends, the server
+randomizes every episode interval: 6–10, 4–7, 3–5, or 2–4 minutes. Withdrawal
+is applied only for an episode (30/40/50/60 seconds), with exact movement
+penalties of 3/5/7/10% and block-breaking penalties of 5/8/12/15%. Episode
+starts have a tier-based 5/15/25/35% chance of 3–5 seconds of vanilla Nausea.
+Successful puffs count relief only while Withdrawal is active; 2/3/4/5 puffs
+remove the current episode without resetting `activeTicksSinceSatisfied`.
+Completing the whole item still performs the only satisfaction reset.
+
+Lit smoking items now use Minecraft's built-in item bar to show the remaining
+puff ratio, and their tooltip shows the exact current/default puff count. This
+is item-local UI rather than a persistent player HUD.
+
 ## Future brand concepts (do not implement yet)
 
 - MarlbOre Red: redstone theme; about 25% per puff for Haste I, about 20 seconds.
@@ -110,7 +126,7 @@ Night Vision for about 45 seconds plus Glowing for about 20 seconds at about
 ## Explicitly out of scope
 
 Do not implement wild tobacco world generation, new machines or blocks,
-Withdrawal episodes, brand effects, packs, custom ignition tools, cigarette
+brand effects, packs, custom ignition tools, cigarette
 butts, additional cigarette products, or additional cigars before a later
 phase explicitly starts.
 

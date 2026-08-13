@@ -41,5 +41,7 @@
   "item.create_tobacco.cobbliba_maduro": "Cobbliba Maduro",
   "item.create_tobacco.incomplete_cigarette": "Незавершённая сигарета",
   "item.create_tobacco.incomplete_cigar": "Незавершённая сигара",
-  "effect.create_tobacco.nicotine_rush": "Никотиновый прилив"
+  "effect.create_tobacco.nicotine_rush": "Никотиновый прилив",
+  "effect.create_tobacco.withdrawal": "Никотиновая ломка",
+  "tooltip.create_tobacco.remaining_puffs": "Затяжки: %s/%s"
 }

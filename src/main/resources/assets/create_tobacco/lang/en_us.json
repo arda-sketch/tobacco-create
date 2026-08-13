@@ -41,5 +41,7 @@
   "item.create_tobacco.cobbliba_maduro": "Cobbliba Maduro",
   "item.create_tobacco.incomplete_cigarette": "Incomplete Cigarette",
   "item.create_tobacco.incomplete_cigar": "Incomplete Cigar",
-  "effect.create_tobacco.nicotine_rush": "Nicotine Rush"
+  "effect.create_tobacco.nicotine_rush": "Nicotine Rush",
+  "effect.create_tobacco.withdrawal": "Withdrawal",
+  "tooltip.create_tobacco.remaining_puffs": "Puffs: %s/%s"
 }

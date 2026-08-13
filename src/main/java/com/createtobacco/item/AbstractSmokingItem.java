@@ -1,11 +1,15 @@
 package com.createtobacco.item;
 
 import com.createtobacco.component.SmokingItemState;
+import com.createtobacco.attachment.SmokingData;
+import com.createtobacco.attachment.WithdrawalTier;
 import com.createtobacco.registry.ModAttachments;
 import com.createtobacco.registry.ModDataComponents;
 import com.createtobacco.registry.ModEffects;
 import com.createtobacco.registry.ModParticles;
 import net.minecraft.core.particles.ParticleTypes;
+import java.util.List;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -18,8 +22,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.util.Mth;
 
 public abstract class AbstractSmokingItem extends Item {
     private static final int USE_DURATION_TICKS = 24;
@@ -90,8 +96,9 @@ public abstract class AbstractSmokingItem extends Item {
 
         int remainingPuffs = state.remainingPuffs() - 1;
         if (livingEntity instanceof Player player) {
-            player.getData(ModAttachments.SMOKING_DATA)
-                    .addDependence(totalDependence / defaultState.remainingPuffs());
+            SmokingData smokingData = player.getData(ModAttachments.SMOKING_DATA);
+            smokingData.addDependence(totalDependence / defaultState.remainingPuffs());
+            relieveWithdrawal(player, smokingData);
         }
         playPuffEffects(serverLevel, livingEntity);
         if (remainingPuffs == 0) {
@@ -114,6 +121,39 @@ public abstract class AbstractSmokingItem extends Item {
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.DRINK;
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        return getState(stack).lit();
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        SmokingItemState state = getState(stack);
+        return Math.round(13.0F * state.remainingPuffs() / defaultState.remainingPuffs());
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        SmokingItemState state = getState(stack);
+        float remainingRatio = (float) state.remainingPuffs() / defaultState.remainingPuffs();
+        return Mth.hsvToRgb(remainingRatio / 3.0F, 1.0F, 1.0F);
+    }
+
+    @Override
+    public void appendHoverText(
+            ItemStack stack,
+            TooltipContext context,
+            List<Component> tooltipComponents,
+            TooltipFlag tooltipFlag
+    ) {
+        SmokingItemState state = getState(stack);
+        tooltipComponents.add(Component.translatable(
+                "tooltip.create_tobacco.remaining_puffs",
+                state.remainingPuffs(),
+                defaultState.remainingPuffs()
+        ));
     }
 
     @Override
@@ -188,6 +228,7 @@ public abstract class AbstractSmokingItem extends Item {
 
     private void completeSmoking(Player player) {
         player.getData(ModAttachments.SMOKING_DATA).markSatisfied();
+        player.removeEffect(ModEffects.WITHDRAWAL);
         player.removeEffect(ModEffects.NICOTINE_RUSH);
         player.addEffect(new MobEffectInstance(
                 ModEffects.NICOTINE_RUSH,
@@ -198,5 +239,17 @@ public abstract class AbstractSmokingItem extends Item {
                 true
         ));
         player.causeFoodExhaustion(completionExhaustion);
+    }
+
+    private static void relieveWithdrawal(Player player, SmokingData data) {
+        MobEffectInstance withdrawal = player.getEffect(ModEffects.WITHDRAWAL);
+        if (withdrawal == null) {
+            return;
+        }
+
+        WithdrawalTier tier = WithdrawalTier.fromAmplifier(withdrawal.getAmplifier());
+        if (data.recordWithdrawalReliefPuff(tier.reliefPuffsRequired())) {
+            player.removeEffect(ModEffects.WITHDRAWAL);
+        }
     }
 }

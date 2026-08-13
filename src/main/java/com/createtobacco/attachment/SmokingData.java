@@ -15,7 +15,7 @@ public final class SmokingData {
                     .forGetter(SmokingData::activeTicksSinceSatisfied),
             Codec.LONG.optionalFieldOf("dependence_decay_accumulator", 0L)
                     .forGetter(SmokingData::dependenceDecayAccumulator),
-            Codec.LONG.optionalFieldOf("ticks_until_next_withdrawal_episode", 0L)
+            Codec.LONG.optionalFieldOf("ticks_until_next_withdrawal_episode", -1L)
                     .forGetter(SmokingData::ticksUntilNextWithdrawalEpisode),
             Codec.INT.optionalFieldOf("withdrawal_relief_puffs", 0)
                     .forGetter(SmokingData::withdrawalReliefPuffs)
@@ -28,7 +28,7 @@ public final class SmokingData {
     private int withdrawalReliefPuffs;
 
     public SmokingData() {
-        this(0.0F, 0L, 0L, 0L, 0);
+        this(0.0F, 0L, 0L, -1L, 0);
     }
 
     public SmokingData(
@@ -41,7 +41,11 @@ public final class SmokingData {
         this.dependence = Mth.clamp(dependence, 0.0F, 100.0F);
         this.activeTicksSinceSatisfied = Math.max(0L, activeTicksSinceSatisfied);
         this.dependenceDecayAccumulator = Math.max(0L, dependenceDecayAccumulator);
-        this.ticksUntilNextWithdrawalEpisode = Math.max(0L, ticksUntilNextWithdrawalEpisode);
+        // Phase 9 stored zero while this field was reserved. Treat loaded zero as
+        // unscheduled so upgraded worlds still randomize their first episode.
+        this.ticksUntilNextWithdrawalEpisode = ticksUntilNextWithdrawalEpisode <= 0L
+                ? -1L
+                : ticksUntilNextWithdrawalEpisode;
         this.withdrawalReliefPuffs = Math.max(0, withdrawalReliefPuffs);
     }
 
@@ -76,6 +80,37 @@ public final class SmokingData {
 
     public void markSatisfied() {
         activeTicksSinceSatisfied = 0L;
+        clearWithdrawalSchedule();
+    }
+
+    public void clearWithdrawalSchedule() {
+        ticksUntilNextWithdrawalEpisode = -1L;
+        withdrawalReliefPuffs = 0;
+    }
+
+    public boolean withdrawalEpisodeIsScheduled() {
+        return ticksUntilNextWithdrawalEpisode >= 0L;
+    }
+
+    public boolean withdrawalEpisodeIsDue() {
+        return ticksUntilNextWithdrawalEpisode == 0L;
+    }
+
+    public void scheduleWithdrawalEpisode(long ticks) {
+        ticksUntilNextWithdrawalEpisode = Math.max(1L, ticks);
+    }
+
+    public void beginWithdrawalEpisode() {
+        withdrawalReliefPuffs = 0;
+    }
+
+    public boolean recordWithdrawalReliefPuff(int requiredPuffs) {
+        withdrawalReliefPuffs++;
+        if (withdrawalReliefPuffs >= requiredPuffs) {
+            withdrawalReliefPuffs = 0;
+            return true;
+        }
+        return false;
     }
 
     public float dependence() {

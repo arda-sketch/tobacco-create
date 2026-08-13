@@ -2,6 +2,7 @@ package com.createtobacco.registry;
 
 import com.createtobacco.CreateTobacco;
 import com.createtobacco.effect.NicotineRushEffect;
+import com.createtobacco.effect.WithdrawalEffect;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.neoforged.bus.api.IEventBus;
@@ -14,6 +15,8 @@ public final class ModEffects {
 
     public static final DeferredHolder<MobEffect, NicotineRushEffect> NICOTINE_RUSH =
             EFFECTS.register("nicotine_rush", NicotineRushEffect::new);
+    public static final DeferredHolder<MobEffect, WithdrawalEffect> WITHDRAWAL =
+            EFFECTS.register("withdrawal", WithdrawalEffect::new);
 
     private ModEffects() {
     }
