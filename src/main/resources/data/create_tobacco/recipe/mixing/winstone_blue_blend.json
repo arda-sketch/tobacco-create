@@ -1,0 +1,26 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "create_tobacco:cut_virginia_tobacco"
+    },
+    {
+      "item": "create_tobacco:cut_virginia_tobacco"
+    },
+    {
+      "item": "create_tobacco:cut_virginia_tobacco"
+    },
+    {
+      "item": "create_tobacco:cut_virginia_tobacco"
+    },
+    {
+      "item": "minecraft:lapis_lazuli"
+    }
+  ],
+  "results": [
+    {
+      "count": 4,
+      "id": "create_tobacco:winstone_blue_blend"
+    }
+  ]
+}

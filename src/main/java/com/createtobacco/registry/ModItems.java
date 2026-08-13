@@ -33,14 +33,15 @@ public final class ModItems {
     public static final DeferredItem<Item> CIGARETTE_PAPER = ITEMS.registerSimpleItem("cigarette_paper");
     public static final DeferredItem<Item> CIGARETTE_FILTER = ITEMS.registerSimpleItem("cigarette_filter");
 
-    public static final DeferredItem<Item> MALBOOM_RED_BLEND = ITEMS.registerSimpleItem("malboom_red_blend");
+    public static final DeferredItem<Item> MARLBORE_RED_BLEND = ITEMS.registerSimpleItem("marlbore_red_blend");
     public static final DeferredItem<Item> WINSTONE_BLUE_BLEND = ITEMS.registerSimpleItem("winstone_blue_blend");
-    public static final DeferredItem<Item> GLOWLEAF_BLEND = ITEMS.registerSimpleItem("glowleaf_blend");
-    public static final DeferredItem<Item> BLAZEBORO_GOLD_BLEND = ITEMS.registerSimpleItem("blazeboro_gold_blend");
-    public static final DeferredItem<Item> CREEPERFIELD_CLASSIC_BLEND = ITEMS.registerSimpleItem("creeperfield_classic_blend");
-    public static final DeferredItem<Item> CRAMEL_LIGHT_BLEND = ITEMS.registerSimpleItem("cramel_light_blend");
-    public static final DeferredItem<Item> LUCKY_STONE_BLEND = ITEMS.registerSimpleItem("lucky_stone_blend");
-    public static final DeferredItem<Item> PALL_MINE_DARK_BLEND = ITEMS.registerSimpleItem("pall_mine_dark_blend");
+    public static final DeferredItem<Item> CREPERFIELD_BLEND = ITEMS.registerSimpleItem("creperfield_blend");
+    public static final DeferredItem<Item> CRAFTMEL_BLEND = ITEMS.registerSimpleItem("craftmel_blend");
+    public static final DeferredItem<Item> CHUNKMAN_BLEND = ITEMS.registerSimpleItem("chunkman_blend");
+    public static final DeferredItem<Item> KEND_BLEND = ITEMS.registerSimpleItem("kend_blend");
+    public static final DeferredItem<Item> PIGLIAMENT_BLEND = ITEMS.registerSimpleItem("pigliament_blend");
+    public static final DeferredItem<Item> ROTHMINES_BLEND = ITEMS.registerSimpleItem("rothmines_blend");
+    public static final DeferredItem<Item> BEDROMORKANAL_BLEND = ITEMS.registerSimpleItem("bedromorkanal_blend");
 
     public static final List<DeferredItem<Item>> CREATIVE_TAB_ITEMS = List.of(
             VIRGINIA_SEEDS,
@@ -57,14 +58,15 @@ public final class ModItems {
             CUT_HAVANA_TOBACCO,
             CIGARETTE_PAPER,
             CIGARETTE_FILTER,
-            MALBOOM_RED_BLEND,
+            MARLBORE_RED_BLEND,
             WINSTONE_BLUE_BLEND,
-            GLOWLEAF_BLEND,
-            BLAZEBORO_GOLD_BLEND,
-            CREEPERFIELD_CLASSIC_BLEND,
-            CRAMEL_LIGHT_BLEND,
-            LUCKY_STONE_BLEND,
-            PALL_MINE_DARK_BLEND
+            CREPERFIELD_BLEND,
+            CRAFTMEL_BLEND,
+            CHUNKMAN_BLEND,
+            KEND_BLEND,
+            PIGLIAMENT_BLEND,
+            ROTHMINES_BLEND,
+            BEDROMORKANAL_BLEND
     );
 
     private ModItems() {

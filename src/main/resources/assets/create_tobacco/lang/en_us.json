@@ -14,12 +14,13 @@
   "item.create_tobacco.cut_havana_tobacco": "Cut Havana Tobacco",
   "item.create_tobacco.cigarette_paper": "Cigarette Paper",
   "item.create_tobacco.cigarette_filter": "Cigarette Filter",
-  "item.create_tobacco.malboom_red_blend": "MalBoom Red Blend",
+  "item.create_tobacco.marlbore_red_blend": "MarlbOre Red Blend",
   "item.create_tobacco.winstone_blue_blend": "WinStone Blue Blend",
-  "item.create_tobacco.glowleaf_blend": "GlowLeaf Blend",
-  "item.create_tobacco.blazeboro_gold_blend": "BlazeBoro Gold Blend",
-  "item.create_tobacco.creeperfield_classic_blend": "Creeperfield Classic Blend",
-  "item.create_tobacco.cramel_light_blend": "Cramel Light Blend",
-  "item.create_tobacco.lucky_stone_blend": "Lucky Stone Blend",
-  "item.create_tobacco.pall_mine_dark_blend": "Pall Mine Dark Blend"
+  "item.create_tobacco.creperfield_blend": "Creperfield Blend",
+  "item.create_tobacco.craftmel_blend": "Craftmel Blend",
+  "item.create_tobacco.chunkman_blend": "Chunkman Blend",
+  "item.create_tobacco.kend_blend": "KEnd Blend",
+  "item.create_tobacco.pigliament_blend": "Pigliament Blend",
+  "item.create_tobacco.rothmines_blend": "Rothmines Blend",
+  "item.create_tobacco.bedromorkanal_blend": "Bedromorkanal Blend"
 }

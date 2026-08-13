@@ -1,0 +1,26 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "create_tobacco:cut_virginia_tobacco"
+    },
+    {
+      "item": "create_tobacco:cut_virginia_tobacco"
+    },
+    {
+      "item": "create_tobacco:cut_burley_tobacco"
+    },
+    {
+      "item": "create_tobacco:cut_burley_tobacco"
+    },
+    {
+      "item": "minecraft:dried_kelp"
+    }
+  ],
+  "results": [
+    {
+      "count": 4,
+      "id": "create_tobacco:bedromorkanal_blend"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "create_tobacco:cut_virginia_tobacco"
+    },
+    {
+      "item": "create_tobacco:cut_virginia_tobacco"
+    },
+    {
+      "item": "create_tobacco:cut_virginia_tobacco"
+    },
+    {
+      "item": "create_tobacco:cut_burley_tobacco"
+    },
+    {
+      "item": "minecraft:gold_nugget"
+    }
+  ],
+  "results": [
+    {
+      "count": 4,
+      "id": "create_tobacco:pigliament_blend"
+    }
+  ]
+}

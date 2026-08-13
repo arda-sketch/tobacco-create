@@ -14,12 +14,13 @@
   "item.create_tobacco.cut_havana_tobacco": "Нарезанный табак Гавана",
   "item.create_tobacco.cigarette_paper": "Сигаретная бумага",
   "item.create_tobacco.cigarette_filter": "Сигаретный фильтр",
-  "item.create_tobacco.malboom_red_blend": "Смесь MalBoom Red",
+  "item.create_tobacco.marlbore_red_blend": "Смесь MarlbOre Red",
   "item.create_tobacco.winstone_blue_blend": "Смесь WinStone Blue",
-  "item.create_tobacco.glowleaf_blend": "Смесь GlowLeaf",
-  "item.create_tobacco.blazeboro_gold_blend": "Смесь BlazeBoro Gold",
-  "item.create_tobacco.creeperfield_classic_blend": "Смесь Creeperfield Classic",
-  "item.create_tobacco.cramel_light_blend": "Смесь Cramel Light",
-  "item.create_tobacco.lucky_stone_blend": "Смесь Lucky Stone",
-  "item.create_tobacco.pall_mine_dark_blend": "Смесь Pall Mine Dark"
+  "item.create_tobacco.creperfield_blend": "Смесь Creperfield",
+  "item.create_tobacco.craftmel_blend": "Смесь Craftmel",
+  "item.create_tobacco.chunkman_blend": "Смесь Chunkman",
+  "item.create_tobacco.kend_blend": "Смесь KEnd",
+  "item.create_tobacco.pigliament_blend": "Смесь Pigliament",
+  "item.create_tobacco.rothmines_blend": "Смесь Rothmines",
+  "item.create_tobacco.bedromorkanal_blend": "Смесь Bedromorkanal"
 }

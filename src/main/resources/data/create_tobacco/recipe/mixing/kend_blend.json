@@ -1,0 +1,26 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "create_tobacco:cut_virginia_tobacco"
+    },
+    {
+      "item": "create_tobacco:cut_virginia_tobacco"
+    },
+    {
+      "item": "create_tobacco:cut_virginia_tobacco"
+    },
+    {
+      "item": "create_tobacco:cut_havana_tobacco"
+    },
+    {
+      "item": "minecraft:chorus_fruit"
+    }
+  ],
+  "results": [
+    {
+      "count": 4,
+      "id": "create_tobacco:kend_blend"
+    }
+  ]
+}

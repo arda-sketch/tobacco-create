@@ -1,4 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": { "layer0": "create_tobacco:item/lucky_stone_blend" }
-}
