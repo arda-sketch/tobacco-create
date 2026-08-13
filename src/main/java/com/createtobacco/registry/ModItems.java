@@ -2,6 +2,7 @@ package com.createtobacco.registry;
 
 import com.createtobacco.CreateTobacco;
 import com.createtobacco.item.CigaretteItem;
+import com.createtobacco.item.CigarItem;
 import java.util.List;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
@@ -61,8 +62,8 @@ public final class ModItems {
     public static final DeferredItem<Item> CIGAR_FILLER = ITEMS.registerSimpleItem("cigar_filler");
     public static final DeferredItem<Item> MIXED_CIGAR_FILLER = ITEMS.registerSimpleItem("mixed_cigar_filler");
     public static final DeferredItem<Item> CIGAR_WRAPPER = ITEMS.registerSimpleItem("cigar_wrapper");
-    public static final DeferredItem<Item> MINECRISTO_NO_1 = ITEMS.registerSimpleItem("minecristo_no_1");
-    public static final DeferredItem<Item> COBBLIBA_MADURO = ITEMS.registerSimpleItem("cobbliba_maduro");
+    public static final DeferredItem<CigarItem> MINECRISTO_NO_1 = registerCigar("minecristo_no_1");
+    public static final DeferredItem<CigarItem> COBBLIBA_MADURO = registerCigar("cobbliba_maduro");
 
     public static final DeferredItem<Item> INCOMPLETE_CIGARETTE = ITEMS.registerSimpleItem("incomplete_cigarette");
     public static final DeferredItem<Item> INCOMPLETE_CIGAR = ITEMS.registerSimpleItem("incomplete_cigar");
@@ -114,6 +115,10 @@ public final class ModItems {
 
     private static DeferredItem<CigaretteItem> registerCigarette(String name) {
         return ITEMS.registerItem(name, CigaretteItem::new);
+    }
+
+    private static DeferredItem<CigarItem> registerCigar(String name) {
+        return ITEMS.registerItem(name, CigarItem::new);
     }
 
     public static void register(IEventBus modEventBus) {

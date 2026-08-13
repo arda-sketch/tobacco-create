@@ -1,14 +1,12 @@
 package com.createtobacco.item;
 
-import net.minecraft.world.item.Item;
+import com.createtobacco.component.SmokingItemState;
 
 /**
- * Base item type for finished cigarettes.
- *
- * <p>Smoking behavior is intentionally deferred to a later phase.</p>
+ * Finished cigarette with the common five-puff smoking profile.
  */
-public final class CigaretteItem extends Item {
+public final class CigaretteItem extends AbstractSmokingItem {
     public CigaretteItem(Properties properties) {
-        super(properties);
+        super(properties, SmokingItemState.cigarette());
     }
 }

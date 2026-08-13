@@ -14,7 +14,7 @@
 
 ## Current phase
 
-Phases 5–6 — Finished products and Create assembly.
+Phase 7 — Smoking item state and basic smoking.
 
 The Phase 0 skeleton loads with Create on both the development client and the
 dedicated development server. Phase 1 added the requested basic items,
@@ -48,6 +48,17 @@ Minecristo No. 1 deploys Havana filler onto the wrapper and presses it;
 Cobbliba Maduro deploys mixed filler and presses it. Both assemblies use one
 hidden `incomplete_cigar`, one Deployer, one Press, and no loops.
 
+Phase 7 introduces the immutable `SmokingItemState` data component with
+`remainingPuffs` and `lit`. Finished cigarettes default to five puffs and
+finished cigars to eight; both default to unlit and are non-stackable because
+the state belongs to each ItemStack. `AbstractSmokingItem` provides shared
+server-authoritative ignition and puff consumption. An unlit smoking item can
+only be ignited with vanilla Flint and Steel held in the other hand; ignition
+damages it once and produces a small sound/particle effect. A lit item requires
+24 ticks (1.2 seconds) of uninterrupted use per puff. Early release consumes
+nothing, successful completion decrements the data component, and the final
+puff removes the item without producing a butt.
+
 ## Future brand concepts (do not implement yet)
 
 - MarlbOre Red: redstone theme; about 25% per puff for Haste I, about 20 seconds.
@@ -77,10 +88,11 @@ Night Vision for about 45 seconds plus Glowing for about 20 seconds at about
 ## Explicitly out of scope
 
 Do not implement wild tobacco world generation, new machines or blocks,
-smoking/ignition behavior, puffs, dependence, Withdrawal, Nicotine Rush,
-status-effect behavior, particles, animations, packs, Data Components, brand
-effects, additional cigarette products, or additional cigars before a later
-phase explicitly starts.
+dependence, Withdrawal, Nicotine Rush, status-effect behavior, brand effects,
+custom smoke particles, custom animations, packs, custom ignition tools,
+cigarette butts, additional cigarette products, or additional cigars before a
+later phase explicitly starts. Phase 7 contains only the basic vanilla-particle
+ignition/puff feedback and the `SmokingItemState` component.
 
 ## Verification
 

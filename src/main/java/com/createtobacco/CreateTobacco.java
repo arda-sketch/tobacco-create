@@ -18,15 +18,14 @@ public final class CreateTobacco {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public CreateTobacco(IEventBus modEventBus) {
+        ModDataComponents.register(modEventBus);
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModEffects.register(modEventBus);
         ModParticles.register(modEventBus);
-        ModDataComponents.register(modEventBus);
         ModAttachments.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
 
         LOGGER.info("Initializing {}", MOD_ID);
     }
 }
-
