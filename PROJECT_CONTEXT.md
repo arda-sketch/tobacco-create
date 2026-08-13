@@ -14,7 +14,7 @@
 
 ## Current phase
 
-Phase 7 — Smoking item state and basic smoking.
+Phase 9 — Persistent SmokingData and Nicotine Rush.
 
 The Phase 0 skeleton loads with Create on both the development client and the
 dedicated development server. Phase 1 added the requested basic items,
@@ -59,6 +59,28 @@ damages it once and produces a small sound/particle effect. A lit item requires
 nothing, successful completion decrements the data component, and the final
 puff removes the item without producing a butt.
 
+Phase 8 registers a custom translucent `tobacco_smoke` particle backed by the
+eight vanilla animated smoke sprites. Successful server-authoritative puffs
+send a small cloud near the player's mouth. While a lit item is actively held
+in its 24-tick use action, the client creates a sparse local wisp near the used
+hand without continuous networking. Smoking keeps the vanilla `DRINK` use
+animation so first-person and tracked third-person players use Minecraft's
+normal synchronized use-item pose. Position constants live in
+`AbstractSmokingItem` for later visual tuning.
+
+Phase 9 adds persistent player `SmokingData` through NeoForge 1.21.1 Data
+Attachments. Its codec stores dependence, active satisfaction time, decay
+accumulator, the reserved withdrawal countdown, and relief-puff count;
+`copyOnDeath()` preserves it across respawn. Only active server-player ticks
+advance the timers. Dependence decays by 2.5 every 72,000 active ticks and is
+clamped to 0–100. Each cigarette puff adds 0.18 dependence (0.9 total), while
+each cigar puff adds 0.175 (1.4 total). Only the final puff resets
+`activeTicksSinceSatisfied`, adds completion exhaustion, and replaces Nicotine
+Rush with a fresh duration: 6,000 ticks for cigarettes or 8,400 for cigars.
+Nicotine Rush grants 5% movement speed and its separate server damage hook
+reduces incoming damage by 5%. Withdrawal episodes and brand-specific effects
+remain unimplemented.
+
 ## Future brand concepts (do not implement yet)
 
 - MarlbOre Red: redstone theme; about 25% per puff for Haste I, about 20 seconds.
@@ -88,11 +110,9 @@ Night Vision for about 45 seconds plus Glowing for about 20 seconds at about
 ## Explicitly out of scope
 
 Do not implement wild tobacco world generation, new machines or blocks,
-dependence, Withdrawal, Nicotine Rush, status-effect behavior, brand effects,
-custom smoke particles, custom animations, packs, custom ignition tools,
-cigarette butts, additional cigarette products, or additional cigars before a
-later phase explicitly starts. Phase 7 contains only the basic vanilla-particle
-ignition/puff feedback and the `SmokingItemState` component.
+Withdrawal episodes, brand effects, packs, custom ignition tools, cigarette
+butts, additional cigarette products, or additional cigars before a later
+phase explicitly starts.
 
 ## Verification
 

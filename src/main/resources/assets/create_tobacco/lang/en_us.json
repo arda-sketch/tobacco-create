@@ -40,5 +40,6 @@
   "item.create_tobacco.minecristo_no_1": "Minecristo No. 1",
   "item.create_tobacco.cobbliba_maduro": "Cobbliba Maduro",
   "item.create_tobacco.incomplete_cigarette": "Incomplete Cigarette",
-  "item.create_tobacco.incomplete_cigar": "Incomplete Cigar"
+  "item.create_tobacco.incomplete_cigar": "Incomplete Cigar",
+  "effect.create_tobacco.nicotine_rush": "Nicotine Rush"
 }
