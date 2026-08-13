@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "create_tobacco:virginia_tobacco",
+    "create_tobacco:burley_tobacco",
+    "create_tobacco:havana_tobacco"
+  ]
+}

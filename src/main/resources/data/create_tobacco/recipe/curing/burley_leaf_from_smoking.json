@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smoking",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "create_tobacco:fresh_burley_leaf"
+  },
+  "result": {
+    "id": "create_tobacco:cured_burley_leaf"
+  }
+}

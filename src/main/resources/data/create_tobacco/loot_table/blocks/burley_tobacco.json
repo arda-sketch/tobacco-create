@@ -1,0 +1,55 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "create_tobacco:burley_seeds"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "create_tobacco:fresh_burley_leaf"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "create_tobacco:burley_tobacco",
+          "properties": {
+            "age": "7"
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "create_tobacco:burley_seeds"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "create_tobacco:burley_tobacco",
+          "properties": {
+            "age": "7"
+          }
+        },
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.5
+        }
+      ]
+    }
+  ],
+  "random_sequence": "create_tobacco:blocks/burley_tobacco"
+}

@@ -18,9 +18,8 @@ public final class ModCreativeTabs {
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.create_tobacco.main"))
                     .icon(() -> Items.PAPER.getDefaultInstance())
-                    .displayItems((parameters, output) -> {
-                        // Phase 0 intentionally has no mod content.
-                    })
+                    .displayItems((parameters, output) ->
+                            ModItems.CREATIVE_TAB_ITEMS.forEach(output::accept))
                     .build()
     );
 
@@ -31,4 +30,3 @@ public final class ModCreativeTabs {
         CREATIVE_TABS.register(modEventBus);
     }
 }
-

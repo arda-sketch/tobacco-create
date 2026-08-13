@@ -1,0 +1,14 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "minecraft:string"
+    }
+  ],
+  "results": [
+    {
+      "count": 4,
+      "id": "create_tobacco:cigarette_filter"
+    }
+  ]
+}

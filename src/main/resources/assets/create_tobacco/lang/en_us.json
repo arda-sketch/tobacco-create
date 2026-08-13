@@ -1,4 +1,25 @@
 {
-  "itemGroup.create_tobacco.main": "Create: Tobacco"
+  "itemGroup.create_tobacco.main": "Create: Tobacco",
+  "item.create_tobacco.virginia_seeds": "Virginia Seeds",
+  "item.create_tobacco.burley_seeds": "Burley Seeds",
+  "item.create_tobacco.havana_seeds": "Havana Seeds",
+  "item.create_tobacco.fresh_virginia_leaf": "Fresh Virginia Leaf",
+  "item.create_tobacco.fresh_burley_leaf": "Fresh Burley Leaf",
+  "item.create_tobacco.fresh_havana_leaf": "Fresh Havana Leaf",
+  "item.create_tobacco.cured_virginia_leaf": "Cured Virginia Leaf",
+  "item.create_tobacco.cured_burley_leaf": "Cured Burley Leaf",
+  "item.create_tobacco.cured_havana_leaf": "Cured Havana Leaf",
+  "item.create_tobacco.cut_virginia_tobacco": "Cut Virginia Tobacco",
+  "item.create_tobacco.cut_burley_tobacco": "Cut Burley Tobacco",
+  "item.create_tobacco.cut_havana_tobacco": "Cut Havana Tobacco",
+  "item.create_tobacco.cigarette_paper": "Cigarette Paper",
+  "item.create_tobacco.cigarette_filter": "Cigarette Filter",
+  "item.create_tobacco.malboom_red_blend": "MalBoom Red Blend",
+  "item.create_tobacco.winstone_blue_blend": "WinStone Blue Blend",
+  "item.create_tobacco.glowleaf_blend": "GlowLeaf Blend",
+  "item.create_tobacco.blazeboro_gold_blend": "BlazeBoro Gold Blend",
+  "item.create_tobacco.creeperfield_classic_blend": "Creeperfield Classic Blend",
+  "item.create_tobacco.cramel_light_blend": "Cramel Light Blend",
+  "item.create_tobacco.lucky_stone_blend": "Lucky Stone Blend",
+  "item.create_tobacco.pall_mine_dark_blend": "Pall Mine Dark Blend"
 }
-

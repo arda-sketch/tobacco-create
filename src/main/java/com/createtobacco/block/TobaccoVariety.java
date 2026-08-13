@@ -1,0 +1,20 @@
+package com.createtobacco.block;
+
+public enum TobaccoVariety {
+    VIRGINIA(1.0F),
+    BURLEY(1.0F),
+    HAVANA(1.0F);
+
+    private final float growthSpeedMultiplier;
+
+    TobaccoVariety(float growthSpeedMultiplier) {
+        if (growthSpeedMultiplier <= 0.0F) {
+            throw new IllegalArgumentException("Growth speed multiplier must be positive");
+        }
+        this.growthSpeedMultiplier = growthSpeedMultiplier;
+    }
+
+    public float growthSpeedMultiplier() {
+        return growthSpeedMultiplier;
+    }
+}

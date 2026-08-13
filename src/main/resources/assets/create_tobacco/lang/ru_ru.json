@@ -1,4 +1,25 @@
 {
-  "itemGroup.create_tobacco.main": "Create: Tobacco"
+  "itemGroup.create_tobacco.main": "Create: Tobacco",
+  "item.create_tobacco.virginia_seeds": "Семена Вирджинии",
+  "item.create_tobacco.burley_seeds": "Семена Берли",
+  "item.create_tobacco.havana_seeds": "Семена Гаваны",
+  "item.create_tobacco.fresh_virginia_leaf": "Свежий лист Вирджинии",
+  "item.create_tobacco.fresh_burley_leaf": "Свежий лист Берли",
+  "item.create_tobacco.fresh_havana_leaf": "Свежий лист Гаваны",
+  "item.create_tobacco.cured_virginia_leaf": "Выдержанный лист Вирджинии",
+  "item.create_tobacco.cured_burley_leaf": "Выдержанный лист Берли",
+  "item.create_tobacco.cured_havana_leaf": "Выдержанный лист Гаваны",
+  "item.create_tobacco.cut_virginia_tobacco": "Нарезанный табак Вирджиния",
+  "item.create_tobacco.cut_burley_tobacco": "Нарезанный табак Берли",
+  "item.create_tobacco.cut_havana_tobacco": "Нарезанный табак Гавана",
+  "item.create_tobacco.cigarette_paper": "Сигаретная бумага",
+  "item.create_tobacco.cigarette_filter": "Сигаретный фильтр",
+  "item.create_tobacco.malboom_red_blend": "Смесь MalBoom Red",
+  "item.create_tobacco.winstone_blue_blend": "Смесь WinStone Blue",
+  "item.create_tobacco.glowleaf_blend": "Смесь GlowLeaf",
+  "item.create_tobacco.blazeboro_gold_blend": "Смесь BlazeBoro Gold",
+  "item.create_tobacco.creeperfield_classic_blend": "Смесь Creeperfield Classic",
+  "item.create_tobacco.cramel_light_blend": "Смесь Cramel Light",
+  "item.create_tobacco.lucky_stone_blend": "Смесь Lucky Stone",
+  "item.create_tobacco.pall_mine_dark_blend": "Смесь Pall Mine Dark"
 }
-

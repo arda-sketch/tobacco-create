@@ -14,18 +14,22 @@
 
 ## Current phase
 
-Phase 0 — Skeleton + Create.
+Phase 3 — Basic Create processing.
 
-The deliverable is an otherwise empty addon that loads with Create on both the
-development client and the dedicated development server. Phase 0 contains only
-the main mod entry point, empty registry infrastructure, a base creative tab,
-build metadata, and run configurations.
+The Phase 0 skeleton loads with Create on both the development client and the
+dedicated development server. Phase 1 added the requested basic items,
+translations, item models, textures, and creative-tab entries. Phase 2 adds
+Virginia, Burley, and Havana farmland crops with eight growth stages,
+vanilla-style random growth and bone meal support, and age-aware loot. Phase 3
+adds data-driven smoking, milling, cutting, and pressing recipes using the
+Create 6.0.10 recipe formats.
 
 ## Explicitly out of scope
 
-Do not implement tobacco, cigarettes, recipes, crops, status-effect behavior,
-particles, data payloads, attachments, or other gameplay mechanics before the
-next phase is explicitly started.
+Do not implement wild tobacco world generation, new machines or blocks,
+smoking behavior, cigarettes, status-effect behavior, particles, data
+payloads, attachments, or other gameplay mechanics before the next phase is
+explicitly started.
 
 ## Verification
 
