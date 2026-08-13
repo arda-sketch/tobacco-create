@@ -2,6 +2,7 @@ package com.createtobacco.registry;
 
 import com.createtobacco.CreateTobacco;
 import com.createtobacco.component.SmokingItemState;
+import com.createtobacco.component.CigarettePackContents;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
@@ -18,6 +19,14 @@ public final class ModDataComponents {
                     builder -> builder
                             .persistent(SmokingItemState.CODEC)
                             .networkSynchronized(SmokingItemState.STREAM_CODEC)
+            );
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CigarettePackContents>> CIGARETTE_PACK_CONTENTS =
+            DATA_COMPONENTS.registerComponentType(
+                    "cigarette_pack_contents",
+                    builder -> builder
+                            .persistent(CigarettePackContents.CODEC)
+                            .networkSynchronized(CigarettePackContents.STREAM_CODEC)
             );
 
     private ModDataComponents() {

@@ -1,0 +1,14 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "create:cardboard"
+    }
+  ],
+  "results": [
+    {
+      "id": "create_tobacco:empty_cigarette_pack",
+      "count": 2
+    }
+  ]
+}

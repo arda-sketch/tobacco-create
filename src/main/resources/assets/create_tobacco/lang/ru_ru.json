@@ -41,9 +41,13 @@
   "item.create_tobacco.cobbliba_maduro": "Cobbliba Maduro",
   "item.create_tobacco.glowstone_cigar_filler": "Светокаменная сигарная начинка",
   "item.create_tobacco.stoneo_y_glowlieta": "Stoneo y Glowlieta",
+  "item.create_tobacco.empty_cigarette_pack": "Пустая пачка сигарет",
+  "item.create_tobacco.cigarette_pack": "Пачка сигарет",
   "item.create_tobacco.incomplete_cigarette": "Незавершённая сигарета",
   "item.create_tobacco.incomplete_cigar": "Незавершённая сигара",
   "effect.create_tobacco.nicotine_rush": "Никотиновый прилив",
   "effect.create_tobacco.withdrawal": "Никотиновая ломка",
-  "tooltip.create_tobacco.remaining_puffs": "Затяжки: %s/%s"
+  "tooltip.create_tobacco.remaining_puffs": "Затяжки: %s/%s",
+  "tooltip.create_tobacco.pack_count": "%s / %s",
+  "tooltip.create_tobacco.invalid_pack": "Повреждённое или пустое содержимое"
 }

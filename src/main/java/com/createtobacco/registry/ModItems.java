@@ -3,6 +3,7 @@ package com.createtobacco.registry;
 import com.createtobacco.CreateTobacco;
 import com.createtobacco.item.CigaretteItem;
 import com.createtobacco.item.CigarItem;
+import com.createtobacco.item.CigarettePackItem;
 import com.createtobacco.smoking.SmokingProduct;
 import java.util.List;
 import net.minecraft.world.item.Item;
@@ -70,6 +71,10 @@ public final class ModItems {
 
     public static final DeferredItem<Item> INCOMPLETE_CIGARETTE = ITEMS.registerSimpleItem("incomplete_cigarette");
     public static final DeferredItem<Item> INCOMPLETE_CIGAR = ITEMS.registerSimpleItem("incomplete_cigar");
+    public static final DeferredItem<Item> EMPTY_CIGARETTE_PACK = ITEMS.registerSimpleItem(
+            "empty_cigarette_pack", new Item.Properties().stacksTo(16));
+    public static final DeferredItem<CigarettePackItem> CIGARETTE_PACK = ITEMS.registerItem(
+            "cigarette_pack", CigarettePackItem::new);
 
     public static final List<DeferredItem<? extends Item>> CREATIVE_TAB_ITEMS = List.of(
             VIRGINIA_SEEDS,
@@ -111,7 +116,8 @@ public final class ModItems {
             CIGAR_WRAPPER,
             MINECRISTO_NO_1,
             GLOWSTONE_CIGAR_FILLER,
-            STONEO_Y_GLOWLIETA
+            STONEO_Y_GLOWLIETA,
+            EMPTY_CIGARETTE_PACK
     );
 
     private ModItems() {

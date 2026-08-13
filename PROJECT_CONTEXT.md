@@ -14,7 +14,7 @@
 
 ## Current phase
 
-Phase 11 — Coughing and product-specific smoking effects.
+Phase 12 — Cigarette packs.
 
 The Phase 0 skeleton loads with Create on both the development client and the
 dedicated development server. Phase 1 added the requested basic items,
@@ -131,10 +131,29 @@ the persistent player attachment and never advances while offline.
 `cobbliba_maduro` remains registered only for compatibility with existing
 development worlds, but it is no longer in the active creative cigar roster.
 
+Phase 12 adds `empty_cigarette_pack` and one generic `cigarette_pack`. Pack
+contents are an immutable, persistent, network-synchronized Data Component
+containing a validated finished-cigarette registry ID and count 1–10. Only the
+nine active cigarette products are accepted; cigars and unknown IDs are
+rejected. Packs never mix brands and are non-stackable while populated.
+
+Create Cardboard is pressed into two Empty Cigarette Packs. Nine Create 6.0.10
+compacting recipes each consume one Empty Pack and ten identical, full, unlit
+finished cigarettes. Data-component ingredients reject lit or partially used
+cigarettes, preventing puff restoration through repacking. Recipe outputs set
+the generic pack's brand/count component directly, so no custom machine or
+custom recipe serializer is necessary. Basin automation remains compatible
+with belts, funnels, chutes, and Mechanical Arms.
+
+Right-click extraction is server-authoritative. The pack first attempts to add
+exactly one fresh saved-brand cigarette to inventory; only a successful full
+insert decrements the component. Count one converts atomically into an Empty
+Pack. Tooltip shows the stored cigarette display name and `count / 10`.
+
 ## Explicitly out of scope
 
 Do not implement wild tobacco world generation, new machines or blocks,
-packs, custom ignition tools, cigarette
+custom ignition tools, cigarette
 butts, additional cigarette products, or additional cigars before a later
 phase explicitly starts.
 
