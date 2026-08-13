@@ -14,7 +14,7 @@
 
 ## Current phase
 
-Phase 10 — Withdrawal scheduler.
+Phase 11 — Coughing and product-specific smoking effects.
 
 The Phase 0 skeleton loads with Create on both the development client and the
 dedicated development server. Phase 1 added the requested basic items,
@@ -97,36 +97,44 @@ Lit smoking items now use Minecraft's built-in item bar to show the remaining
 puff ratio, and their tooltip shows the exact current/default puff count. This
 is item-local UI rather than a persistent player HUD.
 
-## Future brand concepts (do not implement yet)
+Phase 11 centralizes provisional product balance in `SmokingBalance` and all
+production proc/completion behavior in `SmokingEffects`. `AbstractSmokingItem`
+only reports a genuinely completed server puff and final consumption. Product
+design is now final for this phase:
 
-- MarlbOre Red: redstone theme; about 25% per puff for Haste I, about 20 seconds.
-- WinStone Blue: lapis theme; about 35% per puff for 1–2 raw experience points.
-- Creperfield: about 8–10% per puff for a non-destructive Microblast, optional
-  nearby knockback, Speed II and Haste II for about 8–10 seconds. It must not
-  use a normal destructive explosion, fire, or direct explosion damage.
-- Craftmel: basic cheap cigarette, no random proc, slightly weaker completion
-  profile and slightly lower dependence.
-- Chunkman: about 20–25% per puff to restore about one food point and a very
-  small amount of saturation; exact values require later balancing.
-- KEnd: about 12–15% per puff for safe Chorus Fruit-like teleportation up to
-  roughly eight blocks; use valid safe destinations, never naive `setPos`.
-- Pigliament: about 15% per puff for Resistance I, about 10 seconds.
-- Rothmines: no random proc; after full consumption add Haste I for about 60
-  seconds to the normal completion mechanics.
-- Bedromorkanal: about 15% per puff to heal 2 HP without exceeding max health;
-  use direct healing unless playtesting changes the design.
+- MarlbOre Red: Redstone; 25% per puff for Haste I (20 seconds).
+- WinStone Blue: Lapis; 35% per puff for 1–2 raw experience points.
+- Creperfield: Gunpowder; 10% per puff for a non-destructive Microblast. It
+  plays sound/particles, moderately pushes living entities within 3.25 blocks,
+  and grants the smoker Speed II plus Haste II for 10 seconds. It never creates
+  an explosion, block damage, fire, or direct damage.
+- Craftmel: basic/light; no proc, 0.7 total dependence, 4-minute Nicotine Rush.
+- Chunkman: Cocoa; 25% per puff for one food point and 0.5 saturation.
+- KEnd: Chorus Fruit; 18% per puff for Ender Roulette. Outcomes are safe
+  vanilla-style chorus teleport (40%), Slow Falling I (20%), Jump Boost II
+  (15%), Invisibility (15%), or Levitation I (10%).
+- Pigliament: Gold; 15% per puff for Resistance I (10 seconds).
+- Rothmines: Coal; no puff proc, but full consumption grants Haste I for 60
+  seconds in addition to normal completion.
+- Bedromorkanal: Dried Kelp; 15% per puff for direct 2 HP healing.
+- Minecristo No. 1: premium standard eight-puff cigar; no magic proc, 1.6 total
+  dependence and an 8-minute stronger Nicotine Rush completion profile.
+- Stoneo y Glowlieta: Glowstone eight-puff cigar; 30% per puff grants Night
+  Vision for 45 seconds and Glowing for 20 seconds together.
 
-Future smoking design: Minecristo No. 1 is intended as a Havana-focused premium
-eight-puff cigar with a longer/stronger base completion profile and higher
-dependence. Stoneo y Glowlieta remains a future eight-puff Havana plus Glowstone
-cigar; Glowstone belongs in the filler, not the wrapper, and its future proc is
-Night Vision for about 45 seconds plus Glowing for about 20 seconds at about
-30% chance per puff. None of this behavior is implemented yet.
+Dependence tiers at or above 20 schedule independent cough checks every 2–4
+active online minutes. Tier chances are 5/10/18/28%. A cough stops current item
+use safely, plays a sound and smoke, and applies Slowness I for five seconds;
+it causes no damage and does not modify dependence. The cough timer is part of
+the persistent player attachment and never advances while offline.
+
+`cobbliba_maduro` remains registered only for compatibility with existing
+development worlds, but it is no longer in the active creative cigar roster.
 
 ## Explicitly out of scope
 
 Do not implement wild tobacco world generation, new machines or blocks,
-brand effects, packs, custom ignition tools, cigarette
+packs, custom ignition tools, cigarette
 butts, additional cigarette products, or additional cigars before a later
 phase explicitly starts.
 

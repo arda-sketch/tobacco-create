@@ -5,6 +5,7 @@ import com.createtobacco.attachment.SmokingData;
 import com.createtobacco.attachment.WithdrawalTier;
 import com.createtobacco.registry.ModAttachments;
 import com.createtobacco.registry.ModEffects;
+import com.createtobacco.smoking.CoughingSystem;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -38,6 +39,7 @@ public final class SmokingGameplayEvents {
     private static void tickSmokingData(ServerPlayer player) {
         SmokingData data = player.getData(ModAttachments.SMOKING_DATA);
         data.tickActive();
+        CoughingSystem.tick(player, data);
 
         WithdrawalTier tier = WithdrawalTier.fromDependence(data.dependence());
         if (tier == WithdrawalTier.NONE) {

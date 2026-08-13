@@ -18,7 +18,9 @@ public final class SmokingData {
             Codec.LONG.optionalFieldOf("ticks_until_next_withdrawal_episode", -1L)
                     .forGetter(SmokingData::ticksUntilNextWithdrawalEpisode),
             Codec.INT.optionalFieldOf("withdrawal_relief_puffs", 0)
-                    .forGetter(SmokingData::withdrawalReliefPuffs)
+                    .forGetter(SmokingData::withdrawalReliefPuffs),
+            Codec.LONG.optionalFieldOf("ticks_until_next_cough_check", -1L)
+                    .forGetter(SmokingData::ticksUntilNextCoughCheck)
     ).apply(instance, SmokingData::new));
 
     private float dependence;
@@ -26,9 +28,10 @@ public final class SmokingData {
     private long dependenceDecayAccumulator;
     private long ticksUntilNextWithdrawalEpisode;
     private int withdrawalReliefPuffs;
+    private long ticksUntilNextCoughCheck;
 
     public SmokingData() {
-        this(0.0F, 0L, 0L, -1L, 0);
+        this(0.0F, 0L, 0L, -1L, 0, -1L);
     }
 
     public SmokingData(
@@ -36,7 +39,8 @@ public final class SmokingData {
             long activeTicksSinceSatisfied,
             long dependenceDecayAccumulator,
             long ticksUntilNextWithdrawalEpisode,
-            int withdrawalReliefPuffs
+            int withdrawalReliefPuffs,
+            long ticksUntilNextCoughCheck
     ) {
         this.dependence = Mth.clamp(dependence, 0.0F, 100.0F);
         this.activeTicksSinceSatisfied = Math.max(0L, activeTicksSinceSatisfied);
@@ -47,12 +51,16 @@ public final class SmokingData {
                 ? -1L
                 : ticksUntilNextWithdrawalEpisode;
         this.withdrawalReliefPuffs = Math.max(0, withdrawalReliefPuffs);
+        this.ticksUntilNextCoughCheck = ticksUntilNextCoughCheck <= 0L ? -1L : ticksUntilNextCoughCheck;
     }
 
     public void tickActive() {
         activeTicksSinceSatisfied = saturatedAdd(activeTicksSinceSatisfied, 1L);
         if (ticksUntilNextWithdrawalEpisode > 0L) {
             ticksUntilNextWithdrawalEpisode--;
+        }
+        if (ticksUntilNextCoughCheck > 0L) {
+            ticksUntilNextCoughCheck--;
         }
 
         if (dependence <= 0.0F) {
@@ -131,6 +139,34 @@ public final class SmokingData {
 
     public int withdrawalReliefPuffs() {
         return withdrawalReliefPuffs;
+    }
+
+    public long ticksUntilNextCoughCheck() {
+        return ticksUntilNextCoughCheck;
+    }
+
+    public boolean coughCheckIsScheduled() {
+        return ticksUntilNextCoughCheck >= 0L;
+    }
+
+    public boolean coughCheckIsDue() {
+        return ticksUntilNextCoughCheck == 0L;
+    }
+
+    public void scheduleCoughCheck(long ticks) {
+        ticksUntilNextCoughCheck = Math.max(1L, ticks);
+    }
+
+    public void clearCoughSchedule() {
+        ticksUntilNextCoughCheck = -1L;
+    }
+
+    public void reset() {
+        dependence = 0.0F;
+        activeTicksSinceSatisfied = 0L;
+        dependenceDecayAccumulator = 0L;
+        clearWithdrawalSchedule();
+        clearCoughSchedule();
     }
 
     private static long saturatedAdd(long value, long increment) {

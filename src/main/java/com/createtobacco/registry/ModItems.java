@@ -3,6 +3,7 @@ package com.createtobacco.registry;
 import com.createtobacco.CreateTobacco;
 import com.createtobacco.item.CigaretteItem;
 import com.createtobacco.item.CigarItem;
+import com.createtobacco.smoking.SmokingProduct;
 import java.util.List;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
@@ -45,15 +46,15 @@ public final class ModItems {
     public static final DeferredItem<Item> ROTHMINES_BLEND = ITEMS.registerSimpleItem("rothmines_blend");
     public static final DeferredItem<Item> BEDROMORKANAL_BLEND = ITEMS.registerSimpleItem("bedromorkanal_blend");
 
-    public static final DeferredItem<CigaretteItem> MARLBORE_RED = registerCigarette("marlbore_red");
-    public static final DeferredItem<CigaretteItem> WINSTONE_BLUE = registerCigarette("winstone_blue");
-    public static final DeferredItem<CigaretteItem> CREPERFIELD = registerCigarette("creperfield");
-    public static final DeferredItem<CigaretteItem> CRAFTMEL = registerCigarette("craftmel");
-    public static final DeferredItem<CigaretteItem> CHUNKMAN = registerCigarette("chunkman");
-    public static final DeferredItem<CigaretteItem> KEND = registerCigarette("kend");
-    public static final DeferredItem<CigaretteItem> PIGLIAMENT = registerCigarette("pigliament");
-    public static final DeferredItem<CigaretteItem> ROTHMINES = registerCigarette("rothmines");
-    public static final DeferredItem<CigaretteItem> BEDROMORKANAL = registerCigarette("bedromorkanal");
+    public static final DeferredItem<CigaretteItem> MARLBORE_RED = registerCigarette(SmokingProduct.MARLBORE_RED);
+    public static final DeferredItem<CigaretteItem> WINSTONE_BLUE = registerCigarette(SmokingProduct.WINSTONE_BLUE);
+    public static final DeferredItem<CigaretteItem> CREPERFIELD = registerCigarette(SmokingProduct.CREPERFIELD);
+    public static final DeferredItem<CigaretteItem> CRAFTMEL = registerCigarette(SmokingProduct.CRAFTMEL);
+    public static final DeferredItem<CigaretteItem> CHUNKMAN = registerCigarette(SmokingProduct.CHUNKMAN);
+    public static final DeferredItem<CigaretteItem> KEND = registerCigarette(SmokingProduct.KEND);
+    public static final DeferredItem<CigaretteItem> PIGLIAMENT = registerCigarette(SmokingProduct.PIGLIAMENT);
+    public static final DeferredItem<CigaretteItem> ROTHMINES = registerCigarette(SmokingProduct.ROTHMINES);
+    public static final DeferredItem<CigaretteItem> BEDROMORKANAL = registerCigarette(SmokingProduct.BEDROMORKANAL);
 
     public static final DeferredItem<Item> FERMENTED_HAVANA_TOBACCO_BUNDLE =
             ITEMS.registerSimpleItem("fermented_havana_tobacco_bundle");
@@ -62,8 +63,10 @@ public final class ModItems {
     public static final DeferredItem<Item> CIGAR_FILLER = ITEMS.registerSimpleItem("cigar_filler");
     public static final DeferredItem<Item> MIXED_CIGAR_FILLER = ITEMS.registerSimpleItem("mixed_cigar_filler");
     public static final DeferredItem<Item> CIGAR_WRAPPER = ITEMS.registerSimpleItem("cigar_wrapper");
-    public static final DeferredItem<CigarItem> MINECRISTO_NO_1 = registerCigar("minecristo_no_1");
-    public static final DeferredItem<CigarItem> COBBLIBA_MADURO = registerCigar("cobbliba_maduro");
+    public static final DeferredItem<Item> GLOWSTONE_CIGAR_FILLER = ITEMS.registerSimpleItem("glowstone_cigar_filler");
+    public static final DeferredItem<CigarItem> MINECRISTO_NO_1 = registerCigar(SmokingProduct.MINECRISTO_NO_1);
+    public static final DeferredItem<CigarItem> STONEO_Y_GLOWLIETA = registerCigar(SmokingProduct.STONEO_Y_GLOWLIETA);
+    public static final DeferredItem<CigarItem> COBBLIBA_MADURO = registerCigar(SmokingProduct.COBBLIBA_MADURO);
 
     public static final DeferredItem<Item> INCOMPLETE_CIGARETTE = ITEMS.registerSimpleItem("incomplete_cigarette");
     public static final DeferredItem<Item> INCOMPLETE_CIGAR = ITEMS.registerSimpleItem("incomplete_cigar");
@@ -107,18 +110,19 @@ public final class ModItems {
             MIXED_CIGAR_FILLER,
             CIGAR_WRAPPER,
             MINECRISTO_NO_1,
-            COBBLIBA_MADURO
+            GLOWSTONE_CIGAR_FILLER,
+            STONEO_Y_GLOWLIETA
     );
 
     private ModItems() {
     }
 
-    private static DeferredItem<CigaretteItem> registerCigarette(String name) {
-        return ITEMS.registerItem(name, CigaretteItem::new);
+    private static DeferredItem<CigaretteItem> registerCigarette(SmokingProduct product) {
+        return ITEMS.registerItem(product.itemId().getPath(), properties -> new CigaretteItem(properties, product));
     }
 
-    private static DeferredItem<CigarItem> registerCigar(String name) {
-        return ITEMS.registerItem(name, CigarItem::new);
+    private static DeferredItem<CigarItem> registerCigar(SmokingProduct product) {
+        return ITEMS.registerItem(product.itemId().getPath(), properties -> new CigarItem(properties, product));
     }
 
     public static void register(IEventBus modEventBus) {

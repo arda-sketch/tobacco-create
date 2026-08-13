@@ -1,0 +1,16 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "create_tobacco:cigar_filler"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    }
+  ],
+  "results": [
+    {
+      "id": "create_tobacco:glowstone_cigar_filler"
+    }
+  ]
+}

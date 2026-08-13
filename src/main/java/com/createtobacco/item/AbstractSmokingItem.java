@@ -7,13 +7,17 @@ import com.createtobacco.registry.ModAttachments;
 import com.createtobacco.registry.ModDataComponents;
 import com.createtobacco.registry.ModEffects;
 import com.createtobacco.registry.ModParticles;
+import com.createtobacco.smoking.SmokingBalance;
+import com.createtobacco.smoking.SmokingEffects;
+import com.createtobacco.smoking.SmokingProduct;
+import com.createtobacco.smoking.SmokingProfile;
 import net.minecraft.core.particles.ParticleTypes;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,22 +42,21 @@ public abstract class AbstractSmokingItem extends Item {
     public static final int HELD_SMOKE_INTERVAL_TICKS = 7;
 
     private final SmokingItemState defaultState;
-    private final float totalDependence;
-    private final int nicotineRushDurationTicks;
-    private final float completionExhaustion;
+    private final SmokingProduct product;
+    private final SmokingProfile profile;
 
-    protected AbstractSmokingItem(
-            Properties properties,
-            SmokingItemState defaultState,
-            float totalDependence,
-            int nicotineRushDurationTicks,
-            float completionExhaustion
-    ) {
-        super(properties.stacksTo(1).component(ModDataComponents.SMOKING_ITEM_STATE.get(), defaultState));
-        this.defaultState = defaultState;
-        this.totalDependence = totalDependence;
-        this.nicotineRushDurationTicks = nicotineRushDurationTicks;
-        this.completionExhaustion = completionExhaustion;
+    protected AbstractSmokingItem(Properties properties, SmokingProduct product) {
+        this(properties, product, SmokingBalance.profile(product));
+    }
+
+    private AbstractSmokingItem(Properties properties, SmokingProduct product, SmokingProfile profile) {
+        super(properties.stacksTo(1).component(
+                ModDataComponents.SMOKING_ITEM_STATE.get(),
+                new SmokingItemState(profile.puffs(), false)
+        ));
+        this.defaultState = new SmokingItemState(profile.puffs(), false);
+        this.product = product;
+        this.profile = profile;
     }
 
     @Override
@@ -95,15 +98,16 @@ public abstract class AbstractSmokingItem extends Item {
         }
 
         int remainingPuffs = state.remainingPuffs() - 1;
-        if (livingEntity instanceof Player player) {
+        if (livingEntity instanceof ServerPlayer player) {
             SmokingData smokingData = player.getData(ModAttachments.SMOKING_DATA);
-            smokingData.addDependence(totalDependence / defaultState.remainingPuffs());
+            smokingData.addDependence(profile.totalDependence() / profile.puffs());
             relieveWithdrawal(player, smokingData);
+            SmokingEffects.onSuccessfulPuff(player, product);
         }
         playPuffEffects(serverLevel, livingEntity);
         if (remainingPuffs == 0) {
-            if (livingEntity instanceof Player player) {
-                completeSmoking(player);
+            if (livingEntity instanceof ServerPlayer player) {
+                SmokingEffects.onFullyConsumed(player, product);
             }
             stack.shrink(1);
         } else {
@@ -226,23 +230,8 @@ public abstract class AbstractSmokingItem extends Item {
                 .add(0.0D, -HELD_SMOKE_DOWN_OFFSET, 0.0D);
     }
 
-    private void completeSmoking(Player player) {
-        player.getData(ModAttachments.SMOKING_DATA).markSatisfied();
-        player.removeEffect(ModEffects.WITHDRAWAL);
-        player.removeEffect(ModEffects.NICOTINE_RUSH);
-        player.addEffect(new MobEffectInstance(
-                ModEffects.NICOTINE_RUSH,
-                nicotineRushDurationTicks,
-                0,
-                false,
-                true,
-                true
-        ));
-        player.causeFoodExhaustion(completionExhaustion);
-    }
-
-    private static void relieveWithdrawal(Player player, SmokingData data) {
-        MobEffectInstance withdrawal = player.getEffect(ModEffects.WITHDRAWAL);
+    private static void relieveWithdrawal(ServerPlayer player, SmokingData data) {
+        var withdrawal = player.getEffect(ModEffects.WITHDRAWAL);
         if (withdrawal == null) {
             return;
         }
