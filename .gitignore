@@ -1,0 +1,30 @@
+### Gradle ###
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/**/build/
+
+### IDEs ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.classpath
+.project
+.settings/
+bin/
+
+### VS Code workspace state ###
+.vscode/.ropeproject/
+
+### Minecraft development runs ###
+run/
+runs/
+src/generated/resources/.cache/
+repo/
+
+### OS files ###
+.DS_Store
+Thumbs.db
+
