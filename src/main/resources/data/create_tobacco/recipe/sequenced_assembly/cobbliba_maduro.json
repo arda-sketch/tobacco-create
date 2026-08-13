@@ -1,0 +1,45 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create_tobacco:cigar_wrapper"
+  },
+  "transitional_item": {
+    "id": "create_tobacco:incomplete_cigar"
+  },
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_tobacco:incomplete_cigar"
+        },
+        {
+          "item": "create_tobacco:mixed_cigar_filler"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_tobacco:incomplete_cigar"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create_tobacco:incomplete_cigar"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_tobacco:incomplete_cigar"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "create_tobacco:cobbliba_maduro"
+    }
+  ]
+}

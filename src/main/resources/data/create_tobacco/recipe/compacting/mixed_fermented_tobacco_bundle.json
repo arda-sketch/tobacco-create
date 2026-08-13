@@ -1,0 +1,27 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "create_tobacco:cured_havana_leaf"
+    },
+    {
+      "item": "create_tobacco:cured_havana_leaf"
+    },
+    {
+      "item": "create_tobacco:cured_havana_leaf"
+    },
+    {
+      "item": "create_tobacco:cured_burley_leaf"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 250,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "results": [
+    {
+      "id": "create_tobacco:mixed_fermented_tobacco_bundle"
+    }
+  ]
+}

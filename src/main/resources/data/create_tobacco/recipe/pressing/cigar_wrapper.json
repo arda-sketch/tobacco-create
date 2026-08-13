@@ -1,0 +1,13 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "create_tobacco:cured_havana_leaf"
+    }
+  ],
+  "results": [
+    {
+      "id": "create_tobacco:cigar_wrapper"
+    }
+  ]
+}

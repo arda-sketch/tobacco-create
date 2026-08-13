@@ -1,6 +1,7 @@
 package com.createtobacco.registry;
 
 import com.createtobacco.CreateTobacco;
+import com.createtobacco.item.CigaretteItem;
 import java.util.List;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
@@ -43,7 +44,30 @@ public final class ModItems {
     public static final DeferredItem<Item> ROTHMINES_BLEND = ITEMS.registerSimpleItem("rothmines_blend");
     public static final DeferredItem<Item> BEDROMORKANAL_BLEND = ITEMS.registerSimpleItem("bedromorkanal_blend");
 
-    public static final List<DeferredItem<Item>> CREATIVE_TAB_ITEMS = List.of(
+    public static final DeferredItem<CigaretteItem> MARLBORE_RED = registerCigarette("marlbore_red");
+    public static final DeferredItem<CigaretteItem> WINSTONE_BLUE = registerCigarette("winstone_blue");
+    public static final DeferredItem<CigaretteItem> CREPERFIELD = registerCigarette("creperfield");
+    public static final DeferredItem<CigaretteItem> CRAFTMEL = registerCigarette("craftmel");
+    public static final DeferredItem<CigaretteItem> CHUNKMAN = registerCigarette("chunkman");
+    public static final DeferredItem<CigaretteItem> KEND = registerCigarette("kend");
+    public static final DeferredItem<CigaretteItem> PIGLIAMENT = registerCigarette("pigliament");
+    public static final DeferredItem<CigaretteItem> ROTHMINES = registerCigarette("rothmines");
+    public static final DeferredItem<CigaretteItem> BEDROMORKANAL = registerCigarette("bedromorkanal");
+
+    public static final DeferredItem<Item> FERMENTED_HAVANA_TOBACCO_BUNDLE =
+            ITEMS.registerSimpleItem("fermented_havana_tobacco_bundle");
+    public static final DeferredItem<Item> MIXED_FERMENTED_TOBACCO_BUNDLE =
+            ITEMS.registerSimpleItem("mixed_fermented_tobacco_bundle");
+    public static final DeferredItem<Item> CIGAR_FILLER = ITEMS.registerSimpleItem("cigar_filler");
+    public static final DeferredItem<Item> MIXED_CIGAR_FILLER = ITEMS.registerSimpleItem("mixed_cigar_filler");
+    public static final DeferredItem<Item> CIGAR_WRAPPER = ITEMS.registerSimpleItem("cigar_wrapper");
+    public static final DeferredItem<Item> MINECRISTO_NO_1 = ITEMS.registerSimpleItem("minecristo_no_1");
+    public static final DeferredItem<Item> COBBLIBA_MADURO = ITEMS.registerSimpleItem("cobbliba_maduro");
+
+    public static final DeferredItem<Item> INCOMPLETE_CIGARETTE = ITEMS.registerSimpleItem("incomplete_cigarette");
+    public static final DeferredItem<Item> INCOMPLETE_CIGAR = ITEMS.registerSimpleItem("incomplete_cigar");
+
+    public static final List<DeferredItem<? extends Item>> CREATIVE_TAB_ITEMS = List.of(
             VIRGINIA_SEEDS,
             BURLEY_SEEDS,
             HAVANA_SEEDS,
@@ -66,10 +90,30 @@ public final class ModItems {
             KEND_BLEND,
             PIGLIAMENT_BLEND,
             ROTHMINES_BLEND,
-            BEDROMORKANAL_BLEND
+            BEDROMORKANAL_BLEND,
+            MARLBORE_RED,
+            WINSTONE_BLUE,
+            CREPERFIELD,
+            CRAFTMEL,
+            CHUNKMAN,
+            KEND,
+            PIGLIAMENT,
+            ROTHMINES,
+            BEDROMORKANAL,
+            FERMENTED_HAVANA_TOBACCO_BUNDLE,
+            MIXED_FERMENTED_TOBACCO_BUNDLE,
+            CIGAR_FILLER,
+            MIXED_CIGAR_FILLER,
+            CIGAR_WRAPPER,
+            MINECRISTO_NO_1,
+            COBBLIBA_MADURO
     );
 
     private ModItems() {
+    }
+
+    private static DeferredItem<CigaretteItem> registerCigarette(String name) {
+        return ITEMS.registerItem(name, CigaretteItem::new);
     }
 
     public static void register(IEventBus modEventBus) {

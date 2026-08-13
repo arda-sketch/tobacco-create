@@ -1,0 +1,75 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create_tobacco:cigarette_paper"
+  },
+  "transitional_item": {
+    "id": "create_tobacco:incomplete_cigarette"
+  },
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_tobacco:incomplete_cigarette"
+        },
+        {
+          "item": "create_tobacco:craftmel_blend"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_tobacco:incomplete_cigarette"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create_tobacco:incomplete_cigarette"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_tobacco:incomplete_cigarette"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_tobacco:incomplete_cigarette"
+        },
+        {
+          "item": "create_tobacco:cigarette_filter"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_tobacco:incomplete_cigarette"
+        }
+      ]
+    },
+    {
+      "type": "create:cutting",
+      "ingredients": [
+        {
+          "item": "create_tobacco:incomplete_cigarette"
+        }
+      ],
+      "processing_time": 50,
+      "results": [
+        {
+          "id": "create_tobacco:incomplete_cigarette"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "create_tobacco:craftmel"
+    }
+  ]
+}

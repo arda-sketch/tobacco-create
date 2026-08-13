@@ -1,0 +1,14 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "create_tobacco:fermented_havana_tobacco_bundle"
+    }
+  ],
+  "processing_time": 100,
+  "results": [
+    {
+      "id": "create_tobacco:cigar_filler"
+    }
+  ]
+}

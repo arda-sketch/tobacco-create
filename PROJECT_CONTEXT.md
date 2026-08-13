@@ -14,7 +14,7 @@
 
 ## Current phase
 
-Phase 4.5 — Final product roster refactor.
+Phases 5–6 — Finished products and Create assembly.
 
 The Phase 0 skeleton loads with Create on both the development client and the
 dedicated development server. Phase 1 added the requested basic items,
@@ -31,6 +31,22 @@ Mechanical Mixing produces prepared tobacco blends only. Cigarette Paper and
 Cigarette Filters are not mixing ingredients. A later Phase 5 will combine
 Paper, one Prepared Tobacco Blend, and a Filter through Create Sequenced
 Assembly to make a finished cigarette.
+
+Phase 5 registers nine non-smokable finished `CigaretteItem` products and
+assembles each through one-pass Create Sequenced Assembly: Cigarette Paper,
+brand-specific Prepared Tobacco Blend deployed, Mechanical Press, Cigarette
+Filter deployed, Mechanical Saw, then the matching finished cigarette. All
+nine recipes share one hidden `incomplete_cigarette`; Create's sequenced
+assembly data component binds it to the selected brand recipe after step one.
+
+Phase 6 adds a separate cigar production chain. Four Cured Havana Leaves plus
+250 mB Water compact into a Fermented Havana Tobacco Bundle. Three Cured
+Havana Leaves, one Cured Burley Leaf, and 250 mB Water compact into a Mixed
+Fermented Tobacco Bundle. Sawing produces `cigar_filler` or
+`mixed_cigar_filler`; pressing one Cured Havana Leaf produces a Cigar Wrapper.
+Minecristo No. 1 deploys Havana filler onto the wrapper and presses it;
+Cobbliba Maduro deploys mixed filler and presses it. Both assemblies use one
+hidden `incomplete_cigar`, one Deployer, one Press, and no loops.
 
 ## Future brand concepts (do not implement yet)
 
@@ -51,20 +67,20 @@ Assembly to make a finished cigarette.
 - Bedromorkanal: about 15% per puff to heal 2 HP without exceeding max health;
   use direct healing unless playtesting changes the design.
 
-Future cigars: Minecristo No. 1 is a Havana-focused premium eight-puff cigar
-with a longer/stronger base completion profile and higher dependence. Stoneo y
-Glowlieta is an eight-puff Havana plus Glowstone cigar; Glowstone belongs in
-the filler, not the wrapper, and its future proc is Night Vision for about 45
-seconds plus Glowing for about 20 seconds at about 30% chance per puff.
+Future smoking design: Minecristo No. 1 is intended as a Havana-focused premium
+eight-puff cigar with a longer/stronger base completion profile and higher
+dependence. Stoneo y Glowlieta remains a future eight-puff Havana plus Glowstone
+cigar; Glowstone belongs in the filler, not the wrapper, and its future proc is
+Night Vision for about 45 seconds plus Glowing for about 20 seconds at about
+30% chance per puff. None of this behavior is implemented yet.
 
 ## Explicitly out of scope
 
 Do not implement wild tobacco world generation, new machines or blocks,
-smoking behavior, cigarettes, status-effect behavior, particles, data
-payloads, attachments, brand effects, or other gameplay mechanics before the
-next phase is explicitly started. In particular, do not add finished cigarette
-or cigar items, Sequenced Assembly, smoking behavior, or Data Components in
-Phase 4.5.
+smoking/ignition behavior, puffs, dependence, Withdrawal, Nicotine Rush,
+status-effect behavior, particles, animations, packs, Data Components, brand
+effects, additional cigarette products, or additional cigars before a later
+phase explicitly starts.
 
 ## Verification
 
