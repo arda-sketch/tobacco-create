@@ -14,7 +14,7 @@
 
 ## Current phase
 
-Phase 12 — Cigarette packs.
+Phase 13 — Operator development debug commands.
 
 The Phase 0 skeleton loads with Create on both the development client and the
 dedicated development server. Phase 1 added the requested basic items,
@@ -149,6 +149,21 @@ Right-click extraction is server-authoritative. The pack first attempts to add
 exactly one fresh saved-brand cigarette to inventory; only a successful full
 insert decrements the component. Count one converts atomically into an Empty
 Pack. Tooltip shows the stored cigarette display name and `count / 10`.
+
+Phase 13 adds the operator-only `/createtobacco` development command tree
+(permission level 2). `status` reports exact dependence/tier, active elapsed
+time, safe craving interval/remaining time, craving state, active Withdrawal,
+next episode, relief progress, and cough timer. Dependence can be queried,
+set, or added with 0–100 clamping; craving elapsed time can be simulated or
+reset. Withdrawal and cough commands reuse `WithdrawalSystem` and
+`CoughingSystem`, not parallel debug implementations.
+
+Product effect commands call the production `SmokingEffects` handler without
+the random roll. KEnd outcome commands call the same `EnderRoulette` and safe
+chorus teleport implementation as real puffs. Optional completion commands
+invoke the real final-consumption handler, including product profile,
+Nicotine Rush, Rothmines bonus, exhaustion, and satisfaction reset. The reset
+command clears only Create Tobacco persistent smoking state and mod effects.
 
 ## Explicitly out of scope
 

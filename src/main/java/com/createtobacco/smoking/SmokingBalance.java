@@ -12,6 +12,26 @@ public final class SmokingBalance {
     public static final int COUGH_CHECK_MIN_TICKS = minutes(2);
     public static final int COUGH_CHECK_MAX_TICKS = minutes(4);
     public static final int COUGH_SLOWNESS_TICKS = seconds(5);
+    public static final float MARLBORE_PROC_CHANCE = 0.25F;
+    public static final float WINSTONE_PROC_CHANCE = 0.35F;
+    public static final float CREPERFIELD_PROC_CHANCE = 0.10F;
+    public static final float CHUNKMAN_PROC_CHANCE = 0.25F;
+    public static final float KEND_PROC_CHANCE = 0.18F;
+    public static final float PIGLIAMENT_PROC_CHANCE = 0.15F;
+    public static final float BEDROMORKANAL_PROC_CHANCE = 0.15F;
+    public static final float STONEO_PROC_CHANCE = 0.30F;
+
+    public static final int MARLBORE_HASTE_TICKS = seconds(20);
+    public static final int MICROBLAST_BUFF_TICKS = seconds(10);
+    public static final double MICROBLAST_RADIUS = 3.25D;
+    public static final double MICROBLAST_KNOCKBACK = 0.42D;
+    public static final int PIGLIAMENT_RESISTANCE_TICKS = seconds(10);
+    public static final int ROTHMINES_HASTE_TICKS = seconds(60);
+    public static final int CHUNKMAN_FOOD = 1;
+    public static final float CHUNKMAN_SATURATION = 0.5F;
+    public static final float BEDROMORKANAL_HEALING = 2.0F;
+    public static final int STONEO_NIGHT_VISION_TICKS = seconds(45);
+    public static final int STONEO_GLOWING_TICKS = seconds(20);
 
     private SmokingBalance() {
     }

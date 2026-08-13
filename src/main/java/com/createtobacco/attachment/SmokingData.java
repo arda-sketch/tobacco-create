@@ -81,9 +81,16 @@ public final class SmokingData {
     }
 
     public void addDependence(float amount) {
-        if (amount > 0.0F) {
-            dependence = Mth.clamp(dependence + amount, 0.0F, 100.0F);
-        }
+        dependence = Mth.clamp(dependence + amount, 0.0F, 100.0F);
+    }
+
+    public void setDependence(float value) {
+        dependence = Mth.clamp(value, 0.0F, 100.0F);
+    }
+
+    public void setActiveTicksSinceSatisfied(long ticks) {
+        activeTicksSinceSatisfied = Math.max(0L, ticks);
+        clearWithdrawalSchedule();
     }
 
     public void markSatisfied() {
