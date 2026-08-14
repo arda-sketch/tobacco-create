@@ -2,6 +2,7 @@ package com.createtobacco.item;
 
 import com.createtobacco.component.CigarettePackContents;
 import com.createtobacco.registry.ModDataComponents;
+import com.createtobacco.registry.ModCriteriaTriggers;
 import com.createtobacco.registry.ModItems;
 import java.util.List;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -10,6 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -18,6 +21,18 @@ import net.minecraft.world.level.Level;
 public final class CigarettePackItem extends Item {
     public CigarettePackItem(Properties properties) {
         super(properties.stacksTo(1));
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        if (level.isClientSide() || !(entity instanceof ServerPlayer player)) {
+            return;
+        }
+
+        CigarettePackContents contents = stack.get(ModDataComponents.CIGARETTE_PACK_CONTENTS);
+        if (contents != null && contents.count() == CigarettePackContents.CAPACITY) {
+            ModCriteriaTriggers.FULL_CIGARETTE_PACK.get().trigger(player);
+        }
     }
 
     @Override

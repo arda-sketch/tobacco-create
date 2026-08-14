@@ -1,0 +1,55 @@
+{
+  "criteria": {
+    "virginia": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create_tobacco:cured_virginia_leaf"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "burley": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create_tobacco:cured_burley_leaf"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "havana": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create_tobacco:cured_havana_leaf"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+    "description": {
+      "translate": "advancements.create_tobacco.golden_leaf.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create_tobacco:cured_virginia_leaf"
+    },
+    "title": {
+      "translate": "advancements.create_tobacco.golden_leaf.title"
+    }
+  },
+  "requirements": [
+    [
+      "virginia",
+      "burley",
+      "havana"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

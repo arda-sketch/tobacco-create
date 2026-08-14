@@ -1,0 +1,67 @@
+{
+  "parent": "create_tobacco:golden_leaf",
+  "criteria": {
+    "marlbore_red": {
+      "conditions": { "items": [{ "items": "create_tobacco:marlbore_red" }] },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "winstone_blue": {
+      "conditions": { "items": [{ "items": "create_tobacco:winstone_blue" }] },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "creperfield": {
+      "conditions": { "items": [{ "items": "create_tobacco:creperfield" }] },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "craftmel": {
+      "conditions": { "items": [{ "items": "create_tobacco:craftmel" }] },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "chunkman": {
+      "conditions": { "items": [{ "items": "create_tobacco:chunkman" }] },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "kend": {
+      "conditions": { "items": [{ "items": "create_tobacco:kend" }] },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "pigliament": {
+      "conditions": { "items": [{ "items": "create_tobacco:pigliament" }] },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "rothmines": {
+      "conditions": { "items": [{ "items": "create_tobacco:rothmines" }] },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "bedromorkanal": {
+      "conditions": { "items": [{ "items": "create_tobacco:bedromorkanal" }] },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.create_tobacco.industrial_habit.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create_tobacco:marlbore_red"
+    },
+    "title": {
+      "translate": "advancements.create_tobacco.industrial_habit.title"
+    }
+  },
+  "requirements": [
+    [
+      "marlbore_red",
+      "winstone_blue",
+      "creperfield",
+      "craftmel",
+      "chunkman",
+      "kend",
+      "pigliament",
+      "rothmines",
+      "bedromorkanal"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

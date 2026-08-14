@@ -49,5 +49,13 @@
   "effect.create_tobacco.withdrawal": "Никотиновая ломка",
   "tooltip.create_tobacco.remaining_puffs": "Затяжки: %s/%s",
   "tooltip.create_tobacco.pack_count": "%s / %s",
-  "tooltip.create_tobacco.invalid_pack": "Повреждённое или пустое содержимое"
+  "tooltip.create_tobacco.invalid_pack": "Повреждённое или пустое содержимое",
+  "advancements.create_tobacco.golden_leaf.title": "Золотой лист",
+  "advancements.create_tobacco.golden_leaf.description": "Выдержите табачный лист в дыму",
+  "advancements.create_tobacco.industrial_habit.title": "Промышленная привычка",
+  "advancements.create_tobacco.industrial_habit.description": "Добудьте готовую сигарету",
+  "advancements.create_tobacco.pack_it_up.title": "Пора по пачкам",
+  "advancements.create_tobacco.pack_it_up.description": "Соберите десять одинаковых сигарет в пачку",
+  "advancements.create_tobacco.smoke_and_gears.title": "Дым и шестерни",
+  "advancements.create_tobacco.smoke_and_gears.description": "Полностью выкурите сигарету или сигару"
 }

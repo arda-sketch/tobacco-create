@@ -37,6 +37,10 @@ public enum SmokingProduct {
         return packableCigarette;
     }
 
+    public boolean isActiveSmokingProduct() {
+        return this != COBBLIBA_MADURO;
+    }
+
     public static Optional<SmokingProduct> fromId(ResourceLocation id) {
         return Arrays.stream(values()).filter(product -> product.itemId.equals(id)).findFirst();
     }

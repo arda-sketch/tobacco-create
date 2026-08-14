@@ -3,6 +3,7 @@ package com.createtobacco.smoking;
 import com.createtobacco.attachment.SmokingData;
 import com.createtobacco.registry.ModAttachments;
 import com.createtobacco.registry.ModEffects;
+import com.createtobacco.registry.ModCriteriaTriggers;
 import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
@@ -72,6 +73,10 @@ public final class SmokingEffects {
 
         if (product == SmokingProduct.ROTHMINES) {
             addEffect(player, MobEffects.DIG_SPEED, SmokingBalance.ROTHMINES_HASTE_TICKS, 0);
+        }
+
+        if (product.isActiveSmokingProduct()) {
+            ModCriteriaTriggers.SMOKING_ITEM_FULLY_CONSUMED.get().trigger(player);
         }
     }
 

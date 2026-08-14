@@ -1,0 +1,26 @@
+{
+  "parent": "create_tobacco:industrial_habit",
+  "criteria": {
+    "full_pack": {
+      "trigger": "create_tobacco:full_cigarette_pack"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.create_tobacco.pack_it_up.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create_tobacco:cigarette_pack"
+    },
+    "title": {
+      "translate": "advancements.create_tobacco.pack_it_up.title"
+    }
+  },
+  "requirements": [
+    [
+      "full_pack"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

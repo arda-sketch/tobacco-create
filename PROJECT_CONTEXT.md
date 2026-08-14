@@ -14,7 +14,7 @@
 
 ## Current phase
 
-Phase 13 — Operator development debug commands.
+Phase 14 — Create Tobacco advancement branch.
 
 The Phase 0 skeleton loads with Create on both the development client and the
 dedicated development server. Phase 1 added the requested basic items,
@@ -164,6 +164,17 @@ chorus teleport implementation as real puffs. Optional completion commands
 invoke the real final-consumption handler, including product profile,
 Nicotine Rush, Rothmines bonus, exhaustion, and satisfaction reset. The reset
 command clears only Create Tobacco persistent smoking state and mod effects.
+
+Phase 14 adds a compact four-entry advancement branch. `Golden Leaf` is
+awarded for obtaining any cured Virginia, Burley, or Havana leaf, and
+`Industrial Habit` for obtaining any of the nine active finished cigarettes.
+Both use vanilla `inventory_changed` criteria. `Pack It Up` uses a dedicated
+server criterion and is awarded only while a generic Cigarette Pack actually
+contains a validated pack component with count 10; Empty Packs and partial
+packs do not qualify. `Smoke and Gears` is fired from the common final-puff
+completion handler only for the nine active cigarettes, Minecristo No. 1, or
+Stoneo y Glowlieta. Ignition, item acquisition, and partial smoking never fire
+it.
 
 ## Explicitly out of scope
 

@@ -1,0 +1,26 @@
+{
+  "parent": "create_tobacco:industrial_habit",
+  "criteria": {
+    "fully_consumed": {
+      "trigger": "create_tobacco:smoking_item_fully_consumed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.create_tobacco.smoke_and_gears.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create_tobacco:minecristo_no_1"
+    },
+    "title": {
+      "translate": "advancements.create_tobacco.smoke_and_gears.title"
+    }
+  },
+  "requirements": [
+    [
+      "fully_consumed"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

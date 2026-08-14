@@ -49,5 +49,13 @@
   "effect.create_tobacco.withdrawal": "Withdrawal",
   "tooltip.create_tobacco.remaining_puffs": "Puffs: %s/%s",
   "tooltip.create_tobacco.pack_count": "%s / %s",
-  "tooltip.create_tobacco.invalid_pack": "Invalid or empty contents"
+  "tooltip.create_tobacco.invalid_pack": "Invalid or empty contents",
+  "advancements.create_tobacco.golden_leaf.title": "Golden Leaf",
+  "advancements.create_tobacco.golden_leaf.description": "Cure a tobacco leaf with smoke",
+  "advancements.create_tobacco.industrial_habit.title": "Industrial Habit",
+  "advancements.create_tobacco.industrial_habit.description": "Get your hands on a finished cigarette",
+  "advancements.create_tobacco.pack_it_up.title": "Pack It Up",
+  "advancements.create_tobacco.pack_it_up.description": "Fill a pack with ten matching cigarettes",
+  "advancements.create_tobacco.smoke_and_gears.title": "Smoke and Gears",
+  "advancements.create_tobacco.smoke_and_gears.description": "Fully smoke a cigarette or cigar"
 }

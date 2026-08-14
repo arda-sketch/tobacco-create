@@ -3,6 +3,7 @@ package com.createtobacco;
 import com.createtobacco.registry.ModAttachments;
 import com.createtobacco.registry.ModBlocks;
 import com.createtobacco.registry.ModCreativeTabs;
+import com.createtobacco.registry.ModCriteriaTriggers;
 import com.createtobacco.registry.ModDataComponents;
 import com.createtobacco.registry.ModEffects;
 import com.createtobacco.registry.ModItems;
@@ -18,6 +19,7 @@ public final class CreateTobacco {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public CreateTobacco(IEventBus modEventBus) {
+        ModCriteriaTriggers.register(modEventBus);
         ModDataComponents.register(modEventBus);
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
