@@ -1,6 +1,7 @@
 package com.createtobacco.effect;
 
 import com.createtobacco.CreateTobacco;
+import com.createtobacco.smoking.SmokingBalance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -16,8 +17,8 @@ public final class NicotineRushEffect extends MobEffect {
         addAttributeModifier(
                 Attributes.MOVEMENT_SPEED,
                 MOVEMENT_SPEED_MODIFIER_ID,
-                0.05D,
-                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
+                SmokingBalance::nicotineRushMovementModifier
         );
     }
 }

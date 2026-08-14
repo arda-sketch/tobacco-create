@@ -47,7 +47,10 @@ public final class WithdrawalSystem {
         ));
 
         if (rollNausea && player.getRandom().nextFloat() < tier.nauseaChance()) {
-            int nauseaDuration = player.getRandom().nextIntBetweenInclusive(3 * 20, 5 * 20);
+            int nauseaDuration = player.getRandom().nextIntBetweenInclusive(
+                    SmokingBalance.WITHDRAWAL_NAUSEA_MIN_TICKS,
+                    SmokingBalance.WITHDRAWAL_NAUSEA_MAX_TICKS
+            );
             player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, nauseaDuration, 0, false, true, true));
         }
     }

@@ -23,33 +23,33 @@ public final class SmokingEffects {
     }
 
     public static void onSuccessfulPuff(ServerPlayer player, SmokingProduct product) {
-        switch (product) {
-            case MARLBORE_RED -> rollAndTrigger(player, product, SmokingBalance.MARLBORE_PROC_CHANCE);
-            case WINSTONE_BLUE -> rollAndTrigger(player, product, SmokingBalance.WINSTONE_PROC_CHANCE);
-            case CREPERFIELD -> rollAndTrigger(player, product, SmokingBalance.CREPERFIELD_PROC_CHANCE);
-            case CHUNKMAN -> rollAndTrigger(player, product, SmokingBalance.CHUNKMAN_PROC_CHANCE);
-            case KEND -> rollAndTrigger(player, product, SmokingBalance.KEND_PROC_CHANCE);
-            case PIGLIAMENT -> rollAndTrigger(player, product, SmokingBalance.PIGLIAMENT_PROC_CHANCE);
-            case BEDROMORKANAL -> rollAndTrigger(player, product, SmokingBalance.BEDROMORKANAL_PROC_CHANCE);
-            case STONEO_Y_GLOWLIETA -> rollAndTrigger(player, product, SmokingBalance.STONEO_PROC_CHANCE);
-            default -> {
-            }
+        float chance = SmokingBalance.profile(product).specialProcChance();
+        if (chance > 0.0F && player.getRandom().nextFloat() < chance) {
+            triggerPuffEffect(player, product);
         }
     }
 
     public static void triggerPuffEffect(ServerPlayer player, SmokingProduct product) {
         switch (product) {
-            case MARLBORE_RED -> addEffect(player, MobEffects.DIG_SPEED, SmokingBalance.MARLBORE_HASTE_TICKS, 0);
-            case WINSTONE_BLUE -> player.giveExperiencePoints(player.getRandom().nextIntBetweenInclusive(1, 2));
+            case MARLBORE_RED -> addEffect(player, MobEffects.DIG_SPEED,
+                    SmokingBalance.MARLBORE_HASTE_TICKS, SmokingBalance.MARLBORE_HASTE_AMPLIFIER);
+            case WINSTONE_BLUE -> player.giveExperiencePoints(player.getRandom().nextIntBetweenInclusive(
+                    SmokingBalance.WINSTONE_MIN_RAW_XP,
+                    SmokingBalance.WINSTONE_MAX_RAW_XP
+            ));
             case CREPERFIELD -> microblast(player);
             case CHUNKMAN -> feed(player);
             case KEND -> EnderRoulette.trigger(player, EnderRoulette.randomOutcome(player));
-            case PIGLIAMENT -> addEffect(player, MobEffects.DAMAGE_RESISTANCE, SmokingBalance.PIGLIAMENT_RESISTANCE_TICKS, 0);
-            case ROTHMINES -> addEffect(player, MobEffects.DIG_SPEED, SmokingBalance.ROTHMINES_HASTE_TICKS, 0);
+            case PIGLIAMENT -> addEffect(player, MobEffects.DAMAGE_RESISTANCE,
+                    SmokingBalance.PIGLIAMENT_RESISTANCE_TICKS, SmokingBalance.PIGLIAMENT_RESISTANCE_AMPLIFIER);
+            case ROTHMINES -> addEffect(player, MobEffects.DIG_SPEED,
+                    SmokingBalance.ROTHMINES_HASTE_TICKS, SmokingBalance.ROTHMINES_HASTE_AMPLIFIER);
             case BEDROMORKANAL -> heal(player);
             case STONEO_Y_GLOWLIETA -> {
-                addEffect(player, MobEffects.NIGHT_VISION, SmokingBalance.STONEO_NIGHT_VISION_TICKS, 0);
-                addEffect(player, MobEffects.GLOWING, SmokingBalance.STONEO_GLOWING_TICKS, 0);
+                addEffect(player, MobEffects.NIGHT_VISION,
+                        SmokingBalance.STONEO_NIGHT_VISION_TICKS, SmokingBalance.STONEO_EFFECT_AMPLIFIER);
+                addEffect(player, MobEffects.GLOWING,
+                        SmokingBalance.STONEO_GLOWING_TICKS, SmokingBalance.STONEO_EFFECT_AMPLIFIER);
             }
             default -> {
             }
@@ -72,17 +72,12 @@ public final class SmokingEffects {
         player.causeFoodExhaustion(profile.completionExhaustion());
 
         if (product == SmokingProduct.ROTHMINES) {
-            addEffect(player, MobEffects.DIG_SPEED, SmokingBalance.ROTHMINES_HASTE_TICKS, 0);
+            addEffect(player, MobEffects.DIG_SPEED,
+                    SmokingBalance.ROTHMINES_HASTE_TICKS, SmokingBalance.ROTHMINES_HASTE_AMPLIFIER);
         }
 
         if (product.isActiveSmokingProduct()) {
             ModCriteriaTriggers.SMOKING_ITEM_FULLY_CONSUMED.get().trigger(player);
-        }
-    }
-
-    private static void rollAndTrigger(ServerPlayer player, SmokingProduct product, float chance) {
-        if (player.getRandom().nextFloat() < chance) {
-            triggerPuffEffect(player, product);
         }
     }
 
@@ -110,11 +105,13 @@ public final class SmokingEffects {
                 horizontal = new Vec3(0.0D, 0.0D, 1.0D);
             }
             Vec3 push = horizontal.normalize().scale(SmokingBalance.MICROBLAST_KNOCKBACK);
-            entity.push(push.x, 0.12D, push.z);
+            entity.push(push.x, SmokingBalance.MICROBLAST_VERTICAL_KNOCKBACK, push.z);
         }
 
-        addEffect(player, MobEffects.MOVEMENT_SPEED, SmokingBalance.MICROBLAST_BUFF_TICKS, 1);
-        addEffect(player, MobEffects.DIG_SPEED, SmokingBalance.MICROBLAST_BUFF_TICKS, 1);
+        addEffect(player, MobEffects.MOVEMENT_SPEED,
+                SmokingBalance.MICROBLAST_BUFF_TICKS, SmokingBalance.MICROBLAST_BUFF_AMPLIFIER);
+        addEffect(player, MobEffects.DIG_SPEED,
+                SmokingBalance.MICROBLAST_BUFF_TICKS, SmokingBalance.MICROBLAST_BUFF_AMPLIFIER);
     }
 
     private static void feed(ServerPlayer player) {

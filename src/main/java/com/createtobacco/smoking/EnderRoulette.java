@@ -24,34 +24,45 @@ public final class EnderRoulette {
     }
 
     public static Outcome randomOutcome(ServerPlayer player) {
-        int roll = player.getRandom().nextInt(100);
-        if (roll < 40) return Outcome.TELEPORT;
-        if (roll < 60) return Outcome.SLOW_FALLING;
-        if (roll < 75) return Outcome.JUMP_BOOST;
-        if (roll < 90) return Outcome.INVISIBILITY;
+        int roll = player.getRandom().nextInt(SmokingBalance.KEND_TOTAL_WEIGHT);
+        int threshold = SmokingBalance.KEND_TELEPORT_WEIGHT;
+        if (roll < threshold) return Outcome.TELEPORT;
+        threshold += SmokingBalance.KEND_SLOW_FALLING_WEIGHT;
+        if (roll < threshold) return Outcome.SLOW_FALLING;
+        threshold += SmokingBalance.KEND_JUMP_BOOST_WEIGHT;
+        if (roll < threshold) return Outcome.JUMP_BOOST;
+        threshold += SmokingBalance.KEND_INVISIBILITY_WEIGHT;
+        if (roll < threshold) return Outcome.INVISIBILITY;
         return Outcome.LEVITATION;
     }
 
     public static void trigger(ServerPlayer player, Outcome outcome) {
         switch (outcome) {
             case TELEPORT -> safeChorusTeleport(player);
-            case SLOW_FALLING -> addEffect(player, MobEffects.SLOW_FALLING, 20 * 20, 0);
-            case JUMP_BOOST -> addEffect(player, MobEffects.JUMP, 20 * 20, 1);
-            case INVISIBILITY -> addEffect(player, MobEffects.INVISIBILITY, 10 * 20, 0);
-            case LEVITATION -> addEffect(player, MobEffects.LEVITATION, 2 * 20, 0);
+            case SLOW_FALLING -> addEffect(player, MobEffects.SLOW_FALLING,
+                    SmokingBalance.KEND_SLOW_FALLING_TICKS, SmokingBalance.KEND_STANDARD_EFFECT_AMPLIFIER);
+            case JUMP_BOOST -> addEffect(player, MobEffects.JUMP,
+                    SmokingBalance.KEND_JUMP_BOOST_TICKS, SmokingBalance.KEND_JUMP_BOOST_AMPLIFIER);
+            case INVISIBILITY -> addEffect(player, MobEffects.INVISIBILITY,
+                    SmokingBalance.KEND_INVISIBILITY_TICKS, SmokingBalance.KEND_STANDARD_EFFECT_AMPLIFIER);
+            case LEVITATION -> addEffect(player, MobEffects.LEVITATION,
+                    SmokingBalance.KEND_LEVITATION_TICKS, SmokingBalance.KEND_STANDARD_EFFECT_AMPLIFIER);
         }
     }
 
     public static boolean safeChorusTeleport(ServerPlayer player) {
         ServerLevel level = player.serverLevel();
-        for (int attempt = 0; attempt < 16; attempt++) {
-            double x = player.getX() + (player.getRandom().nextDouble() - 0.5D) * 16.0D;
+        for (int attempt = 0; attempt < SmokingBalance.KEND_TELEPORT_ATTEMPTS; attempt++) {
+            double x = player.getX() + (player.getRandom().nextDouble() * 2.0D - 1.0D)
+                    * SmokingBalance.KEND_TELEPORT_RADIUS;
             double y = Mth.clamp(
-                    player.getY() + player.getRandom().nextInt(16) - 8,
+                    player.getY() + player.getRandom().nextInt(SmokingBalance.KEND_TELEPORT_VERTICAL_RANGE * 2)
+                            - SmokingBalance.KEND_TELEPORT_VERTICAL_RANGE,
                     level.getMinBuildHeight(),
                     level.getMinBuildHeight() + level.getLogicalHeight() - 1
             );
-            double z = player.getZ() + (player.getRandom().nextDouble() - 0.5D) * 16.0D;
+            double z = player.getZ() + (player.getRandom().nextDouble() * 2.0D - 1.0D)
+                    * SmokingBalance.KEND_TELEPORT_RADIUS;
             Vec3 origin = player.position();
 
             var event = EventHooks.onChorusFruitTeleport(player, x, y, z);

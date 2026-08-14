@@ -32,8 +32,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.util.Mth;
 
 public abstract class AbstractSmokingItem extends Item {
-    private static final int USE_DURATION_TICKS = 24;
-
     // Phase 8 visual tuning. These offsets are measured from the entity's eye position.
     public static final double MOUTH_FORWARD_OFFSET = 0.45D;
     public static final double HELD_SMOKE_FORWARD_OFFSET = 0.38D;
@@ -119,7 +117,7 @@ public abstract class AbstractSmokingItem extends Item {
 
     @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
-        return USE_DURATION_TICKS;
+        return SmokingBalance.PUFF_USE_DURATION_TICKS;
     }
 
     @Override

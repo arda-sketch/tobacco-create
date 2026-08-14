@@ -3,12 +3,10 @@ package com.createtobacco.attachment;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Mth;
+import com.createtobacco.smoking.SmokingBalance;
 
 /** Persistent, server-owned smoking state attached to each player. */
 public final class SmokingData {
-    public static final long DEPENDENCE_DECAY_INTERVAL_TICKS = 72_000L;
-    public static final float DEPENDENCE_DECAY_PER_INTERVAL = 2.5F;
-
     public static final Codec<SmokingData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.FLOAT.optionalFieldOf("dependence", 0.0F).forGetter(SmokingData::dependence),
             Codec.LONG.optionalFieldOf("active_ticks_since_satisfied", 0L)
@@ -42,7 +40,7 @@ public final class SmokingData {
             int withdrawalReliefPuffs,
             long ticksUntilNextCoughCheck
     ) {
-        this.dependence = Mth.clamp(dependence, 0.0F, 100.0F);
+        this.dependence = Mth.clamp(dependence, SmokingBalance.MIN_DEPENDENCE, SmokingBalance.MAX_DEPENDENCE);
         this.activeTicksSinceSatisfied = Math.max(0L, activeTicksSinceSatisfied);
         this.dependenceDecayAccumulator = Math.max(0L, dependenceDecayAccumulator);
         // Phase 9 stored zero while this field was reserved. Treat loaded zero as
@@ -69,11 +67,11 @@ public final class SmokingData {
         }
 
         dependenceDecayAccumulator = saturatedAdd(dependenceDecayAccumulator, 1L);
-        long completedIntervals = dependenceDecayAccumulator / DEPENDENCE_DECAY_INTERVAL_TICKS;
+        long completedIntervals = dependenceDecayAccumulator / SmokingBalance.DEPENDENCE_DECAY_INTERVAL_TICKS;
         if (completedIntervals > 0L) {
-            double decay = completedIntervals * (double) DEPENDENCE_DECAY_PER_INTERVAL;
+            double decay = completedIntervals * (double) SmokingBalance.DEPENDENCE_DECAY_PER_INTERVAL;
             dependence = (float) Math.max(0.0D, dependence - decay);
-            dependenceDecayAccumulator %= DEPENDENCE_DECAY_INTERVAL_TICKS;
+            dependenceDecayAccumulator %= SmokingBalance.DEPENDENCE_DECAY_INTERVAL_TICKS;
             if (dependence == 0.0F) {
                 dependenceDecayAccumulator = 0L;
             }
@@ -81,11 +79,11 @@ public final class SmokingData {
     }
 
     public void addDependence(float amount) {
-        dependence = Mth.clamp(dependence + amount, 0.0F, 100.0F);
+        dependence = Mth.clamp(dependence + amount, SmokingBalance.MIN_DEPENDENCE, SmokingBalance.MAX_DEPENDENCE);
     }
 
     public void setDependence(float value) {
-        dependence = Mth.clamp(value, 0.0F, 100.0F);
+        dependence = Mth.clamp(value, SmokingBalance.MIN_DEPENDENCE, SmokingBalance.MAX_DEPENDENCE);
     }
 
     public void setActiveTicksSinceSatisfied(long ticks) {

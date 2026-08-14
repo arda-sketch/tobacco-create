@@ -6,6 +6,7 @@ import com.createtobacco.registry.ModAttachments;
 import com.createtobacco.registry.ModEffects;
 import com.createtobacco.smoking.CoughingSystem;
 import com.createtobacco.smoking.WithdrawalSystem;
+import com.createtobacco.smoking.SmokingBalance;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -14,8 +15,6 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 @EventBusSubscriber(modid = CreateTobacco.MOD_ID)
 public final class SmokingGameplayEvents {
-    public static final float NICOTINE_RUSH_DAMAGE_MULTIPLIER = 0.95F;
-
     private SmokingGameplayEvents() {
     }
 
@@ -28,9 +27,12 @@ public final class SmokingGameplayEvents {
 
     @SubscribeEvent
     private static void onIncomingDamage(LivingIncomingDamageEvent event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer
-                && serverPlayer.hasEffect(ModEffects.NICOTINE_RUSH)) {
-            event.setAmount(event.getAmount() * NICOTINE_RUSH_DAMAGE_MULTIPLIER);
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            var nicotineRush = serverPlayer.getEffect(ModEffects.NICOTINE_RUSH);
+            if (nicotineRush != null) {
+                float reduction = SmokingBalance.nicotineRushDamageReduction(nicotineRush.getAmplifier());
+                event.setAmount(event.getAmount() * (1.0F - reduction));
+            }
         }
     }
 

@@ -32,7 +32,7 @@ public final class CoughingSystem {
         }
 
         data.scheduleCoughCheck(SmokingBalance.randomCoughInterval(player.getRandom()));
-        if (player.getRandom().nextFloat() < SmokingBalance.coughChance(tier)) {
+        if (player.getRandom().nextFloat() < SmokingBalance.withdrawal(tier).coughChance()) {
             trigger(player);
         }
     }

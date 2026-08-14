@@ -14,7 +14,7 @@
 
 ## Current phase
 
-Phase 15 — Dedicated-server and multiplayer hardening.
+Phase 16 — Balance consolidation and V1 playtesting support.
 
 The Phase 0 skeleton loads with Create on both the development client and the
 dedicated development server. Phase 1 added the requested basic items,
@@ -84,7 +84,7 @@ remain unimplemented.
 Phase 10 adds a server-side episodic Withdrawal scheduler. Dependence tiers are
 none below 20, Mild at 20–39.999, Moderate at 40–59.999, High at 60–79.999,
 and Severe at 80–100. After a completed smoking item, active online safe times
-are respectively 30, 20, 15, and 10 minutes. Once safe time ends, the server
+are respectively 40, 30, 20, and 15 minutes. Once safe time ends, the server
 randomizes every episode interval: 6–10, 4–7, 3–5, or 2–4 minutes. Withdrawal
 is applied only for an episode (30/40/50/60 seconds), with exact movement
 penalties of 3/5/7/10% and block-breaking penalties of 5/8/12/15%. Episode
@@ -200,6 +200,25 @@ damage blocks, fire, Create contraptions, or storage. Client imports remain
 isolated under `client.particle` with a `Dist.CLIENT` subscriber. Death copies
 SmokingData through the attachment's `copyOnDeath()`, while ItemStack state
 uses Minecraft's normal persistent and network-synchronized Data Components.
+
+Phase 16 makes `SmokingBalance` the single source of truth for provisional V1
+product, Nicotine Rush, dependence decay, cough, Withdrawal, and KEnd values.
+Every active product now has an explicit `SmokingProfile` containing puffs,
+total dependence, Rush duration/amplifier/movement/damage reduction,
+completion exhaustion, and special proc chance. Product effect durations,
+values, Ender Roulette weights, teleport limits, and Withdrawal profiles live
+beside those profiles instead of being distributed across handlers, effects,
+attachments, and enums. Runtime behavior is otherwise unchanged, except that
+the Phase 16 requested craving safe intervals are now Mild 40, Moderate 30,
+High 20, and Severe 15 active minutes.
+
+`PLAYTESTING.md` documents recipe cost, puffs, dependence, Rush, special proc,
+and intended role for all nine cigarettes plus Minecristo No. 1 and Stoneo y
+Glowlieta. It also contains manual exploration, mining, combat, food, health,
+multiplayer, long-session, high-dependence, and reconnect tests, plus a list of
+interactions that should be observed before any future balance changes. Phase
+16 is the V1 feature-complete boundary; subsequent work is manual playtesting
+and polish, not a new gameplay phase.
 
 ## Explicitly out of scope
 
