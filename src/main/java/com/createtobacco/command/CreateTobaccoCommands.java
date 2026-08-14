@@ -8,6 +8,7 @@ import com.createtobacco.registry.ModEffects;
 import com.createtobacco.smoking.CoughingSystem;
 import com.createtobacco.smoking.EnderRoulette;
 import com.createtobacco.smoking.SmokingEffects;
+import com.createtobacco.smoking.SmokingBalance;
 import com.createtobacco.smoking.SmokingProduct;
 import com.createtobacco.smoking.WithdrawalSystem;
 import com.mojang.brigadier.CommandDispatcher;
@@ -38,7 +39,6 @@ public final class CreateTobaccoCommands {
             SmokingProduct.CREPERFIELD,
             SmokingProduct.CHUNKMAN,
             SmokingProduct.PIGLIAMENT,
-            SmokingProduct.ROTHMINES,
             SmokingProduct.BEDROMORKANAL,
             SmokingProduct.STONEO_Y_GLOWLIETA
     );
@@ -121,7 +121,7 @@ public final class CreateTobaccoCommands {
     private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> productArgument() {
         String[] products = {
                 "marlbore_red", "winstone_blue", "creperfield", "chunkman",
-                "pigliament", "rothmines", "bedromorkanal", "stoneo_y_glowlieta"
+                "pigliament", "bedromorkanal", "stoneo_y_glowlieta"
         };
         return Commands.argument("product", StringArgumentType.word())
                 .suggests((context, builder) -> SharedSuggestionProvider.suggest(products, builder));
@@ -137,7 +137,6 @@ public final class CreateTobaccoCommands {
         WithdrawalTier activeTier = withdrawal == null
                 ? WithdrawalTier.NONE
                 : WithdrawalTier.fromAmplifier(withdrawal.getAmplifier());
-        int reliefRequired = withdrawal == null ? 0 : activeTier.reliefPuffsRequired();
 
         send(source, "Smoking status: " + player.getGameProfile().getName());
         send(source, String.format(Locale.ROOT, "Dependence: %.3f / 100 (%s)", data.dependence(), tier));
@@ -148,7 +147,8 @@ public final class CreateTobaccoCommands {
                 + (withdrawal == null ? "" : " (" + formatTicks(withdrawal.getDuration()) + ")"));
         send(source, "Next episode: " + (data.withdrawalEpisodeIsScheduled()
                 ? formatTicks(data.ticksUntilNextWithdrawalEpisode()) : "not scheduled"));
-        send(source, "Relief puffs: " + data.withdrawalReliefPuffs() + " / " + reliefRequired);
+        send(source, "Relief puffs this episode: " + data.withdrawalReliefPuffs()
+                + (withdrawal == null ? "" : " (each successful puff lowers Withdrawal by one tier)"));
         send(source, "Cough check: " + (data.coughCheckIsScheduled()
                 ? formatTicks(data.ticksUntilNextCoughCheck()) : "not scheduled"));
         return 1;
@@ -198,8 +198,28 @@ public final class CreateTobaccoCommands {
             return 0;
         }
         if (tier == WithdrawalTier.NONE) return 0;
-        WithdrawalSystem.trigger(player, data(player), tier, false);
-        send(context.getSource(), "Triggered " + tier + " Withdrawal for " + player.getGameProfile().getName());
+
+        // Debug trigger prepares a production-valid craving state first. Without
+        // this, the normal server tick correctly clears a manually injected
+        // Withdrawal effect immediately when dependence/safe time are too low.
+        SmokingData data = data(player);
+        float minimumDependence = switch (tier) {
+            case MILD -> SmokingBalance.MILD_DEPENDENCE;
+            case MODERATE -> SmokingBalance.MODERATE_DEPENDENCE;
+            case HIGH -> SmokingBalance.HIGH_DEPENDENCE;
+            case SEVERE -> SmokingBalance.SEVERE_DEPENDENCE;
+            case NONE -> 0.0F;
+        };
+        if (data.dependence() < minimumDependence) {
+            data.setDependence(minimumDependence);
+        }
+        if (data.activeTicksSinceSatisfied() < tier.safeIntervalTicks()) {
+            data.setActiveTicksSinceSatisfied(tier.safeIntervalTicks());
+        }
+
+        WithdrawalSystem.trigger(player, data, tier, false);
+        send(context.getSource(), "Triggered persistent " + tier + " Withdrawal for "
+                + player.getGameProfile().getName() + " (debug state prepared)");
         return 1;
     }
 

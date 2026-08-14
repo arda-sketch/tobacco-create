@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "minecraft:meadow",
+    "minecraft:windswept_hills",
+    "minecraft:windswept_forest",
+    "minecraft:savanna",
+    "minecraft:savanna_plateau"
+  ],
+  "features": "create_tobacco:wild_burley_tobacco",
+  "step": "vegetal_decoration"
+}

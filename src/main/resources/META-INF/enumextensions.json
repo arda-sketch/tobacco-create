@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+      "name": "CREATE_TOBACCO_SMOKING",
+      "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+      "parameters": {
+        "class": "com/createtobacco/client/SmokingArmPoseParameters",
+        "field": "SMOKING_POSE"
+      }
+    }
+  ]
+}

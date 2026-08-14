@@ -19,6 +19,10 @@ public final class SmokingBalance {
     public static final long DEPENDENCE_DECAY_INTERVAL_TICKS = hours(1);
     public static final float DEPENDENCE_DECAY_PER_INTERVAL = 2.5F;
     public static final int PUFF_USE_DURATION_TICKS = 24;
+    // A lit cigarette/cigar smoulders even when the player is not puffing it.
+    // Natural burn consumes one puff at each interval but grants no benefits.
+    public static final int CIGARETTE_NATURAL_BURN_INTERVAL_TICKS = seconds(60);
+    public static final int CIGAR_NATURAL_BURN_INTERVAL_TICKS = seconds(90);
 
     public static final float STANDARD_RUSH_DAMAGE_REDUCTION = 0.05F;
     public static final float PREMIUM_RUSH_DAMAGE_REDUCTION = 0.05F;
@@ -34,7 +38,6 @@ public final class SmokingBalance {
     public static final SmokingProfile BEDROMORKANAL = cigarette(0.9F, minutes(5), 0, 0.05D, 0.6F, 0.15F);
     public static final SmokingProfile MINECRISTO_NO_1 = cigar(1.6F, minutes(8), 1, 0.10D, 1.0F, 0.0F);
     public static final SmokingProfile STONEO_Y_GLOWLIETA = cigar(1.4F, minutes(7), 0, 0.05D, 0.9F, 0.30F);
-    public static final SmokingProfile COBBLIBA_MADURO = cigar(1.4F, minutes(7), 0, 0.05D, 0.9F, 0.0F);
 
     public static final int MARLBORE_HASTE_TICKS = seconds(20);
     public static final int MARLBORE_HASTE_AMPLIFIER = 0;
@@ -42,9 +45,9 @@ public final class SmokingBalance {
     public static final int WINSTONE_MAX_RAW_XP = 2;
     public static final int MICROBLAST_BUFF_TICKS = seconds(10);
     public static final int MICROBLAST_BUFF_AMPLIFIER = 1;
-    public static final double MICROBLAST_RADIUS = 3.25D;
-    public static final double MICROBLAST_KNOCKBACK = 0.42D;
-    public static final double MICROBLAST_VERTICAL_KNOCKBACK = 0.12D;
+    public static final double MICROBLAST_RADIUS = 5.0D;
+    public static final double MICROBLAST_KNOCKBACK = 0.60D;
+    public static final double MICROBLAST_VERTICAL_KNOCKBACK = 0.16D;
     public static final int CHUNKMAN_FOOD = 1;
     public static final float CHUNKMAN_SATURATION = 0.5F;
     public static final int PIGLIAMENT_RESISTANCE_TICKS = seconds(10);
@@ -82,16 +85,16 @@ public final class SmokingBalance {
     public static final WithdrawalProfile NO_WITHDRAWAL =
             new WithdrawalProfile(0L, 0, 0, 0, 0, 0.0F, 0.0D, 0.0D, 0.0F);
     public static final WithdrawalProfile MILD_WITHDRAWAL =
-            new WithdrawalProfile(minutes(40), minutes(6), minutes(10), seconds(30), 2,
+            new WithdrawalProfile(minutes(40), minutes(6), minutes(10), seconds(30), 1,
                     0.05F, -0.03D, -0.05D, 0.05F);
     public static final WithdrawalProfile MODERATE_WITHDRAWAL =
-            new WithdrawalProfile(minutes(30), minutes(4), minutes(7), seconds(40), 3,
+            new WithdrawalProfile(minutes(30), minutes(4), minutes(7), seconds(40), 2,
                     0.15F, -0.05D, -0.08D, 0.10F);
     public static final WithdrawalProfile HIGH_WITHDRAWAL =
-            new WithdrawalProfile(minutes(20), minutes(3), minutes(5), seconds(50), 4,
+            new WithdrawalProfile(minutes(20), minutes(3), minutes(5), seconds(50), 3,
                     0.25F, -0.07D, -0.12D, 0.18F);
     public static final WithdrawalProfile SEVERE_WITHDRAWAL =
-            new WithdrawalProfile(minutes(15), minutes(2), minutes(4), seconds(60), 5,
+            new WithdrawalProfile(minutes(15), minutes(2), minutes(4), seconds(60), 4,
                     0.35F, -0.10D, -0.15D, 0.28F);
 
     private SmokingBalance() {
@@ -110,7 +113,6 @@ public final class SmokingBalance {
             case BEDROMORKANAL -> BEDROMORKANAL;
             case MINECRISTO_NO_1 -> MINECRISTO_NO_1;
             case STONEO_Y_GLOWLIETA -> STONEO_Y_GLOWLIETA;
-            case COBBLIBA_MADURO -> COBBLIBA_MADURO;
         };
     }
 

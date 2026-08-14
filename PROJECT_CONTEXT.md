@@ -14,7 +14,7 @@
 
 ## Current phase
 
-Phase 16 — Balance consolidation and V1 playtesting support.
+V1 Polish 02 — wild-tobacco ecology, smoking animation stability, Withdrawal relief, and Microblast tuning.
 
 The Phase 0 skeleton loads with Create on both the development client and the
 dedicated development server. Phase 1 added the requested basic items,
@@ -28,9 +28,9 @@ Creperfield, Craftmel, Chunkman, KEnd, Pigliament, Rothmines, and
 Bedromorkanal.
 
 Mechanical Mixing produces prepared tobacco blends only. Cigarette Paper and
-Cigarette Filters are not mixing ingredients. A later Phase 5 will combine
+Cigarette Filters are not mixing ingredients. Finished cigarettes combine
 Paper, one Prepared Tobacco Blend, and a Filter through Create Sequenced
-Assembly to make a finished cigarette.
+Assembly.
 
 Phase 5 registers nine non-smokable finished `CigaretteItem` products and
 assembles each through one-pass Create Sequenced Assembly: Cigarette Paper,
@@ -40,33 +40,42 @@ nine recipes share one hidden `incomplete_cigarette`; Create's sequenced
 assembly data component binds it to the selected brand recipe after step one.
 
 Phase 6 adds a separate cigar production chain. Four Cured Havana Leaves plus
-250 mB Water compact into a Fermented Havana Tobacco Bundle. Three Cured
-Havana Leaves, one Cured Burley Leaf, and 250 mB Water compact into a Mixed
-Fermented Tobacco Bundle. Sawing produces `cigar_filler` or
-`mixed_cigar_filler`; pressing one Cured Havana Leaf produces a Cigar Wrapper.
-Minecristo No. 1 deploys Havana filler onto the wrapper and presses it;
-Cobbliba Maduro deploys mixed filler and presses it. Both assemblies use one
-hidden `incomplete_cigar`, one Deployer, one Press, and no loops.
+250 mB Water compact into a Fermented Havana Tobacco Bundle. Sawing produces
+`cigar_filler`; pressing one Cured Havana Leaf produces a Cigar Wrapper.
+Minecristo No. 1 deploys Havana filler onto the wrapper and presses it.
+Stoneo y Glowlieta first mixes Cigar Filler with Glowstone Dust to create
+`glowstone_cigar_filler`, then uses the same one-Deployer/one-Press assembly.
+The abandoned Cobbliba/Mixed Filler development chain has been removed.
 
 Phase 7 introduces the immutable `SmokingItemState` data component with
-`remainingPuffs` and `lit`. Finished cigarettes default to five puffs and
-finished cigars to eight; both default to unlit and are non-stackable because
-the state belongs to each ItemStack. `AbstractSmokingItem` provides shared
-server-authoritative ignition and puff consumption. An unlit smoking item can
-only be ignited with vanilla Flint and Steel held in the other hand; ignition
-damages it once and produces a small sound/particle effect. A lit item requires
-24 ticks (1.2 seconds) of uninterrupted use per puff. Early release consumes
-nothing, successful completion decrements the data component, and the final
-puff removes the item without producing a butt.
+`remainingPuffs`, `lit`, and `burnTicksRemaining`. Finished cigarettes default
+to five puffs and finished cigars to eight; both default to unlit and are
+non-stackable because the state belongs to each ItemStack.
+`AbstractSmokingItem` provides shared server-authoritative ignition and puff
+consumption. An unlit smoking item can only be ignited with vanilla Flint and
+Steel held in the other hand; ignition damages it once and starts its natural
+smoulder timer. A lit item requires 24 ticks (1.2 seconds) of uninterrupted use
+per puff. Early release consumes nothing, successful completion decrements the
+data component and refreshes the smoulder interval, and the final puff removes
+the item without producing a butt. Passive smouldering consumes one puff per
+60 seconds for cigarettes and 90 seconds for cigars while the smoking item is
+in a player's ordinary inventory. Passive burn pauses during an active manual
+puff, so the same interval cannot naturally expire and also be consumed by the
+manual completion. Passive burn never grants dependence, Withdrawal relief,
+brand procs, or completion rewards.
 
 Phase 8 registers a custom translucent `tobacco_smoke` particle backed by the
 eight vanilla animated smoke sprites. Successful server-authoritative puffs
-send a small cloud near the player's mouth. While a lit item is actively held
+send a larger cloud near the player's mouth. While a lit item is actively held
 in its 24-tick use action, the client creates a sparse local wisp near the used
-hand without continuous networking. Smoking keeps the vanilla `DRINK` use
-animation so first-person and tracked third-person players use Minecraft's
-normal synchronized use-item pose. Position constants live in
-`AbstractSmokingItem` for later visual tuning.
+hand without continuous networking. Smoking uses `UseAnim.NONE` plus a
+client-item extension. First person smoothly brings the item toward the mouth
+and rotates the cigarette silhouette horizontally, then holds a stable pose.
+Third person uses a dedicated NeoForge-extended `CREATE_TOBACCO_SMOKING`
+`HumanoidModel.ArmPose` instead of borrowing the vanilla horn pose. Component
+updates from natural smouldering do not trigger a hand re-equip animation, and
+active use may continue when only the smoking-state component changes. No
+GeckoLib dependency is used.
 
 Phase 9 adds persistent player `SmokingData` through NeoForge 1.21.1 Data
 Attachments. Its codec stores dependence, active satisfaction time, decay
@@ -77,9 +86,10 @@ clamped to 0–100. Each cigarette puff adds 0.18 dependence (0.9 total), while
 each cigar puff adds 0.175 (1.4 total). Only the final puff resets
 `activeTicksSinceSatisfied`, adds completion exhaustion, and replaces Nicotine
 Rush with a fresh duration: 6,000 ticks for cigarettes or 8,400 for cigars.
-Nicotine Rush grants 5% movement speed and its separate server damage hook
-reduces incoming damage by 5%. Withdrawal episodes and brand-specific effects
-remain unimplemented.
+Nicotine Rush grants 5% movement speed for the standard profile and its
+separate server damage hook reduces incoming damage by the profile value.
+Withdrawal episodes and brand-specific effects are implemented in later
+sections below.
 
 Phase 10 adds a server-side episodic Withdrawal scheduler. Dependence tiers are
 none below 20, Mild at 20–39.999, Moderate at 40–59.999, High at 60–79.999,
@@ -89,9 +99,12 @@ randomizes every episode interval: 6–10, 4–7, 3–5, or 2–4 minutes. Withd
 is applied only for an episode (30/40/50/60 seconds), with exact movement
 penalties of 3/5/7/10% and block-breaking penalties of 5/8/12/15%. Episode
 starts have a tier-based 5/15/25/35% chance of 3–5 seconds of vanilla Nausea.
-Successful puffs count relief only while Withdrawal is active; 2/3/4/5 puffs
-remove the current episode without resetting `activeTicksSinceSatisfied`.
-Completing the whole item still performs the only satisfaction reset.
+Successful puffs relieve an active Withdrawal episode immediately by one
+visible tier per puff: Severe IV -> High III -> Moderate II -> Mild I -> clear.
+The remaining episode duration is preserved while its amplifier is lowered;
+Nausea is rolled only when an episode starts, not on downgrade. Puff relief does
+not reset `activeTicksSinceSatisfied`; completing the whole item still performs
+the only satisfaction reset.
 
 Lit smoking items now use Minecraft's built-in item bar to show the remaining
 puff ratio, and their tooltip shows the exact current/default puff count. This
@@ -105,7 +118,7 @@ design is now final for this phase:
 - MarlbOre Red: Redstone; 25% per puff for Haste I (20 seconds).
 - WinStone Blue: Lapis; 35% per puff for 1–2 raw experience points.
 - Creperfield: Gunpowder; 10% per puff for a non-destructive Microblast. It
-  plays sound/particles, moderately pushes living entities within 3.25 blocks,
+  plays sound/particles, moderately pushes living entities within 5.0 blocks,
   and grants the smoker Speed II plus Haste II for 10 seconds. It never creates
   an explosion, block damage, fire, or direct damage.
 - Craftmel: basic/light; no proc, 0.7 total dependence, 4-minute Nicotine Rush.
@@ -128,27 +141,29 @@ use safely, plays a sound and smoke, and applies Slowness I for five seconds;
 it causes no damage and does not modify dependence. The cough timer is part of
 the persistent player attachment and never advances while offline.
 
-`cobbliba_maduro` remains registered only for compatibility with existing
-development worlds, but it is no longer in the active creative cigar roster.
+Phase 12 originally introduced a generic data-driven pack, but V1 Polish 01
+replaces that design because ten non-stackable cigarettes cannot physically
+fit into a Create Basin alongside the Empty Pack. Packaging is now
+brand-specific. `empty_cigarette_pack` remains a shared input, while nine
+finished pack items (`<brand>_pack`) each store only an immutable remaining
+count 1–10; the pack item itself defines the cigarette type.
 
-Phase 12 adds `empty_cigarette_pack` and one generic `cigarette_pack`. Pack
-contents are an immutable, persistent, network-synchronized Data Component
-containing a validated finished-cigarette registry ID and count 1–10. Only the
-nine active cigarette products are accepted; cigars and unknown IDs are
-rejected. Packs never mix brands and are non-stackable while populated.
+Each full pack is made in a 4x3 Create Mechanical Crafting grid from ten full,
+unlit cigarettes of the matching brand, one Empty Cigarette Pack, and one
+brand dye. The fixed dye map is MarlbOre Red=red, WinStone Blue=blue,
+Creperfield=lime, Craftmel=orange, Chunkman=brown, KEnd=purple,
+Pigliament=yellow, Rothmines=black, and Bedromorkanal=light blue. Cigars are
+never valid pack contents. Right-click extraction remains
+server-authoritative: exactly one fresh cigarette is inserted into player
+inventory before count is decremented, and count one converts to an Empty Pack.
+The `Pack It Up` advancement accepts any brand pack at count 10.
 
-Create Cardboard is pressed into two Empty Cigarette Packs. Nine Create 6.0.10
-compacting recipes each consume one Empty Pack and ten identical, full, unlit
-finished cigarettes. Data-component ingredients reject lit or partially used
-cigarettes, preventing puff restoration through repacking. Recipe outputs set
-the generic pack's brand/count component directly, so no custom machine or
-custom recipe serializer is necessary. Basin automation remains compatible
-with belts, funnels, chutes, and Mechanical Arms.
-
-Right-click extraction is server-authoritative. The pack first attempts to add
-exactly one fresh saved-brand cigarette to inventory; only a successful full
-insert decrements the component. Count one converts atomically into an Empty
-Pack. Tooltip shows the stored cigarette display name and `count / 10`.
+V1 Polish 01 also adds a non-placeable `cigarette_case` portable container.
+Right-click opens a 5x3 (15 slot) menu. Slots accept only the nine active
+cigarettes and two active cigars, including lit and partially smoked ItemStacks,
+so their Data Components are preserved. The case stores its inventory through
+the vanilla `minecraft:container` Data Component. Natural smouldering is paused
+while a smoking item is nested inside the closed case.
 
 Phase 13 adds the operator-only `/createtobacco` development command tree
 (permission level 2). `status` reports exact dependence/tier, active elapsed
@@ -169,8 +184,8 @@ Phase 14 adds a compact four-entry advancement branch. `Golden Leaf` is
 awarded for obtaining any cured Virginia, Burley, or Havana leaf, and
 `Industrial Habit` for obtaining any of the nine active finished cigarettes.
 Both use vanilla `inventory_changed` criteria. `Pack It Up` uses a dedicated
-server criterion and is awarded only while a generic Cigarette Pack actually
-contains a validated pack component with count 10; Empty Packs and partial
+server criterion and is awarded only while any brand-specific Cigarette Pack
+contains a validated count component of 10; Empty Packs and partial
 packs do not qualify. `Smoke and Gears` is fired from the common final-puff
 completion handler only for the nine active cigarettes, Minecristo No. 1, or
 Stoneo y Glowlieta. Ignition, item acquisition, and partial smoking never fire
@@ -220,12 +235,33 @@ interactions that should be observed before any future balance changes. Phase
 16 is the V1 feature-complete boundary; subsequent work is manual playtesting
 and polish, not a new gameplay phase.
 
+## V1 Polish 02 survival/worldgen and crop economy
+
+Three separate wild tobacco blocks provide the survival entry point:
+`wild_virginia_tobacco`, `wild_burley_tobacco`, and `wild_havana_tobacco`.
+Each is a true two-block `DoublePlantBlock` with lower/upper visual halves,
+separate from the compact one-block cultivated crop. Virginia targets temperate
+plains/forest biomes, Burley targets meadow/windswept/savanna biomes, and Havana
+targets jungle biomes. Their placed-feature rarity filters are currently 42,
+50, and 30 respectively. A patch still appears as a recognizable local colony,
+but colonies are much less common than in Polish 01. Each candidate re-resolves
+its local `MOTION_BLOCKING_NO_LEAVES` surface before placing both halves, avoiding
+the old one-block-depression effect and reducing jungle canopy placement.
+
+Breaking a wild plant always yields its matching seed, has a 25% chance for a
+second seed, and a 65% chance for one Fresh Leaf. Wild plants are therefore a
+useful discovery reward but are still primarily the entry point to farming. A
+mature cultivated crop yields two Fresh Leaves guaranteed, has a 35% chance for
+a third Fresh Leaf, always returns one seed, and has a 35% chance for a second
+seed. Immature cultivated crops still return their planted seed. Millstone
+yields are unchanged; the economy increase is deliberately placed at the farm
+harvest stage rather than multiplied again during processing.
+
 ## Explicitly out of scope
 
-Do not implement wild tobacco world generation, new machines or blocks,
-custom ignition tools, cigarette
+Do not implement new processing machines, custom ignition tools, cigarette
 butts, additional cigarette products, or additional cigars before a later
-phase explicitly starts.
+explicit design decision.
 
 ## Verification
 

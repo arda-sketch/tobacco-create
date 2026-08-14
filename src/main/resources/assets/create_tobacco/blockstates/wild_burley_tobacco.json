@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "create_tobacco:block/wild_burley_tobacco_bottom"
+    },
+    "half=upper": {
+      "model": "create_tobacco:block/wild_burley_tobacco_top"
+    }
+  }
+}

@@ -12,11 +12,11 @@
       "projectName": "CreateTobacco",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@E:\\MinecraftModding\\CreateTobacco\\build\\moddev\\clientRunProgramArgs.txt"
+        "@F:\\MinecraftModding\\CreateTobacco\\build\\moddev\\clientRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@E:\\MinecraftModding\\CreateTobacco\\build\\moddev\\clientRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcreate_tobacco%%E:\\MinecraftModding\\CreateTobacco\\bin\\main"
+        "@F:\\MinecraftModding\\CreateTobacco\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreate_tobacco%%F:\\MinecraftModding\\CreateTobacco\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\runs\\client",
       "env": {},
@@ -34,11 +34,11 @@
       "projectName": "CreateTobacco",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@E:\\MinecraftModding\\CreateTobacco\\build\\moddev\\dataRunProgramArgs.txt"
+        "@F:\\MinecraftModding\\CreateTobacco\\build\\moddev\\dataRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@E:\\MinecraftModding\\CreateTobacco\\build\\moddev\\dataRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcreate_tobacco%%E:\\MinecraftModding\\CreateTobacco\\bin\\main"
+        "@F:\\MinecraftModding\\CreateTobacco\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreate_tobacco%%F:\\MinecraftModding\\CreateTobacco\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\runs\\data",
       "env": {},
@@ -56,11 +56,11 @@
       "projectName": "CreateTobacco",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@E:\\MinecraftModding\\CreateTobacco\\build\\moddev\\gameTestServerRunProgramArgs.txt"
+        "@F:\\MinecraftModding\\CreateTobacco\\build\\moddev\\gameTestServerRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@E:\\MinecraftModding\\CreateTobacco\\build\\moddev\\gameTestServerRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcreate_tobacco%%E:\\MinecraftModding\\CreateTobacco\\bin\\main"
+        "@F:\\MinecraftModding\\CreateTobacco\\build\\moddev\\gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreate_tobacco%%F:\\MinecraftModding\\CreateTobacco\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\runs\\gameTestServer",
       "env": {},
@@ -78,11 +78,11 @@
       "projectName": "CreateTobacco",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@E:\\MinecraftModding\\CreateTobacco\\build\\moddev\\serverRunProgramArgs.txt"
+        "@F:\\MinecraftModding\\CreateTobacco\\build\\moddev\\serverRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@E:\\MinecraftModding\\CreateTobacco\\build\\moddev\\serverRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcreate_tobacco%%E:\\MinecraftModding\\CreateTobacco\\bin\\main"
+        "@F:\\MinecraftModding\\CreateTobacco\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreate_tobacco%%F:\\MinecraftModding\\CreateTobacco\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\runs\\server",
       "env": {},

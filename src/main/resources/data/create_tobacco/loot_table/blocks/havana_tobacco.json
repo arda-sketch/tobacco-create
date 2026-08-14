@@ -33,6 +33,46 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "create_tobacco:fresh_havana_leaf"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "create_tobacco:havana_tobacco",
+          "properties": {
+            "age": "7"
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "create_tobacco:fresh_havana_leaf"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "create_tobacco:havana_tobacco",
+          "properties": {
+            "age": "7"
+          }
+        },
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.35
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "name": "create_tobacco:havana_seeds"
         }
       ],
@@ -46,7 +86,7 @@
         },
         {
           "condition": "minecraft:random_chance",
-          "chance": 0.5
+          "chance": 0.35
         }
       ]
     }

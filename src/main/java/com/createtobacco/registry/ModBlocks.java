@@ -3,6 +3,7 @@ package com.createtobacco.registry;
 import com.createtobacco.CreateTobacco;
 import com.createtobacco.block.TobaccoCropBlock;
 import com.createtobacco.block.TobaccoVariety;
+import com.createtobacco.block.WildTobaccoBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
@@ -19,6 +20,10 @@ public final class ModBlocks {
     public static final DeferredBlock<TobaccoCropBlock> HAVANA_TOBACCO = registerCrop(
             "havana_tobacco", TobaccoVariety.HAVANA);
 
+    public static final DeferredBlock<WildTobaccoBlock> WILD_VIRGINIA_TOBACCO = registerWild("wild_virginia_tobacco");
+    public static final DeferredBlock<WildTobaccoBlock> WILD_BURLEY_TOBACCO = registerWild("wild_burley_tobacco");
+    public static final DeferredBlock<WildTobaccoBlock> WILD_HAVANA_TOBACCO = registerWild("wild_havana_tobacco");
+
     private ModBlocks() {
     }
 
@@ -27,6 +32,13 @@ public final class ModBlocks {
                 name,
                 properties -> new TobaccoCropBlock(variety, properties),
                 BlockBehaviour.Properties.ofFullCopy(Blocks.WHEAT));
+    }
+
+    private static DeferredBlock<WildTobaccoBlock> registerWild(String name) {
+        return BLOCKS.registerBlock(
+                name,
+                WildTobaccoBlock::new,
+                BlockBehaviour.Properties.ofFullCopy(Blocks.FERN));
     }
 
     public static void register(IEventBus modEventBus) {

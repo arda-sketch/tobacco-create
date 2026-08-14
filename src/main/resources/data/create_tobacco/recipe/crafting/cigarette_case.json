@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "BIB",
+    "LCL",
+    "BIB"
+  ],
+  "key": {
+    "B": { "item": "create:brass_sheet" },
+    "I": { "item": "minecraft:iron_nugget" },
+    "L": { "item": "minecraft:leather" },
+    "C": { "item": "minecraft:chest" }
+  },
+  "result": {
+    "id": "create_tobacco:cigarette_case",
+    "count": 1
+  }
+}

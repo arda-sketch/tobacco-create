@@ -1,0 +1,1388 @@
+diff --git a/ASSET_CHECKLIST.md b/ASSET_CHECKLIST.md
+index 9e19e1a..42c9eab 100644
+--- a/ASSET_CHECKLIST.md
++++ b/ASSET_CHECKLIST.md
+@@ -60,17 +60,22 @@ stage can be the tallest-looking of the three without changing the actual hitbox
+ Do not simply recolor one identical image for all three varieties; keep a family
+ resemblance but vary leaf shape and silhouette.
+ 
+-## B. REQUIRED — wild tobacco plants (3)
++## B. REQUIRED — wild tobacco plants (6 textures / 3 plants)
+ 
+-- `assets/create_tobacco/textures/block/wild_virginia_tobacco.png`
+-- `assets/create_tobacco/textures/block/wild_burley_tobacco.png`
+-- `assets/create_tobacco/textures/block/wild_havana_tobacco.png`
++Each wild plant is two blocks tall and therefore needs a lower and upper texture:
+ 
+-Recommended: make each wild texture recognizably related to cultivated stage7, but
+-not identical. Wild plants should look slightly irregular/bushy so a player can
+-recognize "wild source plant" instead of "mature crop growing on grass".
++- `assets/create_tobacco/textures/block/wild_virginia_tobacco_bottom.png`
++- `assets/create_tobacco/textures/block/wild_virginia_tobacco_top.png`
++- `assets/create_tobacco/textures/block/wild_burley_tobacco_bottom.png`
++- `assets/create_tobacco/textures/block/wild_burley_tobacco_top.png`
++- `assets/create_tobacco/textures/block/wild_havana_tobacco_bottom.png`
++- `assets/create_tobacco/textures/block/wild_havana_tobacco_top.png`
+ 
+-A useful rule: stage7 is the tidy farm version; wild is the uneven natural version.
++Recommended: make each wild plant recognizably related to cultivated stage7, but
++not identical. The lower half should carry the broad basal leaves and stem; the
++upper half should continue the stem with smaller upper leaves/flowering top. Wild
++plants should look irregular and naturally tall, while stage7 remains the tidy,
++compact farm version.
+ 
+ ## C. SEEDS (3) — existing, redraw if desired
+ 
+@@ -268,7 +273,7 @@ Not required for the current private playtest:
+ 
+ ## Recommended drawing order
+ 
+-1. 24 crop stages + 3 wild plants (fixes the largest visible missing-art problem).
++1. 24 crop stages + 6 wild half-textures (3 two-block plants) (fixes the largest visible missing-art problem).
+ 2. 9 finished cigarettes + 2 finished cigars.
+ 3. Empty pack + 9 brand packs + cigarette case.
+ 4. Cigar production intermediates.
+diff --git a/POLISH_02_TESTING_RU.md b/POLISH_02_TESTING_RU.md
+new file mode 100644
+index 0000000..5dfc5bf
+--- /dev/null
++++ b/POLISH_02_TESTING_RU.md
+@@ -0,0 +1,298 @@
++# Create: Tobacco — Polish 02 — чеклист тестирования
++
++Тестировать после успешного применения `CreateTobacco_V1_Polish_02.patch`.
++Не коммитить до зелёной сборки и критических проверок ниже.
++
++## 0. Сборка и запуск
++
++```powershell
++.\gradlew.bat --stop
++.\gradlew.bat build
++```
++
++Ожидается `BUILD SUCCESSFUL`.
++
++После этого:
++
++```powershell
++.\gradlew.bat runClient
++```
++
++Проверить:
++- Minecraft 1.21.1 загружается;
++- NeoForge 21.1.228 загружается;
++- Create 6.0.10 загружается;
++- Create: Tobacco загружается;
++- мир открывается без registry/datapack/enum-extension ошибки.
++
++Если клиент падает на загрузке, сначала прислать `runs/client/logs/latest.log` и
++файл из `runs/client/crash-reports`, если он появился.
++
++## 1. Дикий табак — новая двухблочная форма
++
++Worldgen проверять ТОЛЬКО в новых чанках. Лучше создать новый тестовый мир.
++
++Полезные команды:
++
++```mcfunction
++/locate biome minecraft:plains
++/locate biome minecraft:meadow
++/locate biome minecraft:jungle
++```
++
++Ожидаемые зоны:
++- Virginia: равнины/умеренные леса;
++- Burley: луга/windswept/savanna;
++- Havana: jungle/sparse jungle/bamboo jungle.
++
++Проверить для каждого сорта:
++- дикое растение имеет нижнюю и верхнюю половину;
++- высота визуально два блока;
++- верхняя и нижняя половины принадлежат одному растению;
++- сломать нижнюю половину — растение полностью исчезает и дропается один раз;
++- сломать верхнюю половину — растение полностью исчезает и дропается один раз;
++- после генерации нет «висящей» верхней половины;
++- после генерации нет одинокой нижней половины;
++- растение стоит НА поверхности, а не на один блок ниже в случайной ямке;
++- Havana не пытается массово появляться поверх листвы джунглей.
++
++Частота Polish 02:
++- Virginia: rarity 42;
++- Burley: rarity 50;
++- Havana: rarity 30 внутри более редких jungle-биомов.
++
++Оценить субъективно:
++- слишком часто;
++- хорошо;
++- слишком редко.
++
++Нужное ощущение: долго идёшь без табака -> находишь заметную локальную заросль.
++
++До отрисовки новых PNG missing texture на двух половинах ожидаема.
++
++## 2. Дроп дикого табака
++
++Сломать хотя бы 30–50 растений каждого сорта (можно тестировать командой
++`/setblock`, если worldgen слишком медленный для статистики).
++
++Ожидается с одного дикого растения:
++- 1 соответствующее семя всегда;
++- 25% шанс второго семени;
++- 65% шанс одного Fresh Leaf;
++- никогда не выпадает табак другого сорта;
++- двухблочная структура не удваивает дроп.
++
++Главная критическая проверка: одно растение не должно дать два комплекта дропа
++только потому, что оно состоит из двух блоков.
++
++## 3. Экономика выращиваемого табака
++
++Для быстрого теста:
++
++```mcfunction
++/give @s create_tobacco:virginia_seeds 32
++/give @s create_tobacco:burley_seeds 32
++/give @s create_tobacco:havana_seeds 32
++/give @s minecraft:bone_meal 64
++```
++
++Для каждого сорта:
++- посадить на farmland;
++- вырастить до age=7;
++- зрелый куст всегда даёт 2 Fresh Leaves;
++- примерно 35% зрелых кустов дают третий Fresh Leaf;
++- одно семя всегда возвращается;
++- примерно 35% зрелых кустов дают второе семя;
++- незрелое растение не даёт Fresh Leaves, но возвращает одно семя.
++
++Не менять Millstone-рецепт в этом тесте: его выход остался прежним.
++
++## 4. Дёргание зажжённого предмета
++
++```mcfunction
++/give @s create_tobacco:craftmel
++/give @s minecraft:flint_and_steel
++```
++
++Поджечь Craftmel и просто держать в руке минимум 20–30 секунд.
++
++Ожидается:
++- burn timer продолжает уменьшаться;
++- tooltip обновляется;
++- предмет НЕ делает маленький re-equip рывок каждую секунду;
++- настоящая смена hotbar-слота по-прежнему имеет обычную анимацию Minecraft.
++
++Отдельно начать затяжку около момента обновления burn timer:
++- использование не должно сбрасываться из-за изменения Data Component;
++- одна успешная затяжка снимает ровно одну puff;
++- passive burn не должен одновременно снять вторую puff во время активной затяжки.
++
++## 5. Анимация — первое лицо
++
++Использовать любую зажжённую сигарету.
++
++Ожидается:
++- первые ~6 ticks рука плавно идёт к лицу;
++- затем положение стабильно до завершения 1.2 сек;
++- предмет заметно ближе к горизонтальной ориентации;
++- нет vanilla DRINK bob;
++- после завершения рука возвращается нормально;
++- ранний отпуск не расходует puff.
++
++Записать замечания максимально конкретно:
++- слишком высоко/низко;
++- слишком близко/далеко;
++- повернуть ещё по/против часовой;
++- горизонтальность хорошая/недостаточная.
++
++## 6. Анимация — третье лицо
++
++Включить F5. Желательно также посмотреть вторым клиентом.
++
++Ожидается:
++- больше не используется визуально узнаваемая поза `TOOT_HORN`;
++- одна рука поднята к области рта;
++- поза не дёргается;
++- другой игрок видит её во время фактического использования;
++- когда игрок не курит, обычная поза руки возвращается.
++
++Особенно проверить правую и левую руку, если используешь сигарету в off-hand.
++
++## 7. Постепенное облегчение Withdrawal
++
++```mcfunction
++/createtobacco reset @s
++/createtobacco withdrawal trigger @s severe
++/effect list @s
++```
++
++Должен появиться Withdrawal IV.
++
++Взять зажжённую сигарету и сделать четыре успешные затяжки по одной, проверяя
++`/effect list @s` после каждой:
++
++1. Severe / Withdrawal IV
++2. после первой puff -> Withdrawal III
++3. после второй puff -> Withdrawal II
++4. после третьей puff -> Withdrawal I
++5. после четвёртой puff -> Withdrawal исчезает
++
++Важно:
++- duration не должен каждый раз начинаться заново с 60 секунд;
++- Nausea не должна заново роллиться при снижении уровня;
++- частично снятая Withdrawal не сбрасывает craving timer;
++- только ПОЛНОЕ выкуривание предмета сбрасывает `activeTicksSinceSatisfied`.
++
++Проверить:
++
++```mcfunction
++/createtobacco status @s
++```
++
++## 8. Creperfield Microblast Polish 02
++
++```mcfunction
++/createtobacco effect trigger @s creperfield
++```
++
++Проверить рядом с мобами на расстояниях примерно 2, 4 и 5 блоков.
++
++Ожидается:
++- радиус воздействия около 5 блоков;
++- knockback немного сильнее Polish 01;
++- частиц заметно меньше;
++- визуальный взрыв не выглядит намного больше фактического радиуса;
++- блоки не ломаются;
++- огонь не создаётся;
++- smoker не получает explosion damage;
++- Create belts/storage/contraptions не повреждаются;
++- Speed II + Haste II остаются прежними.
++
++## 9. Natural smouldering regression
++
++Поджечь сигарету и оставить в обычном inventory:
++- одна natural puff примерно за 60 секунд;
++- сигара примерно за 90 секунд;
++- natural burn не даёт brand proc;
++- natural burn не даёт dependence;
++- natural burn не уменьшает Withdrawal;
++- natural burn не выдаёт completion reward.
++
++Положить зажжённый предмет в Портсигар:
++- закрыть Портсигар;
++- подождать;
++- burn timer внутри не должен идти (дизайн Polish 01 сохранён).
++
++## 10. Пачки и Портсигар — короткий regression
++
++Полную производственную проверку повторять необязательно, если Polish 01 уже был
++пройден. Достаточно:
++- скрафтить одну бренд-пачку Mechanical Crafting 4x3;
++- извлечь одну сигарету;
++- открыть Портсигар;
++- положить fresh, partial и lit smoking item;
++- закрыть/открыть;
++- компоненты сохранены;
++- 15 слотов на месте.
++
++## 11. RNG regression
++
++Никакие изменения Polish 02 не должны переносить random roll в `onUseTick`.
++
++Проверить:
++- раннее отпускание не вызывает proc;
++- один successful puff даёт максимум один roll;
++- Creperfield/KEnd/Bedromorkanal не прокают многократно от одного удержания.
++
++Для функциональной проверки по-прежнему использовать debug-команды.
++
++## 12. Dedicated server smoke test
++
++```powershell
++.\gradlew.bat runServer
++```
++
++Проверить с клиентом:
++- мир загружается с enum extension в mod metadata;
++- dedicated server не пытается загрузить client-only HumanoidModel классы;
++- wild worldgen работает в новых чанках;
++- Withdrawal downgrade работает;
++- Creperfield работает;
++- Портсигар открывается и сохраняется;
++- server log не содержит client-class linkage error.
++
++## 13. Если снова случится краш
++
++Сразу после краша НЕ перезаписывать/удалять `runs/client`.
++
++Проверить:
++
++```powershell
++Get-ChildItem .\runs\client\crash-reports -File -ErrorAction SilentlyContinue |
++    Sort-Object LastWriteTime -Descending |
++    Select-Object -First 10 Name,LastWriteTime,Length
++
++Get-ChildItem .\runs\client\logs -File -ErrorAction SilentlyContinue |
++    Sort-Object LastWriteTime -Descending |
++    Select-Object -First 15 Name,LastWriteTime,Length
++
++Get-ChildItem . -Recurse -File -Filter "hs_err_pid*.log" -ErrorAction SilentlyContinue |
++    Sort-Object LastWriteTime -Descending |
++    Select-Object -First 10 FullName,LastWriteTime,Length
++```
++
++Прислать:
++1. самый свежий `crash-*.txt`, если он есть;
++2. `runs/client/logs/latest.log`;
++3. если `latest.log` уже от следующего запуска — приложить предыдущий `.log.gz`;
++4. `hs_err_pid*.log`, если такой появился.
++
++## 14. Коммит только после проверки
++
++Если сборка, клиент и критические пункты зелёные:
++
++```powershell
++git status
++git add .
++git commit -m "V1 polish: refine wild tobacco and smoking feedback"
++```
+diff --git a/PROJECT_CONTEXT.md b/PROJECT_CONTEXT.md
+index 67a3e8c..ea46fab 100644
+--- a/PROJECT_CONTEXT.md
++++ b/PROJECT_CONTEXT.md
+@@ -14,7 +14,7 @@
+ 
+ ## Current phase
+ 
+-V1 Polish 01 — release blockers, survival acquisition, packaging, portable storage, and smoking UX.
++V1 Polish 02 — wild-tobacco ecology, smoking animation stability, Withdrawal relief, and Microblast tuning.
+ 
+ The Phase 0 skeleton loads with Create on both the development client and the
+ dedicated development server. Phase 1 added the requested basic items,
+@@ -59,17 +59,23 @@ per puff. Early release consumes nothing, successful completion decrements the
+ data component and refreshes the smoulder interval, and the final puff removes
+ the item without producing a butt. Passive smouldering consumes one puff per
+ 60 seconds for cigarettes and 90 seconds for cigars while the smoking item is
+-in a player's ordinary inventory; passive burn never grants dependence,
+-Withdrawal relief, brand procs, or completion rewards.
++in a player's ordinary inventory. Passive burn pauses during an active manual
++puff, so the same interval cannot naturally expire and also be consumed by the
++manual completion. Passive burn never grants dependence, Withdrawal relief,
++brand procs, or completion rewards.
+ 
+ Phase 8 registers a custom translucent `tobacco_smoke` particle backed by the
+ eight vanilla animated smoke sprites. Successful server-authoritative puffs
+ send a larger cloud near the player's mouth. While a lit item is actively held
+ in its 24-tick use action, the client creates a sparse local wisp near the used
+ hand without continuous networking. Smoking uses `UseAnim.NONE` plus a
+-client-item extension: first person receives a smooth hand-to-mouth transform,
+-while third person uses an explicit one-arm mouth pose visible to tracked
+-players. No GeckoLib dependency is used.
++client-item extension. First person smoothly brings the item toward the mouth
++and rotates the cigarette silhouette horizontally, then holds a stable pose.
++Third person uses a dedicated NeoForge-extended `CREATE_TOBACCO_SMOKING`
++`HumanoidModel.ArmPose` instead of borrowing the vanilla horn pose. Component
++updates from natural smouldering do not trigger a hand re-equip animation, and
++active use may continue when only the smoking-state component changes. No
++GeckoLib dependency is used.
+ 
+ Phase 9 adds persistent player `SmokingData` through NeoForge 1.21.1 Data
+ Attachments. Its codec stores dependence, active satisfaction time, decay
+@@ -93,9 +99,12 @@ randomizes every episode interval: 6–10, 4–7, 3–5, or 2–4 minutes. Withd
+ is applied only for an episode (30/40/50/60 seconds), with exact movement
+ penalties of 3/5/7/10% and block-breaking penalties of 5/8/12/15%. Episode
+ starts have a tier-based 5/15/25/35% chance of 3–5 seconds of vanilla Nausea.
+-Successful puffs count relief only while Withdrawal is active; 2/3/4/5 puffs
+-remove the current episode without resetting `activeTicksSinceSatisfied`.
+-Completing the whole item still performs the only satisfaction reset.
++Successful puffs relieve an active Withdrawal episode immediately by one
++visible tier per puff: Severe IV -> High III -> Moderate II -> Mild I -> clear.
++The remaining episode duration is preserved while its amplifier is lowered;
++Nausea is rolled only when an episode starts, not on downgrade. Puff relief does
++not reset `activeTicksSinceSatisfied`; completing the whole item still performs
++the only satisfaction reset.
+ 
+ Lit smoking items now use Minecraft's built-in item bar to show the remaining
+ puff ratio, and their tooltip shows the exact current/default puff count. This
+@@ -109,7 +118,7 @@ design is now final for this phase:
+ - MarlbOre Red: Redstone; 25% per puff for Haste I (20 seconds).
+ - WinStone Blue: Lapis; 35% per puff for 1–2 raw experience points.
+ - Creperfield: Gunpowder; 10% per puff for a non-destructive Microblast. It
+-  plays sound/particles, moderately pushes living entities within 4.5 blocks,
++  plays sound/particles, moderately pushes living entities within 5.0 blocks,
+   and grants the smoker Speed II plus Haste II for 10 seconds. It never creates
+   an explosion, block damage, fire, or direct damage.
+ - Craftmel: basic/light; no proc, 0.7 total dependence, 4-minute Nicotine Rush.
+@@ -226,15 +235,27 @@ interactions that should be observed before any future balance changes. Phase
+ 16 is the V1 feature-complete boundary; subsequent work is manual playtesting
+ and polish, not a new gameplay phase.
+ 
+-## V1 Polish 01 survival/worldgen
++## V1 Polish 02 survival/worldgen and crop economy
+ 
+-Three separate non-crop wild tobacco blocks provide the survival entry point:
++Three separate wild tobacco blocks provide the survival entry point:
+ `wild_virginia_tobacco`, `wild_burley_tobacco`, and `wild_havana_tobacco`.
+-They have independent data-driven worldgen. Virginia targets temperate
+-plains/forest biomes, Burley targets meadow/windswept/savanna biomes, and
+-Havana targets jungle biomes. Breaking a wild plant always yields its seed,
+-has a 50% chance for a second seed, and a 25% chance for one fresh leaf.
+-Worldgen rarity is provisional and must be judged in newly generated chunks.
++Each is a true two-block `DoublePlantBlock` with lower/upper visual halves,
++separate from the compact one-block cultivated crop. Virginia targets temperate
++plains/forest biomes, Burley targets meadow/windswept/savanna biomes, and Havana
++targets jungle biomes. Their placed-feature rarity filters are currently 42,
++50, and 30 respectively. A patch still appears as a recognizable local colony,
++but colonies are much less common than in Polish 01. Each candidate re-resolves
++its local `MOTION_BLOCKING_NO_LEAVES` surface before placing both halves, avoiding
++the old one-block-depression effect and reducing jungle canopy placement.
++
++Breaking a wild plant always yields its matching seed, has a 25% chance for a
++second seed, and a 65% chance for one Fresh Leaf. Wild plants are therefore a
++useful discovery reward but are still primarily the entry point to farming. A
++mature cultivated crop yields two Fresh Leaves guaranteed, has a 35% chance for
++a third Fresh Leaf, always returns one seed, and has a 35% chance for a second
++seed. Immature cultivated crops still return their planted seed. Millstone
++yields are unchanged; the economy increase is deliberately placed at the farm
++harvest stage rather than multiplied again during processing.
+ 
+ ## Explicitly out of scope
+ 
+diff --git a/src/main/java/com/createtobacco/CreateTobacco.java b/src/main/java/com/createtobacco/CreateTobacco.java
+index adeb601..b3f2f35 100644
+--- a/src/main/java/com/createtobacco/CreateTobacco.java
++++ b/src/main/java/com/createtobacco/CreateTobacco.java
+@@ -6,6 +6,7 @@ import com.createtobacco.registry.ModCreativeTabs;
+ import com.createtobacco.registry.ModCriteriaTriggers;
+ import com.createtobacco.registry.ModDataComponents;
+ import com.createtobacco.registry.ModEffects;
++import com.createtobacco.registry.ModFeatures;
+ import com.createtobacco.registry.ModItems;
+ import com.createtobacco.registry.ModMenus;
+ import com.createtobacco.registry.ModParticles;
+@@ -25,6 +26,7 @@ public final class CreateTobacco {
+         ModItems.register(modEventBus);
+         ModMenus.register(modEventBus);
+         ModBlocks.register(modEventBus);
++        ModFeatures.register(modEventBus);
+         ModEffects.register(modEventBus);
+         ModParticles.register(modEventBus);
+         ModAttachments.register(modEventBus);
+diff --git a/src/main/java/com/createtobacco/attachment/SmokingData.java b/src/main/java/com/createtobacco/attachment/SmokingData.java
+index 849db50..2a67e82 100644
+--- a/src/main/java/com/createtobacco/attachment/SmokingData.java
++++ b/src/main/java/com/createtobacco/attachment/SmokingData.java
+@@ -117,13 +117,12 @@ public final class SmokingData {
+         withdrawalReliefPuffs = 0;
+     }
+ 
+-    public boolean recordWithdrawalReliefPuff(int requiredPuffs) {
++    public void recordWithdrawalReliefPuff() {
+         withdrawalReliefPuffs++;
+-        if (withdrawalReliefPuffs >= requiredPuffs) {
+-            withdrawalReliefPuffs = 0;
+-            return true;
+-        }
+-        return false;
++    }
++
++    public void resetWithdrawalReliefPuffs() {
++        withdrawalReliefPuffs = 0;
+     }
+ 
+     public float dependence() {
+diff --git a/src/main/java/com/createtobacco/block/WildTobaccoBlock.java b/src/main/java/com/createtobacco/block/WildTobaccoBlock.java
+index 2a038ff..61c0282 100644
+--- a/src/main/java/com/createtobacco/block/WildTobaccoBlock.java
++++ b/src/main/java/com/createtobacco/block/WildTobaccoBlock.java
+@@ -4,16 +4,16 @@ import com.mojang.serialization.MapCodec;
+ import net.minecraft.core.BlockPos;
+ import net.minecraft.tags.BlockTags;
+ import net.minecraft.world.level.BlockGetter;
+-import net.minecraft.world.level.block.BushBlock;
++import net.minecraft.world.level.block.DoublePlantBlock;
+ import net.minecraft.world.level.block.state.BlockBehaviour;
+ import net.minecraft.world.level.block.state.BlockState;
+ 
+ /**
+- * Naturally generated tobacco. Wild plants are deliberately separate from the
+- * cultivated CropBlock so world generation cannot accidentally create mature
+- * farm crops or inherit farmland-only placement rules.
++ * Naturally generated, two-block-tall tobacco. It stays separate from the
++ * cultivated CropBlock so wild plants can have their own silhouette, drops,
++ * placement rules and world-generation frequency.
+  */
+-public final class WildTobaccoBlock extends BushBlock {
++public final class WildTobaccoBlock extends DoublePlantBlock {
+     public static final MapCodec<WildTobaccoBlock> CODEC = simpleCodec(WildTobaccoBlock::new);
+ 
+     public WildTobaccoBlock(BlockBehaviour.Properties properties) {
+diff --git a/src/main/java/com/createtobacco/client/SmokingArmPoseParameters.java b/src/main/java/com/createtobacco/client/SmokingArmPoseParameters.java
+new file mode 100644
+index 0000000..d413223
+--- /dev/null
++++ b/src/main/java/com/createtobacco/client/SmokingArmPoseParameters.java
+@@ -0,0 +1,28 @@
++package com.createtobacco.client;
++
++import net.minecraft.client.model.HumanoidModel;
++import net.minecraft.world.entity.HumanoidArm;
++import net.neoforged.fml.common.asm.enumextension.EnumProxy;
++import net.neoforged.neoforge.client.IArmPoseTransformer;
++
++/** Parameters used by NeoForge's runtime enum extension for the smoking arm pose. */
++public final class SmokingArmPoseParameters {
++    public static final EnumProxy<HumanoidModel.ArmPose> SMOKING_POSE = new EnumProxy<>(
++            HumanoidModel.ArmPose.class,
++            false,
++            (IArmPoseTransformer) (model, entity, arm) -> {
++                var modelArm = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
++                float side = arm == HumanoidArm.RIGHT ? 1.0F : -1.0F;
++
++                // Bring one hand naturally inward and slightly below the mouth.
++                // Small head-follow terms keep the pose from looking detached when
++                // the player looks around, without turning it into the horn pose.
++                modelArm.xRot = -1.18F + model.head.xRot * 0.25F;
++                modelArm.yRot = -0.34F * side + model.head.yRot * 0.12F;
++                modelArm.zRot = 0.10F * side;
++            }
++    );
++
++    private SmokingArmPoseParameters() {
++    }
++}
+diff --git a/src/main/java/com/createtobacco/client/SmokingItemClientExtensions.java b/src/main/java/com/createtobacco/client/SmokingItemClientExtensions.java
+index b942c21..fe61d1f 100644
+--- a/src/main/java/com/createtobacco/client/SmokingItemClientExtensions.java
++++ b/src/main/java/com/createtobacco/client/SmokingItemClientExtensions.java
+@@ -13,7 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
+ import net.minecraft.world.item.ItemStack;
+ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+ 
+-/** Smooth hand-to-mouth transform without reusing the vanilla drinking pose. */
++/** Smooth hand-to-mouth transform without reusing a vanilla eating/drinking pose. */
+ public final class SmokingItemClientExtensions implements IClientItemExtensions {
+     public static final SmokingItemClientExtensions INSTANCE = new SmokingItemClientExtensions();
+ 
+@@ -47,13 +47,16 @@ public final class SmokingItemClientExtensions implements IClientItemExtensions
+         float progress = smoothstep(Mth.clamp(elapsed / 6.0F, 0.0F, 1.0F));
+         float side = arm == HumanoidArm.RIGHT ? 1.0F : -1.0F;
+ 
+-        poseStack.translate(-0.12F * side * progress, 0.16F * progress, 0.20F * progress);
+-        poseStack.mulPose(Axis.XP.rotationDegrees(-32.0F * progress));
+-        poseStack.mulPose(Axis.YP.rotationDegrees(16.0F * side * progress));
+-        poseStack.mulPose(Axis.ZP.rotationDegrees(9.0F * side * progress));
++        // Move toward the mouth, then rotate the originally upright generated-item
++        // silhouette into a cigarette-like horizontal orientation. After the first
++        // six ticks progress remains 1, so the held pose is completely stable.
++        poseStack.translate(-0.17F * side * progress, 0.19F * progress, 0.27F * progress);
++        poseStack.mulPose(Axis.XP.rotationDegrees(-15.0F * progress));
++        poseStack.mulPose(Axis.YP.rotationDegrees(22.0F * side * progress));
++        poseStack.mulPose(Axis.ZP.rotationDegrees(-78.0F * side * progress));
+ 
+         // Keep the normal first-person base/equip transform; our use transform is
+-        // layered on top and UseAnim.NONE prevents the drinking bob.
++        // layered on top and UseAnim.NONE prevents vanilla drinking movement.
+         return false;
+     }
+ 
+@@ -63,9 +66,7 @@ public final class SmokingItemClientExtensions implements IClientItemExtensions
+                 && entity.isUsingItem()
+                 && entity.getUsedItemHand() == hand
+                 && entity.getUseItemRemainingTicks() > 0) {
+-            // Stable vanilla one-arm mouth pose, supplied explicitly by the
+-            // client extension so it is visible to other players in third person.
+-            return HumanoidModel.ArmPose.TOOT_HORN;
++            return SmokingArmPoseParameters.SMOKING_POSE.getValue();
+         }
+         return null;
+     }
+diff --git a/src/main/java/com/createtobacco/command/CreateTobaccoCommands.java b/src/main/java/com/createtobacco/command/CreateTobaccoCommands.java
+index 2311d04..26e35a7 100644
+--- a/src/main/java/com/createtobacco/command/CreateTobaccoCommands.java
++++ b/src/main/java/com/createtobacco/command/CreateTobaccoCommands.java
+@@ -137,7 +137,6 @@ public final class CreateTobaccoCommands {
+         WithdrawalTier activeTier = withdrawal == null
+                 ? WithdrawalTier.NONE
+                 : WithdrawalTier.fromAmplifier(withdrawal.getAmplifier());
+-        int reliefRequired = withdrawal == null ? 0 : activeTier.reliefPuffsRequired();
+ 
+         send(source, "Smoking status: " + player.getGameProfile().getName());
+         send(source, String.format(Locale.ROOT, "Dependence: %.3f / 100 (%s)", data.dependence(), tier));
+@@ -148,7 +147,8 @@ public final class CreateTobaccoCommands {
+                 + (withdrawal == null ? "" : " (" + formatTicks(withdrawal.getDuration()) + ")"));
+         send(source, "Next episode: " + (data.withdrawalEpisodeIsScheduled()
+                 ? formatTicks(data.ticksUntilNextWithdrawalEpisode()) : "not scheduled"));
+-        send(source, "Relief puffs: " + data.withdrawalReliefPuffs() + " / " + reliefRequired);
++        send(source, "Relief puffs this episode: " + data.withdrawalReliefPuffs()
++                + (withdrawal == null ? "" : " (each successful puff lowers Withdrawal by one tier)"));
+         send(source, "Cough check: " + (data.coughCheckIsScheduled()
+                 ? formatTicks(data.ticksUntilNextCoughCheck()) : "not scheduled"));
+         return 1;
+diff --git a/src/main/java/com/createtobacco/item/AbstractSmokingItem.java b/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
+index c5179fb..c982560 100644
+--- a/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
++++ b/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
+@@ -66,6 +66,16 @@ public abstract class AbstractSmokingItem extends Item {
+         consumer.accept(SmokingItemClientExtensions.INSTANCE);
+     }
+ 
++    @Override
++    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
++        return slotChanged || oldStack.getItem() != newStack.getItem();
++    }
++
++    @Override
++    public boolean canContinueUsing(ItemStack oldStack, ItemStack newStack) {
++        return oldStack.getItem() == newStack.getItem();
++    }
++
+     @Override
+     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+         ItemStack smokingStack = player.getItemInHand(usedHand);
+@@ -178,6 +188,11 @@ public abstract class AbstractSmokingItem extends Item {
+         if (level.isClientSide() || entity.tickCount % SmokingBalance.TICKS_PER_SECOND != 0) {
+             return;
+         }
++        if (entity instanceof LivingEntity livingEntity
++                && livingEntity.isUsingItem()
++                && livingEntity.getUseItem() == stack) {
++            return;
++        }
+         tickNaturalBurn(stack, SmokingBalance.TICKS_PER_SECOND);
+     }
+ 
+@@ -296,9 +311,25 @@ public abstract class AbstractSmokingItem extends Item {
+             return;
+         }
+ 
+-        WithdrawalTier tier = WithdrawalTier.fromAmplifier(withdrawal.getAmplifier());
+-        if (data.recordWithdrawalReliefPuff(tier.reliefPuffsRequired())) {
+-            player.removeEffect(ModEffects.WITHDRAWAL);
++        data.recordWithdrawalReliefPuff();
++        int currentAmplifier = withdrawal.getAmplifier();
++        int remainingDuration = withdrawal.getDuration();
++        player.removeEffect(ModEffects.WITHDRAWAL);
++
++        if (currentAmplifier <= 0) {
++            data.resetWithdrawalReliefPuffs();
++            return;
+         }
++
++        // Every successful puff immediately lowers the active episode by one tier.
++        // Keep the remaining duration instead of restarting a fresh full episode.
++        player.addEffect(new net.minecraft.world.effect.MobEffectInstance(
++                ModEffects.WITHDRAWAL,
++                remainingDuration,
++                currentAmplifier - 1,
++                false,
++                true,
++                true
++        ));
+     }
+ }
+diff --git a/src/main/java/com/createtobacco/registry/ModFeatures.java b/src/main/java/com/createtobacco/registry/ModFeatures.java
+new file mode 100644
+index 0000000..3d8b93a
+--- /dev/null
++++ b/src/main/java/com/createtobacco/registry/ModFeatures.java
+@@ -0,0 +1,32 @@
++package com.createtobacco.registry;
++
++import com.createtobacco.CreateTobacco;
++import com.createtobacco.worldgen.WildTobaccoPlantFeature;
++import net.minecraft.core.registries.Registries;
++import net.minecraft.world.level.levelgen.feature.Feature;
++import net.neoforged.bus.api.IEventBus;
++import net.neoforged.neoforge.registries.DeferredHolder;
++import net.neoforged.neoforge.registries.DeferredRegister;
++
++/** Feature types used by data-driven wild tobacco RandomPatch configurations. */
++public final class ModFeatures {
++    public static final DeferredRegister<Feature<?>> FEATURES =
++            DeferredRegister.create(Registries.FEATURE, CreateTobacco.MOD_ID);
++
++    public static final DeferredHolder<Feature<?>, WildTobaccoPlantFeature> WILD_VIRGINIA_TOBACCO_PLANT =
++            FEATURES.register("wild_virginia_tobacco_plant",
++                    () -> new WildTobaccoPlantFeature(ModBlocks.WILD_VIRGINIA_TOBACCO));
++    public static final DeferredHolder<Feature<?>, WildTobaccoPlantFeature> WILD_BURLEY_TOBACCO_PLANT =
++            FEATURES.register("wild_burley_tobacco_plant",
++                    () -> new WildTobaccoPlantFeature(ModBlocks.WILD_BURLEY_TOBACCO));
++    public static final DeferredHolder<Feature<?>, WildTobaccoPlantFeature> WILD_HAVANA_TOBACCO_PLANT =
++            FEATURES.register("wild_havana_tobacco_plant",
++                    () -> new WildTobaccoPlantFeature(ModBlocks.WILD_HAVANA_TOBACCO));
++
++    private ModFeatures() {
++    }
++
++    public static void register(IEventBus modEventBus) {
++        FEATURES.register(modEventBus);
++    }
++}
+diff --git a/src/main/java/com/createtobacco/smoking/SmokingBalance.java b/src/main/java/com/createtobacco/smoking/SmokingBalance.java
+index 7e5fdbd..c1dad4d 100644
+--- a/src/main/java/com/createtobacco/smoking/SmokingBalance.java
++++ b/src/main/java/com/createtobacco/smoking/SmokingBalance.java
+@@ -45,8 +45,8 @@ public final class SmokingBalance {
+     public static final int WINSTONE_MAX_RAW_XP = 2;
+     public static final int MICROBLAST_BUFF_TICKS = seconds(10);
+     public static final int MICROBLAST_BUFF_AMPLIFIER = 1;
+-    public static final double MICROBLAST_RADIUS = 4.5D;
+-    public static final double MICROBLAST_KNOCKBACK = 0.55D;
++    public static final double MICROBLAST_RADIUS = 5.0D;
++    public static final double MICROBLAST_KNOCKBACK = 0.60D;
+     public static final double MICROBLAST_VERTICAL_KNOCKBACK = 0.16D;
+     public static final int CHUNKMAN_FOOD = 1;
+     public static final float CHUNKMAN_SATURATION = 0.5F;
+@@ -85,16 +85,16 @@ public final class SmokingBalance {
+     public static final WithdrawalProfile NO_WITHDRAWAL =
+             new WithdrawalProfile(0L, 0, 0, 0, 0, 0.0F, 0.0D, 0.0D, 0.0F);
+     public static final WithdrawalProfile MILD_WITHDRAWAL =
+-            new WithdrawalProfile(minutes(40), minutes(6), minutes(10), seconds(30), 2,
++            new WithdrawalProfile(minutes(40), minutes(6), minutes(10), seconds(30), 1,
+                     0.05F, -0.03D, -0.05D, 0.05F);
+     public static final WithdrawalProfile MODERATE_WITHDRAWAL =
+-            new WithdrawalProfile(minutes(30), minutes(4), minutes(7), seconds(40), 3,
++            new WithdrawalProfile(minutes(30), minutes(4), minutes(7), seconds(40), 2,
+                     0.15F, -0.05D, -0.08D, 0.10F);
+     public static final WithdrawalProfile HIGH_WITHDRAWAL =
+-            new WithdrawalProfile(minutes(20), minutes(3), minutes(5), seconds(50), 4,
++            new WithdrawalProfile(minutes(20), minutes(3), minutes(5), seconds(50), 3,
+                     0.25F, -0.07D, -0.12D, 0.18F);
+     public static final WithdrawalProfile SEVERE_WITHDRAWAL =
+-            new WithdrawalProfile(minutes(15), minutes(2), minutes(4), seconds(60), 5,
++            new WithdrawalProfile(minutes(15), minutes(2), minutes(4), seconds(60), 4,
+                     0.35F, -0.10D, -0.15D, 0.28F);
+ 
+     private SmokingBalance() {
+diff --git a/src/main/java/com/createtobacco/smoking/SmokingEffects.java b/src/main/java/com/createtobacco/smoking/SmokingEffects.java
+index c901dd0..363b46e 100644
+--- a/src/main/java/com/createtobacco/smoking/SmokingEffects.java
++++ b/src/main/java/com/createtobacco/smoking/SmokingEffects.java
+@@ -88,10 +88,10 @@ public final class SmokingEffects {
+                 1, 0.0D, 0.0D, 0.0D, 0.0D);
+         level.sendParticles(ParticleTypes.EXPLOSION,
+                 player.getX(), player.getY() + 1.0D, player.getZ(),
+-                4, 0.45D, 0.35D, 0.45D, 0.0D);
++                2, 0.40D, 0.30D, 0.40D, 0.0D);
+         level.sendParticles(ParticleTypes.POOF,
+                 player.getX(), player.getY() + 0.8D, player.getZ(),
+-                32, 1.05D, 0.6D, 1.05D, 0.055D);
++                12, 0.9D, 0.5D, 0.9D, 0.045D);
+ 
+         List<LivingEntity> nearby = level.getEntitiesOfClass(
+                 LivingEntity.class,
+diff --git a/src/main/java/com/createtobacco/worldgen/WildTobaccoPlantFeature.java b/src/main/java/com/createtobacco/worldgen/WildTobaccoPlantFeature.java
+new file mode 100644
+index 0000000..0ab096e
+--- /dev/null
++++ b/src/main/java/com/createtobacco/worldgen/WildTobaccoPlantFeature.java
+@@ -0,0 +1,55 @@
++package com.createtobacco.worldgen;
++
++import java.util.function.Supplier;
++import net.minecraft.core.BlockPos;
++import net.minecraft.world.level.WorldGenLevel;
++import net.minecraft.world.level.block.Block;
++import net.minecraft.world.level.block.DoublePlantBlock;
++import net.minecraft.world.level.block.state.BlockState;
++import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
++import net.minecraft.world.level.block.state.properties.BlockStateProperties;
++import net.minecraft.world.level.levelgen.Heightmap;
++import net.minecraft.world.level.levelgen.feature.Feature;
++import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
++import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
++
++/** Places exactly one complete wild tobacco plant at the local surface. */
++public final class WildTobaccoPlantFeature extends Feature<NoneFeatureConfiguration> {
++    private static final int WORLDGEN_UPDATE_FLAGS = Block.UPDATE_CLIENTS;
++    private final Supplier<? extends DoublePlantBlock> plant;
++
++    public WildTobaccoPlantFeature(Supplier<? extends DoublePlantBlock> plant) {
++        super(NoneFeatureConfiguration.CODEC);
++        this.plant = plant;
++    }
++
++    @Override
++    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
++        WorldGenLevel level = context.level();
++        BlockPos candidate = context.origin();
++
++        // RandomPatch supplies X/Z candidates. Re-resolve Y for every candidate
++        // so a patch follows terrain instead of placing some plants one block
++        // down in shallow depressions relative to the patch origin.
++        int surfaceY = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, candidate.getX(), candidate.getZ());
++        BlockPos lowerPos = new BlockPos(candidate.getX(), surfaceY, candidate.getZ());
++        BlockPos upperPos = lowerPos.above();
++
++        if (!level.isEmptyBlock(lowerPos) || !level.isEmptyBlock(upperPos)) {
++            return false;
++        }
++
++        DoublePlantBlock block = plant.get();
++        BlockState lower = block.defaultBlockState()
++                .setValue(BlockStateProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER);
++        if (!lower.canSurvive(level, lowerPos)) {
++            return false;
++        }
++
++        BlockState upper = block.defaultBlockState()
++                .setValue(BlockStateProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.UPPER);
++        level.setBlock(lowerPos, lower, WORLDGEN_UPDATE_FLAGS);
++        level.setBlock(upperPos, upper, WORLDGEN_UPDATE_FLAGS);
++        return true;
++    }
++}
+diff --git a/src/main/resources/META-INF/enumextensions.json b/src/main/resources/META-INF/enumextensions.json
+new file mode 100644
+index 0000000..1432975
+--- /dev/null
++++ b/src/main/resources/META-INF/enumextensions.json
+@@ -0,0 +1,13 @@
++{
++  "entries": [
++    {
++      "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
++      "name": "CREATE_TOBACCO_SMOKING",
++      "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
++      "parameters": {
++        "class": "com/createtobacco/client/SmokingArmPoseParameters",
++        "field": "SMOKING_POSE"
++      }
++    }
++  ]
++}
+diff --git a/src/main/resources/assets/create_tobacco/blockstates/wild_burley_tobacco.json b/src/main/resources/assets/create_tobacco/blockstates/wild_burley_tobacco.json
+index fd58c95..65be4db 100644
+--- a/src/main/resources/assets/create_tobacco/blockstates/wild_burley_tobacco.json
++++ b/src/main/resources/assets/create_tobacco/blockstates/wild_burley_tobacco.json
+@@ -1,7 +1,10 @@
+ {
+   "variants": {
+-    "": {
+-      "model": "create_tobacco:block/wild_burley_tobacco"
++    "half=lower": {
++      "model": "create_tobacco:block/wild_burley_tobacco_bottom"
++    },
++    "half=upper": {
++      "model": "create_tobacco:block/wild_burley_tobacco_top"
+     }
+   }
+ }
+diff --git a/src/main/resources/assets/create_tobacco/blockstates/wild_havana_tobacco.json b/src/main/resources/assets/create_tobacco/blockstates/wild_havana_tobacco.json
+index bc486fe..40f971a 100644
+--- a/src/main/resources/assets/create_tobacco/blockstates/wild_havana_tobacco.json
++++ b/src/main/resources/assets/create_tobacco/blockstates/wild_havana_tobacco.json
+@@ -1,7 +1,10 @@
+ {
+   "variants": {
+-    "": {
+-      "model": "create_tobacco:block/wild_havana_tobacco"
++    "half=lower": {
++      "model": "create_tobacco:block/wild_havana_tobacco_bottom"
++    },
++    "half=upper": {
++      "model": "create_tobacco:block/wild_havana_tobacco_top"
+     }
+   }
+ }
+diff --git a/src/main/resources/assets/create_tobacco/blockstates/wild_virginia_tobacco.json b/src/main/resources/assets/create_tobacco/blockstates/wild_virginia_tobacco.json
+index 3755eb2..ed4886c 100644
+--- a/src/main/resources/assets/create_tobacco/blockstates/wild_virginia_tobacco.json
++++ b/src/main/resources/assets/create_tobacco/blockstates/wild_virginia_tobacco.json
+@@ -1,7 +1,10 @@
+ {
+   "variants": {
+-    "": {
+-      "model": "create_tobacco:block/wild_virginia_tobacco"
++    "half=lower": {
++      "model": "create_tobacco:block/wild_virginia_tobacco_bottom"
++    },
++    "half=upper": {
++      "model": "create_tobacco:block/wild_virginia_tobacco_top"
+     }
+   }
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/block/wild_burley_tobacco_bottom.json b/src/main/resources/assets/create_tobacco/models/block/wild_burley_tobacco_bottom.json
+new file mode 100644
+index 0000000..1c6854c
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/block/wild_burley_tobacco_bottom.json
+@@ -0,0 +1,7 @@
++{
++  "render_type": "minecraft:cutout",
++  "parent": "minecraft:block/cross",
++  "textures": {
++    "cross": "create_tobacco:block/wild_burley_tobacco_bottom"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/block/wild_burley_tobacco.json b/src/main/resources/assets/create_tobacco/models/block/wild_burley_tobacco_top.json
+similarity index 62%
+rename from src/main/resources/assets/create_tobacco/models/block/wild_burley_tobacco.json
+rename to src/main/resources/assets/create_tobacco/models/block/wild_burley_tobacco_top.json
+index bdaa623..bef4466 100644
+--- a/src/main/resources/assets/create_tobacco/models/block/wild_burley_tobacco.json
++++ b/src/main/resources/assets/create_tobacco/models/block/wild_burley_tobacco_top.json
+@@ -2,6 +2,6 @@
+   "render_type": "minecraft:cutout",
+   "parent": "minecraft:block/cross",
+   "textures": {
+-    "cross": "create_tobacco:block/wild_burley_tobacco"
++    "cross": "create_tobacco:block/wild_burley_tobacco_top"
+   }
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/block/wild_havana_tobacco_bottom.json b/src/main/resources/assets/create_tobacco/models/block/wild_havana_tobacco_bottom.json
+new file mode 100644
+index 0000000..5eaf046
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/block/wild_havana_tobacco_bottom.json
+@@ -0,0 +1,7 @@
++{
++  "render_type": "minecraft:cutout",
++  "parent": "minecraft:block/cross",
++  "textures": {
++    "cross": "create_tobacco:block/wild_havana_tobacco_bottom"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/block/wild_havana_tobacco.json b/src/main/resources/assets/create_tobacco/models/block/wild_havana_tobacco_top.json
+similarity index 62%
+rename from src/main/resources/assets/create_tobacco/models/block/wild_havana_tobacco.json
+rename to src/main/resources/assets/create_tobacco/models/block/wild_havana_tobacco_top.json
+index ba6c16e..775fe00 100644
+--- a/src/main/resources/assets/create_tobacco/models/block/wild_havana_tobacco.json
++++ b/src/main/resources/assets/create_tobacco/models/block/wild_havana_tobacco_top.json
+@@ -2,6 +2,6 @@
+   "render_type": "minecraft:cutout",
+   "parent": "minecraft:block/cross",
+   "textures": {
+-    "cross": "create_tobacco:block/wild_havana_tobacco"
++    "cross": "create_tobacco:block/wild_havana_tobacco_top"
+   }
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/block/wild_virginia_tobacco_bottom.json b/src/main/resources/assets/create_tobacco/models/block/wild_virginia_tobacco_bottom.json
+new file mode 100644
+index 0000000..5443f2f
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/block/wild_virginia_tobacco_bottom.json
+@@ -0,0 +1,7 @@
++{
++  "render_type": "minecraft:cutout",
++  "parent": "minecraft:block/cross",
++  "textures": {
++    "cross": "create_tobacco:block/wild_virginia_tobacco_bottom"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/block/wild_virginia_tobacco.json b/src/main/resources/assets/create_tobacco/models/block/wild_virginia_tobacco_top.json
+similarity index 61%
+rename from src/main/resources/assets/create_tobacco/models/block/wild_virginia_tobacco.json
+rename to src/main/resources/assets/create_tobacco/models/block/wild_virginia_tobacco_top.json
+index c3222d4..b0bd081 100644
+--- a/src/main/resources/assets/create_tobacco/models/block/wild_virginia_tobacco.json
++++ b/src/main/resources/assets/create_tobacco/models/block/wild_virginia_tobacco_top.json
+@@ -2,6 +2,6 @@
+   "render_type": "minecraft:cutout",
+   "parent": "minecraft:block/cross",
+   "textures": {
+-    "cross": "create_tobacco:block/wild_virginia_tobacco"
++    "cross": "create_tobacco:block/wild_virginia_tobacco_top"
+   }
+ }
+diff --git a/src/main/resources/data/create_tobacco/loot_table/blocks/burley_tobacco.json b/src/main/resources/data/create_tobacco/loot_table/blocks/burley_tobacco.json
+index 376aa42..1d0c91c 100644
+--- a/src/main/resources/data/create_tobacco/loot_table/blocks/burley_tobacco.json
++++ b/src/main/resources/data/create_tobacco/loot_table/blocks/burley_tobacco.json
+@@ -28,6 +28,46 @@
+         }
+       ]
+     },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:fresh_burley_leaf"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:block_state_property",
++          "block": "create_tobacco:burley_tobacco",
++          "properties": {
++            "age": "7"
++          }
++        }
++      ]
++    },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:fresh_burley_leaf"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:block_state_property",
++          "block": "create_tobacco:burley_tobacco",
++          "properties": {
++            "age": "7"
++          }
++        },
++        {
++          "condition": "minecraft:random_chance",
++          "chance": 0.35
++        }
++      ]
++    },
+     {
+       "rolls": 1,
+       "entries": [
+@@ -46,7 +86,7 @@
+         },
+         {
+           "condition": "minecraft:random_chance",
+-          "chance": 0.5
++          "chance": 0.35
+         }
+       ]
+     }
+diff --git a/src/main/resources/data/create_tobacco/loot_table/blocks/havana_tobacco.json b/src/main/resources/data/create_tobacco/loot_table/blocks/havana_tobacco.json
+index defab50..b546203 100644
+--- a/src/main/resources/data/create_tobacco/loot_table/blocks/havana_tobacco.json
++++ b/src/main/resources/data/create_tobacco/loot_table/blocks/havana_tobacco.json
+@@ -28,6 +28,46 @@
+         }
+       ]
+     },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:fresh_havana_leaf"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:block_state_property",
++          "block": "create_tobacco:havana_tobacco",
++          "properties": {
++            "age": "7"
++          }
++        }
++      ]
++    },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:fresh_havana_leaf"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:block_state_property",
++          "block": "create_tobacco:havana_tobacco",
++          "properties": {
++            "age": "7"
++          }
++        },
++        {
++          "condition": "minecraft:random_chance",
++          "chance": 0.35
++        }
++      ]
++    },
+     {
+       "rolls": 1,
+       "entries": [
+@@ -46,7 +86,7 @@
+         },
+         {
+           "condition": "minecraft:random_chance",
+-          "chance": 0.5
++          "chance": 0.35
+         }
+       ]
+     }
+diff --git a/src/main/resources/data/create_tobacco/loot_table/blocks/virginia_tobacco.json b/src/main/resources/data/create_tobacco/loot_table/blocks/virginia_tobacco.json
+index d6e3cb8..865e97a 100644
+--- a/src/main/resources/data/create_tobacco/loot_table/blocks/virginia_tobacco.json
++++ b/src/main/resources/data/create_tobacco/loot_table/blocks/virginia_tobacco.json
+@@ -28,6 +28,46 @@
+         }
+       ]
+     },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:fresh_virginia_leaf"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:block_state_property",
++          "block": "create_tobacco:virginia_tobacco",
++          "properties": {
++            "age": "7"
++          }
++        }
++      ]
++    },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:fresh_virginia_leaf"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:block_state_property",
++          "block": "create_tobacco:virginia_tobacco",
++          "properties": {
++            "age": "7"
++          }
++        },
++        {
++          "condition": "minecraft:random_chance",
++          "chance": 0.35
++        }
++      ]
++    },
+     {
+       "rolls": 1,
+       "entries": [
+@@ -46,7 +86,7 @@
+         },
+         {
+           "condition": "minecraft:random_chance",
+-          "chance": 0.5
++          "chance": 0.35
+         }
+       ]
+     }
+diff --git a/src/main/resources/data/create_tobacco/loot_table/blocks/wild_burley_tobacco.json b/src/main/resources/data/create_tobacco/loot_table/blocks/wild_burley_tobacco.json
+index d4fd70c..a8997ec 100644
+--- a/src/main/resources/data/create_tobacco/loot_table/blocks/wild_burley_tobacco.json
++++ b/src/main/resources/data/create_tobacco/loot_table/blocks/wild_burley_tobacco.json
+@@ -21,7 +21,7 @@
+       "conditions": [
+         {
+           "condition": "minecraft:random_chance",
+-          "chance": 0.5
++          "chance": 0.25
+         }
+       ]
+     },
+@@ -36,7 +36,7 @@
+       "conditions": [
+         {
+           "condition": "minecraft:random_chance",
+-          "chance": 0.25
++          "chance": 0.65
+         }
+       ]
+     }
+diff --git a/src/main/resources/data/create_tobacco/loot_table/blocks/wild_havana_tobacco.json b/src/main/resources/data/create_tobacco/loot_table/blocks/wild_havana_tobacco.json
+index c51da3d..bb539d8 100644
+--- a/src/main/resources/data/create_tobacco/loot_table/blocks/wild_havana_tobacco.json
++++ b/src/main/resources/data/create_tobacco/loot_table/blocks/wild_havana_tobacco.json
+@@ -21,7 +21,7 @@
+       "conditions": [
+         {
+           "condition": "minecraft:random_chance",
+-          "chance": 0.5
++          "chance": 0.25
+         }
+       ]
+     },
+@@ -36,7 +36,7 @@
+       "conditions": [
+         {
+           "condition": "minecraft:random_chance",
+-          "chance": 0.25
++          "chance": 0.65
+         }
+       ]
+     }
+diff --git a/src/main/resources/data/create_tobacco/loot_table/blocks/wild_virginia_tobacco.json b/src/main/resources/data/create_tobacco/loot_table/blocks/wild_virginia_tobacco.json
+index 9de2df1..630a9bd 100644
+--- a/src/main/resources/data/create_tobacco/loot_table/blocks/wild_virginia_tobacco.json
++++ b/src/main/resources/data/create_tobacco/loot_table/blocks/wild_virginia_tobacco.json
+@@ -21,7 +21,7 @@
+       "conditions": [
+         {
+           "condition": "minecraft:random_chance",
+-          "chance": 0.5
++          "chance": 0.25
+         }
+       ]
+     },
+@@ -36,7 +36,7 @@
+       "conditions": [
+         {
+           "condition": "minecraft:random_chance",
+-          "chance": 0.25
++          "chance": 0.65
+         }
+       ]
+     }
+diff --git a/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_burley_tobacco_patch.json b/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_burley_tobacco_patch.json
+index 1e7eaaa..b09b8a2 100644
+--- a/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_burley_tobacco_patch.json
++++ b/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_burley_tobacco_patch.json
+@@ -3,18 +3,11 @@
+   "config": {
+     "tries": 15,
+     "xz_spread": 5,
+-    "y_spread": 2,
++    "y_spread": 0,
+     "feature": {
+       "feature": {
+-        "type": "minecraft:simple_block",
+-        "config": {
+-          "to_place": {
+-            "type": "minecraft:simple_state_provider",
+-            "state": {
+-              "Name": "create_tobacco:wild_burley_tobacco"
+-            }
+-          }
+-        }
++        "type": "create_tobacco:wild_burley_tobacco_plant",
++        "config": {}
+       },
+       "placement": []
+     }
+diff --git a/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_havana_tobacco_patch.json b/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_havana_tobacco_patch.json
+index 105ec4a..7cbd608 100644
+--- a/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_havana_tobacco_patch.json
++++ b/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_havana_tobacco_patch.json
+@@ -3,18 +3,11 @@
+   "config": {
+     "tries": 12,
+     "xz_spread": 5,
+-    "y_spread": 2,
++    "y_spread": 0,
+     "feature": {
+       "feature": {
+-        "type": "minecraft:simple_block",
+-        "config": {
+-          "to_place": {
+-            "type": "minecraft:simple_state_provider",
+-            "state": {
+-              "Name": "create_tobacco:wild_havana_tobacco"
+-            }
+-          }
+-        }
++        "type": "create_tobacco:wild_havana_tobacco_plant",
++        "config": {}
+       },
+       "placement": []
+     }
+diff --git a/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_virginia_tobacco_patch.json b/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_virginia_tobacco_patch.json
+index d1fb9e5..dd9c001 100644
+--- a/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_virginia_tobacco_patch.json
++++ b/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_virginia_tobacco_patch.json
+@@ -3,18 +3,11 @@
+   "config": {
+     "tries": 18,
+     "xz_spread": 5,
+-    "y_spread": 2,
++    "y_spread": 0,
+     "feature": {
+       "feature": {
+-        "type": "minecraft:simple_block",
+-        "config": {
+-          "to_place": {
+-            "type": "minecraft:simple_state_provider",
+-            "state": {
+-              "Name": "create_tobacco:wild_virginia_tobacco"
+-            }
+-          }
+-        }
++        "type": "create_tobacco:wild_virginia_tobacco_plant",
++        "config": {}
+       },
+       "placement": []
+     }
+diff --git a/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_burley_tobacco.json b/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_burley_tobacco.json
+index b04b5bb..e209ffd 100644
+--- a/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_burley_tobacco.json
++++ b/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_burley_tobacco.json
+@@ -3,14 +3,14 @@
+   "placement": [
+     {
+       "type": "minecraft:rarity_filter",
+-      "chance": 20
++      "chance": 50
+     },
+     {
+       "type": "minecraft:in_square"
+     },
+     {
+       "type": "minecraft:heightmap",
+-      "heightmap": "MOTION_BLOCKING"
++      "heightmap": "MOTION_BLOCKING_NO_LEAVES"
+     },
+     {
+       "type": "minecraft:biome"
+diff --git a/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_havana_tobacco.json b/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_havana_tobacco.json
+index fa55c97..181ba1b 100644
+--- a/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_havana_tobacco.json
++++ b/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_havana_tobacco.json
+@@ -3,14 +3,14 @@
+   "placement": [
+     {
+       "type": "minecraft:rarity_filter",
+-      "chance": 24
++      "chance": 30
+     },
+     {
+       "type": "minecraft:in_square"
+     },
+     {
+       "type": "minecraft:heightmap",
+-      "heightmap": "MOTION_BLOCKING"
++      "heightmap": "MOTION_BLOCKING_NO_LEAVES"
+     },
+     {
+       "type": "minecraft:biome"
+diff --git a/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_virginia_tobacco.json b/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_virginia_tobacco.json
+index f84395d..226b410 100644
+--- a/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_virginia_tobacco.json
++++ b/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_virginia_tobacco.json
+@@ -3,14 +3,14 @@
+   "placement": [
+     {
+       "type": "minecraft:rarity_filter",
+-      "chance": 16
++      "chance": 42
+     },
+     {
+       "type": "minecraft:in_square"
+     },
+     {
+       "type": "minecraft:heightmap",
+-      "heightmap": "MOTION_BLOCKING"
++      "heightmap": "MOTION_BLOCKING_NO_LEAVES"
+     },
+     {
+       "type": "minecraft:biome"
+diff --git a/src/main/templates/META-INF/neoforge.mods.toml b/src/main/templates/META-INF/neoforge.mods.toml
+index 26b7be6..2623598 100644
+--- a/src/main/templates/META-INF/neoforge.mods.toml
++++ b/src/main/templates/META-INF/neoforge.mods.toml
+@@ -7,6 +7,7 @@ modId="${mod_id}"
+ version="${mod_version}"
+ displayName="${mod_name}"
+ authors="Create Tobacco Team"
++enumExtensions="META-INF/enumextensions.json"
+ description='''
+ An addon skeleton for Create. Phase 0 contains infrastructure only.
+ '''

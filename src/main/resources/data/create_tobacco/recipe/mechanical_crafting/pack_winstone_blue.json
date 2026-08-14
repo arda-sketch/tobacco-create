@@ -1,0 +1,34 @@
+{
+  "type": "create:mechanical_crafting",
+  "accept_mirrored": false,
+  "category": "misc",
+  "key": {
+    "C": {
+      "type": "neoforge:components",
+      "items": "create_tobacco:winstone_blue",
+      "components": {
+        "create_tobacco:smoking_item_state": {
+          "remaining_puffs": 5,
+          "lit": false,
+          "burn_ticks": 0
+        }
+      }
+    },
+    "P": {
+      "item": "create_tobacco:empty_cigarette_pack"
+    },
+    "D": {
+      "item": "minecraft:blue_dye"
+    }
+  },
+  "pattern": [
+    "CCCC",
+    "CPCD",
+    "CCCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_tobacco:winstone_blue_pack"
+  },
+  "show_notification": false
+}

@@ -42,8 +42,6 @@ public final class SmokingEffects {
             case KEND -> EnderRoulette.trigger(player, EnderRoulette.randomOutcome(player));
             case PIGLIAMENT -> addEffect(player, MobEffects.DAMAGE_RESISTANCE,
                     SmokingBalance.PIGLIAMENT_RESISTANCE_TICKS, SmokingBalance.PIGLIAMENT_RESISTANCE_AMPLIFIER);
-            case ROTHMINES -> addEffect(player, MobEffects.DIG_SPEED,
-                    SmokingBalance.ROTHMINES_HASTE_TICKS, SmokingBalance.ROTHMINES_HASTE_AMPLIFIER);
             case BEDROMORKANAL -> heal(player);
             case STONEO_Y_GLOWLIETA -> {
                 addEffect(player, MobEffects.NIGHT_VISION,
@@ -85,12 +83,15 @@ public final class SmokingEffects {
         ServerLevel level = player.serverLevel();
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 0.65F, 1.25F);
+        level.sendParticles(ParticleTypes.EXPLOSION_EMITTER,
+                player.getX(), player.getY() + 0.9D, player.getZ(),
+                1, 0.0D, 0.0D, 0.0D, 0.0D);
         level.sendParticles(ParticleTypes.EXPLOSION,
                 player.getX(), player.getY() + 1.0D, player.getZ(),
-                2, 0.25D, 0.25D, 0.25D, 0.0D);
+                2, 0.40D, 0.30D, 0.40D, 0.0D);
         level.sendParticles(ParticleTypes.POOF,
                 player.getX(), player.getY() + 0.8D, player.getZ(),
-                18, 0.7D, 0.45D, 0.7D, 0.04D);
+                12, 0.9D, 0.5D, 0.9D, 0.045D);
 
         List<LivingEntity> nearby = level.getEntitiesOfClass(
                 LivingEntity.class,

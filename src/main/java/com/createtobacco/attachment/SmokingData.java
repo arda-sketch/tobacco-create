@@ -117,13 +117,12 @@ public final class SmokingData {
         withdrawalReliefPuffs = 0;
     }
 
-    public boolean recordWithdrawalReliefPuff(int requiredPuffs) {
+    public void recordWithdrawalReliefPuff() {
         withdrawalReliefPuffs++;
-        if (withdrawalReliefPuffs >= requiredPuffs) {
-            withdrawalReliefPuffs = 0;
-            return true;
-        }
-        return false;
+    }
+
+    public void resetWithdrawalReliefPuffs() {
+        withdrawalReliefPuffs = 0;
     }
 
     public float dependence() {

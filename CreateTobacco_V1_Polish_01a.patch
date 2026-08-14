@@ -1,0 +1,83 @@
+diff --git a/src/main/java/com/createtobacco/client/CreateTobaccoClient.java b/src/main/java/com/createtobacco/client/CreateTobaccoClient.java
+index dc7f24a..c97156e 100644
+--- a/src/main/java/com/createtobacco/client/CreateTobaccoClient.java
++++ b/src/main/java/com/createtobacco/client/CreateTobaccoClient.java
+@@ -2,37 +2,17 @@ package com.createtobacco.client;
+ 
+ import com.createtobacco.CreateTobacco;
+ import com.createtobacco.client.screen.CigaretteCaseScreen;
+-import com.createtobacco.registry.ModItems;
+ import com.createtobacco.registry.ModMenus;
+ import net.neoforged.api.distmarker.Dist;
+ import net.neoforged.bus.api.SubscribeEvent;
+ import net.neoforged.fml.common.EventBusSubscriber;
+-import net.neoforged.neoforge.client.event.RegisterClientExtensionsEvent;
+ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+ 
+-@EventBusSubscriber(modid = CreateTobacco.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
++@EventBusSubscriber(modid = CreateTobacco.MOD_ID, value = Dist.CLIENT)
+ public final class CreateTobaccoClient {
+     private CreateTobaccoClient() {
+     }
+ 
+-    @SubscribeEvent
+-    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+-        event.registerItem(
+-                SmokingItemClientExtensions.INSTANCE,
+-                ModItems.MARLBORE_RED.get(),
+-                ModItems.WINSTONE_BLUE.get(),
+-                ModItems.CREPERFIELD.get(),
+-                ModItems.CRAFTMEL.get(),
+-                ModItems.CHUNKMAN.get(),
+-                ModItems.KEND.get(),
+-                ModItems.PIGLIAMENT.get(),
+-                ModItems.ROTHMINES.get(),
+-                ModItems.BEDROMORKANAL.get(),
+-                ModItems.MINECRISTO_NO_1.get(),
+-                ModItems.STONEO_Y_GLOWLIETA.get()
+-        );
+-    }
+-
+     @SubscribeEvent
+     public static void registerScreens(RegisterMenuScreensEvent event) {
+         event.register(ModMenus.CIGARETTE_CASE.get(), CigaretteCaseScreen::new);
+diff --git a/src/main/java/com/createtobacco/item/AbstractSmokingItem.java b/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
+index 5944f0e..c5179fb 100644
+--- a/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
++++ b/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
+@@ -1,6 +1,7 @@
+ package com.createtobacco.item;
+ 
+ import com.createtobacco.component.SmokingItemState;
++import com.createtobacco.client.SmokingItemClientExtensions;
+ import com.createtobacco.attachment.SmokingData;
+ import com.createtobacco.attachment.WithdrawalTier;
+ import com.createtobacco.registry.ModAttachments;
+@@ -13,6 +14,7 @@ import com.createtobacco.smoking.SmokingProduct;
+ import com.createtobacco.smoking.SmokingProfile;
+ import net.minecraft.core.particles.ParticleTypes;
+ import java.util.List;
++import java.util.function.Consumer;
+ import net.minecraft.network.chat.Component;
+ import net.minecraft.server.level.ServerLevel;
+ import net.minecraft.server.level.ServerPlayer;
+@@ -31,6 +33,7 @@ import net.minecraft.world.item.TooltipFlag;
+ import net.minecraft.world.level.Level;
+ import net.minecraft.world.phys.Vec3;
+ import net.minecraft.util.Mth;
++import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+ 
+ public abstract class AbstractSmokingItem extends Item {
+     // Phase 8 visual tuning. These offsets are measured from the entity's eye position.
+@@ -58,6 +61,11 @@ public abstract class AbstractSmokingItem extends Item {
+         this.profile = profile;
+     }
+ 
++    @Override
++    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
++        consumer.accept(SmokingItemClientExtensions.INSTANCE);
++    }
++
+     @Override
+     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+         ItemStack smokingStack = player.getItemInHand(usedHand);

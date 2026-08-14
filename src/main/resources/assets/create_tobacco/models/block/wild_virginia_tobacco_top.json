@@ -1,0 +1,7 @@
+{
+  "render_type": "minecraft:cutout",
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "create_tobacco:block/wild_virginia_tobacco_top"
+  }
+}

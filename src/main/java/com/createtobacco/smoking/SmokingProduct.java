@@ -18,8 +18,7 @@ public enum SmokingProduct {
     ROTHMINES("rothmines", true),
     BEDROMORKANAL("bedromorkanal", true),
     MINECRISTO_NO_1("minecristo_no_1", false),
-    STONEO_Y_GLOWLIETA("stoneo_y_glowlieta", false),
-    COBBLIBA_MADURO("cobbliba_maduro", false);
+    STONEO_Y_GLOWLIETA("stoneo_y_glowlieta", false);
 
     private final ResourceLocation itemId;
     private final boolean packableCigarette;
@@ -38,7 +37,7 @@ public enum SmokingProduct {
     }
 
     public boolean isActiveSmokingProduct() {
-        return this != COBBLIBA_MADURO;
+        return true;
     }
 
     public static Optional<SmokingProduct> fromId(ResourceLocation id) {

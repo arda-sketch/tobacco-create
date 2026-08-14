@@ -1,0 +1,3440 @@
+diff --git a/ASSET_CHECKLIST.md b/ASSET_CHECKLIST.md
+new file mode 100644
+index 0000000..9e19e1a
+--- /dev/null
++++ b/ASSET_CHECKLIST.md
+@@ -0,0 +1,277 @@
++# Create: Tobacco — V1 Asset Checklist
++
++This file is the art pass checklist after V1 Polish 01. Gameplay may use temporary
++Minecraft/Create textures until the matching custom asset is drawn.
++
++## Art direction
++
++- Target look: roughly 70% vanilla Minecraft, 30% Create.
++- Keep silhouettes readable at native resolution; avoid anti-aliasing.
++- Organic tobacco assets: muted greens, ochres, tobacco browns.
++- Industrial/packaging assets: cream paper, cardboard, brass/copper accents.
++- Prefer a small palette per icon (usually 4–7 colors).
++- Item icons should normally be 16x16 PNG with transparent background.
++- Crop/wild plant textures should be 16x16 PNG with transparent background.
++- Mob-effect icons should be 18x18 PNG.
++
++## A. REQUIRED — cultivated crop stages (24)
++
++These are currently required by the crop block models and should be drawn first.
++Each variety needs eight visually distinct stages, stage0 through stage7.
++
++### Virginia
++
++- `assets/create_tobacco/textures/block/virginia_tobacco_stage0.png`
++- `.../virginia_tobacco_stage1.png`
++- `.../virginia_tobacco_stage2.png`
++- `.../virginia_tobacco_stage3.png`
++- `.../virginia_tobacco_stage4.png`
++- `.../virginia_tobacco_stage5.png`
++- `.../virginia_tobacco_stage6.png`
++- `.../virginia_tobacco_stage7.png`
++
++Visual idea: lighter/brighter broad leaves, relatively upright mature silhouette.
++
++### Burley
++
++- `.../burley_tobacco_stage0.png` through `.../burley_tobacco_stage7.png`
++
++Visual idea: darker, broader/heavier leaves; mature plant should be visibly distinct
++from Virginia even without reading the item name.
++
++### Havana
++
++- `.../havana_tobacco_stage0.png` through `.../havana_tobacco_stage7.png`
++
++Visual idea: rich green, slightly narrower/longer leaves, tropical feel. The final
++stage can be the tallest-looking of the three without changing the actual hitbox.
++
++### Suggested stage progression
++
++- 0: tiny two-leaf sprout
++- 1: 3–4 leaves
++- 2: low rosette
++- 3: stem becomes visible
++- 4: mid-sized plant
++- 5: broad leaf mass
++- 6: nearly mature, fuller top
++- 7: mature harvest silhouette
++
++Do not simply recolor one identical image for all three varieties; keep a family
++resemblance but vary leaf shape and silhouette.
++
++## B. REQUIRED — wild tobacco plants (3)
++
++- `assets/create_tobacco/textures/block/wild_virginia_tobacco.png`
++- `assets/create_tobacco/textures/block/wild_burley_tobacco.png`
++- `assets/create_tobacco/textures/block/wild_havana_tobacco.png`
++
++Recommended: make each wild texture recognizably related to cultivated stage7, but
++not identical. Wild plants should look slightly irregular/bushy so a player can
++recognize "wild source plant" instead of "mature crop growing on grass".
++
++A useful rule: stage7 is the tidy farm version; wild is the uneven natural version.
++
++## C. SEEDS (3) — existing, redraw if desired
++
++- `textures/item/virginia_seeds.png`
++- `textures/item/burley_seeds.png`
++- `textures/item/havana_seeds.png`
++
++Keep subtle color differences rather than three dramatically different seed shapes.
++
++## D. LEAVES (6) — existing, good candidates for a coherent redraw
++
++Fresh:
++- `fresh_virginia_leaf.png`
++- `fresh_burley_leaf.png`
++- `fresh_havana_leaf.png`
++
++Cured:
++- `cured_virginia_leaf.png`
++- `cured_burley_leaf.png`
++- `cured_havana_leaf.png`
++
++Fresh should read green at a glance; cured should read golden/brown at a glance.
++Try to preserve each variety's leaf silhouette between fresh and cured versions.
++
++## E. CUT TOBACCO (3) — existing
++
++- `cut_virginia_tobacco.png`
++- `cut_burley_tobacco.png`
++- `cut_havana_tobacco.png`
++
++Make these look like small shredded piles rather than miniature whole leaves.
++
++## F. CIGARETTE COMPONENTS (2) — existing
++
++- `cigarette_paper.png`
++- `cigarette_filter.png`
++
++Paper: thin cream strip / small stack of strips.
++Filter: short tan cylinder or compact filter bundle.
++
++## G. PREPARED BLENDS (9)
++
++Existing custom textures:
++- `marlbore_red_blend.png`
++- `winstone_blue_blend.png`
++- `creperfield_blend.png`
++- `craftmel_blend.png`
++- `chunkman_blend.png`
++- `kend_blend.png`
++- `pigliament_blend.png`
++- `rothmines_blend.png`
++
++Bedromorkanal currently falls back to vanilla dried kelp and needs its own art:
++- `bedromorkanal_blend.png`
++
++Blend rule: the tobacco pile should remain dominant and the additive should be a
++small readable accent (red spark, blue fleck, cocoa brown, chorus purple, etc.).
++
++## H. FINISHED CIGARETTES (9) — recommended high-priority redraw
++
++At present most finished cigarettes visually reuse their blend. Give every finished
++product a real cigarette silhouette:
++
++- `marlbore_red.png`
++- `winstone_blue.png`
++- `creperfield.png`
++- `craftmel.png`
++- `chunkman.png`
++- `kend.png`
++- `pigliament.png`
++- `rothmines.png`
++- `bedromorkanal.png`
++
++Keep the basic cigarette shape consistent, with small brand differences in filter,
++paper stripe, tip color, or decorative pixels. Do not make nine unrelated shapes.
++
++### Lit-state art
++
++The current V1 code stores lit state in a Data Component but does not yet swap the
++item model by component. If a later visual patch adds a component-aware model,
++prepare either:
++
++- nine `_lit` variants, or
++- one reusable ember/ash overlay approach.
++
++Do not draw all nine lit variants yet unless you want to; this can be a later polish.
++
++## I. CIGAR PRODUCTION ITEMS (4) — recommended redraw
++
++Currently several reuse leaf/cut-tobacco art:
++
++- `fermented_havana_tobacco_bundle.png`
++  - compact pressed brown bundle, tied/stacked leaf look
++- `cigar_filler.png`
++  - coarser long-cut Havana filler
++- `cigar_wrapper.png`
++  - flattened single cured wrapper leaf
++- `glowstone_cigar_filler.png`
++  - cigar filler with subtle warm gold Glowstone flecks
++
++## J. FINISHED CIGARS (2) — high priority
++
++- `minecristo_no_1.png`
++- `stoneo_y_glowlieta.png`
++
++Minecristo: classic dark-brown cigar, premium band/detail.
++Stoneo y Glowlieta: same cigar family, but warmer/golden band or faint glow accent.
++Do not simply reuse a cured leaf texture.
++
++## K. TRANSITIONAL CREATE ITEMS (2) — low priority
++
++These normally exist only during Sequenced Assembly and need not be beautiful:
++
++- `incomplete_cigarette.png`
++- `incomplete_cigar.png`
++
++A simple unfinished paper/tobacco rod and unfinished cigar are enough. They should
++not compete visually with finished products.
++
++## L. PACKAGING (10) — high priority
++
++Shared empty pack:
++- `empty_cigarette_pack.png`
++
++Brand packs:
++- `marlbore_red_pack.png` — red identity
++- `winstone_blue_pack.png` — blue identity
++- `creperfield_pack.png` — lime/creeper identity
++- `craftmel_pack.png` — orange/sandy identity
++- `chunkman_pack.png` — cocoa/brown identity
++- `kend_pack.png` — purple/End identity
++- `pigliament_pack.png` — gold/yellow identity
++- `rothmines_pack.png` — black/coal identity
++- `bedromorkanal_pack.png` — light-blue/sea identity
++
++All nine should share the same physical pack silhouette/template. Change label,
++stripe, logo geometry, and palette rather than the entire shape. Avoid real-world
++logos; parody names are enough.
++
++## M. CIGARETTE CASE / PORTSIGAR (1) — high priority
++
++- `cigarette_case.png`
++
++Suggested look: compact brass/iron cigarette case, dark leather inset, small hinge or
++clasp. It should read as a premium personal container rather than a chest/backpack.
++
++The current GUI is programmatically drawn, so no GUI PNG is required for V1.
++Optional later GUI art can use a 176x168-style inventory panel if desired.
++
++## N. MOB EFFECT ICONS (2) — required for polished HUD/inventory
++
++18x18 PNG:
++
++- `textures/mob_effect/nicotine_rush.png`
++  - subtle wind/leaf/smoke motif; should not resemble vanilla Speed too closely
++- `textures/mob_effect/withdrawal.png`
++  - muted/gray broken smoke or shaking-leaf motif
++
++## O. SMOKE PARTICLE SET (recommended polish, 8 frames)
++
++The current particle deliberately reuses vanilla `generic_0..7`, so it works without
++custom art. For a recognizable tobacco-smoke look later, draw:
++
++- `textures/particle/tobacco_smoke_0.png`
++- `.../tobacco_smoke_1.png`
++- ...
++- `.../tobacco_smoke_7.png`
++
++Recommended 8x8 or 16x16, soft gray shapes with transparent edges. The animation
++should expand and dissipate rather than look like eight unrelated clouds.
++
++## P. SOUNDS (not drawings, but part of the same polish pass)
++
++Current V1 avoids the drinking sound and uses existing game sounds. For a later audio
++pass prepare original/appropriately licensed `.ogg` files:
++
++- `sounds/smoking/puff.ogg`
++- `sounds/smoking/exhale.ogg` (optional; can be combined with puff)
++- `sounds/smoking/cough_1.ogg`
++- `sounds/smoking/cough_2.ogg` (optional variation)
++- `sounds/pack/open.ogg` or `pack_take.ogg`
++- `sounds/case/open.ogg`
++- `sounds/case/close.ogg`
++
++Do not ship audio copied from unrelated games/videos.
++
++## Q. Deferred release/metadata art
++
++Not required for the current private playtest:
++
++- mod logo
++- README screenshots
++- CurseForge/Modrinth banner
++- homepage art
++
++## Recommended drawing order
++
++1. 24 crop stages + 3 wild plants (fixes the largest visible missing-art problem).
++2. 9 finished cigarettes + 2 finished cigars.
++3. Empty pack + 9 brand packs + cigarette case.
++4. Cigar production intermediates.
++5. Effect icons.
++6. Redraw seeds/leaves/cut tobacco/blends only where the current style no longer fits.
++7. Custom smoke frames and audio last.
+diff --git a/POLISH_TESTING.md b/POLISH_TESTING.md
+new file mode 100644
+index 0000000..5e29d9d
+--- /dev/null
++++ b/POLISH_TESTING.md
+@@ -0,0 +1,294 @@
++# Create: Tobacco — V1 Polish 01 Manual Test Plan
++
++Run these tests after applying the patch. Do not commit the patch until `build` and
++the critical tests are green.
++
++## 0. Build / boot
++
++```powershell
++.\gradlew.bat --stop
++.\gradlew.bat build
++.\gradlew.bat runClient
++```
++
++Expected:
++- build succeeds;
++- Create 6.0.10 and Create: Tobacco load;
++- integrated world opens without registry/datapack errors.
++
++For dedicated-server smoke test later:
++
++```powershell
++.\gradlew.bat runServer
++```
++
++## 1. Wild tobacco survival entry
++
++IMPORTANT: worldgen appears only in newly generated chunks. Prefer a fresh test world.
++
++Expected biome groups:
++
++- Virginia: Plains / Sunflower Plains / Forest / Flower Forest / Birch Forest / Old Growth Birch Forest.
++- Burley: Meadow / Windswept Hills / Windswept Forest / Savanna / Savanna Plateau.
++- Havana: Jungle / Sparse Jungle / Bamboo Jungle.
++
++Useful commands:
++
++```mcfunction
++/locate biome minecraft:plains
++/locate biome minecraft:meadow
++/locate biome minecraft:jungle
++```
++
++If you need to inspect the blocks directly before drawing textures:
++
++```mcfunction
++/setblock ~ ~ ~ create_tobacco:wild_virginia_tobacco
++/setblock ~2 ~ ~ create_tobacco:wild_burley_tobacco
++/setblock ~4 ~ ~ create_tobacco:wild_havana_tobacco
++```
++
++Break at least 20 of each (use `/setblock` repeatedly if necessary):
++- always at least one corresponding seed;
++- sometimes a second seed (~50%);
++- occasionally a matching fresh leaf (~25%);
++- no wrong variety drops.
++
++Worldgen frequency is intentionally provisional. Record whether each plant feels:
++`too rare / good / too common`.
++
++## 2. Cobbliba cleanup
++
++JEI/search should no longer expose:
++
++- Cobbliba Maduro
++- Mixed Fermented Tobacco Bundle
++- Mixed Cigar Filler
++
++Commands such as these should fail as unknown items:
++
++```mcfunction
++/give @s create_tobacco:cobbliba_maduro
++/give @s create_tobacco:mixed_cigar_filler
++```
++
++## 3. Natural smouldering
++
++Give and ignite a cigarette:
++
++```mcfunction
++/give @s create_tobacco:craftmel
++/give @s minecraft:flint_and_steel
++```
++
++Expected:
++- ignition starts the burn countdown;
++- tooltip shows remaining puffs plus approximate burn seconds;
++- a cigarette left in normal player inventory loses one puff after about 60 seconds;
++- after all five natural burn intervals it disappears;
++- natural burn gives NO dependence, brand proc, Withdrawal relief, Rush, advancement or completion bonus;
++- a cigar burns one puff roughly every 90 seconds;
++- a manual successful puff refreshes that item's current burn interval.
++
++Also test logout/reconnect and moving the item between inventory slots.
++
++## 4. Smoking animation / smoke
++
++Use F5 and, ideally, a second player.
++
++Expected:
++- no vanilla drinking bob;
++- first-person hand moves smoothly toward the mouth over the first few ticks;
++- held pose is stable for the rest of the 1.2 second puff;
++- third-person player has a visible one-arm mouth pose;
++- early release still consumes no puff;
++- a successful puff produces a visibly larger smoke cloud;
++- held lit item produces small intermittent smoke;
++- puff sound is no longer a drinking sound.
++
++Record visual tuning notes such as:
++`too high / too low / too close / wrong rotation / third-person looks odd`.
++The transform values are intentionally easy to tune in the next patch.
++
++## 5. Creperfield enlarged Microblast
++
++Deterministic test:
++
++```mcfunction
++/createtobacco effect trigger @s creperfield
++```
++
++Test beside:
++- dirt/glass blocks;
++- a chest;
++- Create belts/shafts;
++- living mobs;
++- another player if possible.
++
++Expected:
++- larger, obvious explosion-like visual;
++- no block destruction;
++- no fire;
++- smoker takes no explosion damage;
++- nearby living entities are pushed moderately within ~4.5 blocks;
++- Speed II + Haste II are granted for the configured short duration.
++
++## 6. Withdrawal debug command
++
++Reset, then trigger severe directly:
++
++```mcfunction
++/createtobacco reset @s
++/createtobacco withdrawal trigger @s severe
++/createtobacco status @s
++```
++
++Expected:
++- command prepares dependence and elapsed craving state automatically;
++- Severe Withdrawal remains after the next tick instead of immediately disappearing;
++- status shows a Severe-valid dependence/timer state.
++
++Repeat mild/moderate/high if desired.
++
++## 7. Brand-specific packs — Mechanical Crafting
++
++Each full pack is a 4x3 Mechanical Crafter recipe:
++
++```text
++CCCC
++CPCD
++CCCC
++```
++
++- `C`: ten identical FULL, UNLIT cigarettes of the target brand
++- `P`: Empty Cigarette Pack
++- `D`: brand dye
++
++Dyes:
++
++- MarlbOre Red: Red Dye
++- WinStone Blue: Blue Dye
++- Creperfield: Lime Dye
++- Craftmel: Orange Dye
++- Chunkman: Brown Dye
++- KEnd: Purple Dye
++- Pigliament: Yellow Dye
++- Rothmines: Black Dye
++- Bedromorkanal: Light Blue Dye
++
++Expected:
++- all twelve ingredients physically fit in 4x3;
++- correct brand produces correct brand pack;
++- output starts `10 / 10`;
++- a lit cigarette must NOT match;
++- a partially smoked cigarette must NOT match;
++- wrong brand must NOT match;
++- cigars must NOT match.
++
++Quick item setup:
++
++```mcfunction
++/give @s create_tobacco:empty_cigarette_pack 16
++/give @s create_tobacco:marlbore_red 10
++/give @s minecraft:red_dye
++```
++
++Repeat with each brand after the first recipe is confirmed.
++
++## 8. Brand pack extraction
++
++For any crafted pack:
++- tooltip is the pack's brand name + `10 / 10`;
++- right click gives exactly one fresh matching cigarette;
++- pack becomes `9 / 10`;
++- spam click never duplicates;
++- full inventory does not lose a cigarette or decrement count;
++- `1 / 10 -> right click` replaces the pack with Empty Cigarette Pack;
++- drop/pickup preserves count;
++- death/inventory move preserves count.
++
++Quick direct full-pack commands (default component is full):
++
++```mcfunction
++/give @s create_tobacco:marlbore_red_pack
++/give @s create_tobacco:kend_pack
++/give @s create_tobacco:bedromorkanal_pack
++```
++
++## 9. Cigarette Case / Портсигар
++
++Craft recipe:
++
++```text
++Brass Sheet | Iron Nugget | Brass Sheet
++Leather     | Chest       | Leather
++Brass Sheet | Iron Nugget | Brass Sheet
++```
++
++Quick test:
++
++```mcfunction
++/give @s create_tobacco:cigarette_case
++/give @s create_tobacco:kend
++/give @s create_tobacco:minecristo_no_1
++/give @s minecraft:diamond
++```
++
++Expected:
++- right click opens 5x3 = 15 case slots;
++- all nine cigarettes and both cigars can be inserted;
++- vanilla diamond/food/tools cannot be inserted;
++- partially smoked and lit smoking items can be inserted;
++- their remaining-puff/lit Data Components survive closing/reopening;
++- shift-click transfers allowed items into the case;
++- source case cannot be moved out of its own main-hand hotbar slot while open;
++- closing/reopening, drop/pickup and relog preserve contents;
++- case cannot contain another case.
++
++Design choice for this patch: a lit item stored INSIDE the closed case does not
++progress passive burn. Treat the metal case as extinguishing/suppressing the ember.
++If this feels wrong in play, flag it for Polish 02.
++
++## 10. RNG regression
++
++Normal smoking should roll a product effect only once per completed puff.
++Holding the use button for 24 ticks must not make 24 rolls.
++
++Practical sanity test:
++- smoke several Creperfield/KEnd/Bedromorkanal items normally;
++- compare observed proc frequency to the configured low probabilities;
++- cancel puffs early repeatedly; cancelled puffs must never proc and never consume a puff.
++
++Deterministic debug handlers remain the preferred functional test:
++
++```mcfunction
++/createtobacco effect trigger @s marlbore_red
++/createtobacco effect trigger @s winstone_blue
++/createtobacco effect trigger @s creperfield
++/createtobacco effect trigger @s chunkman
++/createtobacco effect trigger @s pigliament
++/createtobacco effect trigger @s bedromorkanal
++/createtobacco effect trigger @s stoneo_y_glowlieta
++/createtobacco kend trigger @s random
++```
++
++## 11. Critical dedicated-server regression
++
++At minimum test with one connected client:
++- open/modify cigarette case;
++- put a partial cigarette in it and relog;
++- extract from a brand pack;
++- trigger Creperfield;
++- trigger KEnd teleport;
++- trigger Withdrawal;
++- ensure server log has no client-class linkage errors.
++
++With two clients, verify their cases/packs/player SmokingData stay independent.
++
++## Commit only after critical tests pass
++
++```powershell
++git status
++git add .
++git commit -m "V1 polish: survival tobacco packaging and smoking UX"
++```
+diff --git a/PROJECT_CONTEXT.md b/PROJECT_CONTEXT.md
+index 4c89ef7..67a3e8c 100644
+--- a/PROJECT_CONTEXT.md
++++ b/PROJECT_CONTEXT.md
+@@ -14,7 +14,7 @@
+ 
+ ## Current phase
+ 
+-Phase 16 — Balance consolidation and V1 playtesting support.
++V1 Polish 01 — release blockers, survival acquisition, packaging, portable storage, and smoking UX.
+ 
+ The Phase 0 skeleton loads with Create on both the development client and the
+ dedicated development server. Phase 1 added the requested basic items,
+@@ -28,9 +28,9 @@ Creperfield, Craftmel, Chunkman, KEnd, Pigliament, Rothmines, and
+ Bedromorkanal.
+ 
+ Mechanical Mixing produces prepared tobacco blends only. Cigarette Paper and
+-Cigarette Filters are not mixing ingredients. A later Phase 5 will combine
++Cigarette Filters are not mixing ingredients. Finished cigarettes combine
+ Paper, one Prepared Tobacco Blend, and a Filter through Create Sequenced
+-Assembly to make a finished cigarette.
++Assembly.
+ 
+ Phase 5 registers nine non-smokable finished `CigaretteItem` products and
+ assembles each through one-pass Create Sequenced Assembly: Cigarette Paper,
+@@ -40,33 +40,36 @@ nine recipes share one hidden `incomplete_cigarette`; Create's sequenced
+ assembly data component binds it to the selected brand recipe after step one.
+ 
+ Phase 6 adds a separate cigar production chain. Four Cured Havana Leaves plus
+-250 mB Water compact into a Fermented Havana Tobacco Bundle. Three Cured
+-Havana Leaves, one Cured Burley Leaf, and 250 mB Water compact into a Mixed
+-Fermented Tobacco Bundle. Sawing produces `cigar_filler` or
+-`mixed_cigar_filler`; pressing one Cured Havana Leaf produces a Cigar Wrapper.
+-Minecristo No. 1 deploys Havana filler onto the wrapper and presses it;
+-Cobbliba Maduro deploys mixed filler and presses it. Both assemblies use one
+-hidden `incomplete_cigar`, one Deployer, one Press, and no loops.
++250 mB Water compact into a Fermented Havana Tobacco Bundle. Sawing produces
++`cigar_filler`; pressing one Cured Havana Leaf produces a Cigar Wrapper.
++Minecristo No. 1 deploys Havana filler onto the wrapper and presses it.
++Stoneo y Glowlieta first mixes Cigar Filler with Glowstone Dust to create
++`glowstone_cigar_filler`, then uses the same one-Deployer/one-Press assembly.
++The abandoned Cobbliba/Mixed Filler development chain has been removed.
+ 
+ Phase 7 introduces the immutable `SmokingItemState` data component with
+-`remainingPuffs` and `lit`. Finished cigarettes default to five puffs and
+-finished cigars to eight; both default to unlit and are non-stackable because
+-the state belongs to each ItemStack. `AbstractSmokingItem` provides shared
+-server-authoritative ignition and puff consumption. An unlit smoking item can
+-only be ignited with vanilla Flint and Steel held in the other hand; ignition
+-damages it once and produces a small sound/particle effect. A lit item requires
+-24 ticks (1.2 seconds) of uninterrupted use per puff. Early release consumes
+-nothing, successful completion decrements the data component, and the final
+-puff removes the item without producing a butt.
++`remainingPuffs`, `lit`, and `burnTicksRemaining`. Finished cigarettes default
++to five puffs and finished cigars to eight; both default to unlit and are
++non-stackable because the state belongs to each ItemStack.
++`AbstractSmokingItem` provides shared server-authoritative ignition and puff
++consumption. An unlit smoking item can only be ignited with vanilla Flint and
++Steel held in the other hand; ignition damages it once and starts its natural
++smoulder timer. A lit item requires 24 ticks (1.2 seconds) of uninterrupted use
++per puff. Early release consumes nothing, successful completion decrements the
++data component and refreshes the smoulder interval, and the final puff removes
++the item without producing a butt. Passive smouldering consumes one puff per
++60 seconds for cigarettes and 90 seconds for cigars while the smoking item is
++in a player's ordinary inventory; passive burn never grants dependence,
++Withdrawal relief, brand procs, or completion rewards.
+ 
+ Phase 8 registers a custom translucent `tobacco_smoke` particle backed by the
+ eight vanilla animated smoke sprites. Successful server-authoritative puffs
+-send a small cloud near the player's mouth. While a lit item is actively held
++send a larger cloud near the player's mouth. While a lit item is actively held
+ in its 24-tick use action, the client creates a sparse local wisp near the used
+-hand without continuous networking. Smoking keeps the vanilla `DRINK` use
+-animation so first-person and tracked third-person players use Minecraft's
+-normal synchronized use-item pose. Position constants live in
+-`AbstractSmokingItem` for later visual tuning.
++hand without continuous networking. Smoking uses `UseAnim.NONE` plus a
++client-item extension: first person receives a smooth hand-to-mouth transform,
++while third person uses an explicit one-arm mouth pose visible to tracked
++players. No GeckoLib dependency is used.
+ 
+ Phase 9 adds persistent player `SmokingData` through NeoForge 1.21.1 Data
+ Attachments. Its codec stores dependence, active satisfaction time, decay
+@@ -77,9 +80,10 @@ clamped to 0–100. Each cigarette puff adds 0.18 dependence (0.9 total), while
+ each cigar puff adds 0.175 (1.4 total). Only the final puff resets
+ `activeTicksSinceSatisfied`, adds completion exhaustion, and replaces Nicotine
+ Rush with a fresh duration: 6,000 ticks for cigarettes or 8,400 for cigars.
+-Nicotine Rush grants 5% movement speed and its separate server damage hook
+-reduces incoming damage by 5%. Withdrawal episodes and brand-specific effects
+-remain unimplemented.
++Nicotine Rush grants 5% movement speed for the standard profile and its
++separate server damage hook reduces incoming damage by the profile value.
++Withdrawal episodes and brand-specific effects are implemented in later
++sections below.
+ 
+ Phase 10 adds a server-side episodic Withdrawal scheduler. Dependence tiers are
+ none below 20, Mild at 20–39.999, Moderate at 40–59.999, High at 60–79.999,
+@@ -105,7 +109,7 @@ design is now final for this phase:
+ - MarlbOre Red: Redstone; 25% per puff for Haste I (20 seconds).
+ - WinStone Blue: Lapis; 35% per puff for 1–2 raw experience points.
+ - Creperfield: Gunpowder; 10% per puff for a non-destructive Microblast. It
+-  plays sound/particles, moderately pushes living entities within 3.25 blocks,
++  plays sound/particles, moderately pushes living entities within 4.5 blocks,
+   and grants the smoker Speed II plus Haste II for 10 seconds. It never creates
+   an explosion, block damage, fire, or direct damage.
+ - Craftmel: basic/light; no proc, 0.7 total dependence, 4-minute Nicotine Rush.
+@@ -128,27 +132,29 @@ use safely, plays a sound and smoke, and applies Slowness I for five seconds;
+ it causes no damage and does not modify dependence. The cough timer is part of
+ the persistent player attachment and never advances while offline.
+ 
+-`cobbliba_maduro` remains registered only for compatibility with existing
+-development worlds, but it is no longer in the active creative cigar roster.
+-
+-Phase 12 adds `empty_cigarette_pack` and one generic `cigarette_pack`. Pack
+-contents are an immutable, persistent, network-synchronized Data Component
+-containing a validated finished-cigarette registry ID and count 1–10. Only the
+-nine active cigarette products are accepted; cigars and unknown IDs are
+-rejected. Packs never mix brands and are non-stackable while populated.
+-
+-Create Cardboard is pressed into two Empty Cigarette Packs. Nine Create 6.0.10
+-compacting recipes each consume one Empty Pack and ten identical, full, unlit
+-finished cigarettes. Data-component ingredients reject lit or partially used
+-cigarettes, preventing puff restoration through repacking. Recipe outputs set
+-the generic pack's brand/count component directly, so no custom machine or
+-custom recipe serializer is necessary. Basin automation remains compatible
+-with belts, funnels, chutes, and Mechanical Arms.
+-
+-Right-click extraction is server-authoritative. The pack first attempts to add
+-exactly one fresh saved-brand cigarette to inventory; only a successful full
+-insert decrements the component. Count one converts atomically into an Empty
+-Pack. Tooltip shows the stored cigarette display name and `count / 10`.
++Phase 12 originally introduced a generic data-driven pack, but V1 Polish 01
++replaces that design because ten non-stackable cigarettes cannot physically
++fit into a Create Basin alongside the Empty Pack. Packaging is now
++brand-specific. `empty_cigarette_pack` remains a shared input, while nine
++finished pack items (`<brand>_pack`) each store only an immutable remaining
++count 1–10; the pack item itself defines the cigarette type.
++
++Each full pack is made in a 4x3 Create Mechanical Crafting grid from ten full,
++unlit cigarettes of the matching brand, one Empty Cigarette Pack, and one
++brand dye. The fixed dye map is MarlbOre Red=red, WinStone Blue=blue,
++Creperfield=lime, Craftmel=orange, Chunkman=brown, KEnd=purple,
++Pigliament=yellow, Rothmines=black, and Bedromorkanal=light blue. Cigars are
++never valid pack contents. Right-click extraction remains
++server-authoritative: exactly one fresh cigarette is inserted into player
++inventory before count is decremented, and count one converts to an Empty Pack.
++The `Pack It Up` advancement accepts any brand pack at count 10.
++
++V1 Polish 01 also adds a non-placeable `cigarette_case` portable container.
++Right-click opens a 5x3 (15 slot) menu. Slots accept only the nine active
++cigarettes and two active cigars, including lit and partially smoked ItemStacks,
++so their Data Components are preserved. The case stores its inventory through
++the vanilla `minecraft:container` Data Component. Natural smouldering is paused
++while a smoking item is nested inside the closed case.
+ 
+ Phase 13 adds the operator-only `/createtobacco` development command tree
+ (permission level 2). `status` reports exact dependence/tier, active elapsed
+@@ -169,8 +175,8 @@ Phase 14 adds a compact four-entry advancement branch. `Golden Leaf` is
+ awarded for obtaining any cured Virginia, Burley, or Havana leaf, and
+ `Industrial Habit` for obtaining any of the nine active finished cigarettes.
+ Both use vanilla `inventory_changed` criteria. `Pack It Up` uses a dedicated
+-server criterion and is awarded only while a generic Cigarette Pack actually
+-contains a validated pack component with count 10; Empty Packs and partial
++server criterion and is awarded only while any brand-specific Cigarette Pack
++contains a validated count component of 10; Empty Packs and partial
+ packs do not qualify. `Smoke and Gears` is fired from the common final-puff
+ completion handler only for the nine active cigarettes, Minecristo No. 1, or
+ Stoneo y Glowlieta. Ignition, item acquisition, and partial smoking never fire
+@@ -220,12 +226,21 @@ interactions that should be observed before any future balance changes. Phase
+ 16 is the V1 feature-complete boundary; subsequent work is manual playtesting
+ and polish, not a new gameplay phase.
+ 
++## V1 Polish 01 survival/worldgen
++
++Three separate non-crop wild tobacco blocks provide the survival entry point:
++`wild_virginia_tobacco`, `wild_burley_tobacco`, and `wild_havana_tobacco`.
++They have independent data-driven worldgen. Virginia targets temperate
++plains/forest biomes, Burley targets meadow/windswept/savanna biomes, and
++Havana targets jungle biomes. Breaking a wild plant always yields its seed,
++has a 50% chance for a second seed, and a 25% chance for one fresh leaf.
++Worldgen rarity is provisional and must be judged in newly generated chunks.
++
+ ## Explicitly out of scope
+ 
+-Do not implement wild tobacco world generation, new machines or blocks,
+-custom ignition tools, cigarette
++Do not implement new processing machines, custom ignition tools, cigarette
+ butts, additional cigarette products, or additional cigars before a later
+-phase explicitly starts.
++explicit design decision.
+ 
+ ## Verification
+ 
+diff --git a/src/main/java/com/createtobacco/CreateTobacco.java b/src/main/java/com/createtobacco/CreateTobacco.java
+index 9e50029..adeb601 100644
+--- a/src/main/java/com/createtobacco/CreateTobacco.java
++++ b/src/main/java/com/createtobacco/CreateTobacco.java
+@@ -7,6 +7,7 @@ import com.createtobacco.registry.ModCriteriaTriggers;
+ import com.createtobacco.registry.ModDataComponents;
+ import com.createtobacco.registry.ModEffects;
+ import com.createtobacco.registry.ModItems;
++import com.createtobacco.registry.ModMenus;
+ import com.createtobacco.registry.ModParticles;
+ import com.mojang.logging.LogUtils;
+ import net.neoforged.bus.api.IEventBus;
+@@ -22,6 +23,7 @@ public final class CreateTobacco {
+         ModCriteriaTriggers.register(modEventBus);
+         ModDataComponents.register(modEventBus);
+         ModItems.register(modEventBus);
++        ModMenus.register(modEventBus);
+         ModBlocks.register(modEventBus);
+         ModEffects.register(modEventBus);
+         ModParticles.register(modEventBus);
+diff --git a/src/main/java/com/createtobacco/block/WildTobaccoBlock.java b/src/main/java/com/createtobacco/block/WildTobaccoBlock.java
+new file mode 100644
+index 0000000..2a038ff
+--- /dev/null
++++ b/src/main/java/com/createtobacco/block/WildTobaccoBlock.java
+@@ -0,0 +1,32 @@
++package com.createtobacco.block;
++
++import com.mojang.serialization.MapCodec;
++import net.minecraft.core.BlockPos;
++import net.minecraft.tags.BlockTags;
++import net.minecraft.world.level.BlockGetter;
++import net.minecraft.world.level.block.BushBlock;
++import net.minecraft.world.level.block.state.BlockBehaviour;
++import net.minecraft.world.level.block.state.BlockState;
++
++/**
++ * Naturally generated tobacco. Wild plants are deliberately separate from the
++ * cultivated CropBlock so world generation cannot accidentally create mature
++ * farm crops or inherit farmland-only placement rules.
++ */
++public final class WildTobaccoBlock extends BushBlock {
++    public static final MapCodec<WildTobaccoBlock> CODEC = simpleCodec(WildTobaccoBlock::new);
++
++    public WildTobaccoBlock(BlockBehaviour.Properties properties) {
++        super(properties);
++    }
++
++    @Override
++    public MapCodec<WildTobaccoBlock> codec() {
++        return CODEC;
++    }
++
++    @Override
++    protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {
++        return state.is(BlockTags.DIRT);
++    }
++}
+diff --git a/src/main/java/com/createtobacco/client/CreateTobaccoClient.java b/src/main/java/com/createtobacco/client/CreateTobaccoClient.java
+new file mode 100644
+index 0000000..dc7f24a
+--- /dev/null
++++ b/src/main/java/com/createtobacco/client/CreateTobaccoClient.java
+@@ -0,0 +1,40 @@
++package com.createtobacco.client;
++
++import com.createtobacco.CreateTobacco;
++import com.createtobacco.client.screen.CigaretteCaseScreen;
++import com.createtobacco.registry.ModItems;
++import com.createtobacco.registry.ModMenus;
++import net.neoforged.api.distmarker.Dist;
++import net.neoforged.bus.api.SubscribeEvent;
++import net.neoforged.fml.common.EventBusSubscriber;
++import net.neoforged.neoforge.client.event.RegisterClientExtensionsEvent;
++import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
++
++@EventBusSubscriber(modid = CreateTobacco.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
++public final class CreateTobaccoClient {
++    private CreateTobaccoClient() {
++    }
++
++    @SubscribeEvent
++    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
++        event.registerItem(
++                SmokingItemClientExtensions.INSTANCE,
++                ModItems.MARLBORE_RED.get(),
++                ModItems.WINSTONE_BLUE.get(),
++                ModItems.CREPERFIELD.get(),
++                ModItems.CRAFTMEL.get(),
++                ModItems.CHUNKMAN.get(),
++                ModItems.KEND.get(),
++                ModItems.PIGLIAMENT.get(),
++                ModItems.ROTHMINES.get(),
++                ModItems.BEDROMORKANAL.get(),
++                ModItems.MINECRISTO_NO_1.get(),
++                ModItems.STONEO_Y_GLOWLIETA.get()
++        );
++    }
++
++    @SubscribeEvent
++    public static void registerScreens(RegisterMenuScreensEvent event) {
++        event.register(ModMenus.CIGARETTE_CASE.get(), CigaretteCaseScreen::new);
++    }
++}
+diff --git a/src/main/java/com/createtobacco/client/SmokingItemClientExtensions.java b/src/main/java/com/createtobacco/client/SmokingItemClientExtensions.java
+new file mode 100644
+index 0000000..b942c21
+--- /dev/null
++++ b/src/main/java/com/createtobacco/client/SmokingItemClientExtensions.java
+@@ -0,0 +1,76 @@
++package com.createtobacco.client;
++
++import com.createtobacco.item.AbstractSmokingItem;
++import com.createtobacco.smoking.SmokingBalance;
++import com.mojang.blaze3d.vertex.PoseStack;
++import com.mojang.math.Axis;
++import net.minecraft.client.model.HumanoidModel;
++import net.minecraft.client.player.LocalPlayer;
++import net.minecraft.util.Mth;
++import net.minecraft.world.InteractionHand;
++import net.minecraft.world.entity.HumanoidArm;
++import net.minecraft.world.entity.LivingEntity;
++import net.minecraft.world.item.ItemStack;
++import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
++
++/** Smooth hand-to-mouth transform without reusing the vanilla drinking pose. */
++public final class SmokingItemClientExtensions implements IClientItemExtensions {
++    public static final SmokingItemClientExtensions INSTANCE = new SmokingItemClientExtensions();
++
++    private SmokingItemClientExtensions() {
++    }
++
++    @Override
++    public boolean applyForgeHandTransform(
++            PoseStack poseStack,
++            LocalPlayer player,
++            HumanoidArm arm,
++            ItemStack itemInHand,
++            float partialTick,
++            float equipProcess,
++            float swingProcess
++    ) {
++        if (!(itemInHand.getItem() instanceof AbstractSmokingItem)
++                || !player.isUsingItem()
++                || player.getUseItem().getItem() != itemInHand.getItem()) {
++            return false;
++        }
++
++        HumanoidArm usingArm = player.getUsedItemHand() == InteractionHand.MAIN_HAND
++                ? player.getMainArm()
++                : player.getMainArm().getOpposite();
++        if (usingArm != arm) {
++            return false;
++        }
++
++        float elapsed = SmokingBalance.PUFF_USE_DURATION_TICKS - player.getUseItemRemainingTicks() + partialTick;
++        float progress = smoothstep(Mth.clamp(elapsed / 6.0F, 0.0F, 1.0F));
++        float side = arm == HumanoidArm.RIGHT ? 1.0F : -1.0F;
++
++        poseStack.translate(-0.12F * side * progress, 0.16F * progress, 0.20F * progress);
++        poseStack.mulPose(Axis.XP.rotationDegrees(-32.0F * progress));
++        poseStack.mulPose(Axis.YP.rotationDegrees(16.0F * side * progress));
++        poseStack.mulPose(Axis.ZP.rotationDegrees(9.0F * side * progress));
++
++        // Keep the normal first-person base/equip transform; our use transform is
++        // layered on top and UseAnim.NONE prevents the drinking bob.
++        return false;
++    }
++
++    @Override
++    public HumanoidModel.ArmPose getArmPose(LivingEntity entity, InteractionHand hand, ItemStack stack) {
++        if (stack.getItem() instanceof AbstractSmokingItem
++                && entity.isUsingItem()
++                && entity.getUsedItemHand() == hand
++                && entity.getUseItemRemainingTicks() > 0) {
++            // Stable vanilla one-arm mouth pose, supplied explicitly by the
++            // client extension so it is visible to other players in third person.
++            return HumanoidModel.ArmPose.TOOT_HORN;
++        }
++        return null;
++    }
++
++    private static float smoothstep(float value) {
++        return value * value * (3.0F - 2.0F * value);
++    }
++}
+diff --git a/src/main/java/com/createtobacco/client/screen/CigaretteCaseScreen.java b/src/main/java/com/createtobacco/client/screen/CigaretteCaseScreen.java
+new file mode 100644
+index 0000000..10ce53e
+--- /dev/null
++++ b/src/main/java/com/createtobacco/client/screen/CigaretteCaseScreen.java
+@@ -0,0 +1,69 @@
++package com.createtobacco.client.screen;
++
++import com.createtobacco.menu.CigaretteCaseMenu;
++import net.minecraft.client.gui.GuiGraphics;
++import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
++import net.minecraft.network.chat.Component;
++import net.minecraft.world.entity.player.Inventory;
++
++/** Lightweight screen that does not require a custom GUI texture. */
++public final class CigaretteCaseScreen extends AbstractContainerScreen<CigaretteCaseMenu> {
++    private static final int PANEL = 0xFF2B261F;
++    private static final int PANEL_INNER = 0xFF4A4034;
++    private static final int SLOT_BORDER = 0xFF1A1713;
++    private static final int SLOT_FILL = 0xFF6A5B48;
++
++    public CigaretteCaseScreen(CigaretteCaseMenu menu, Inventory playerInventory, Component title) {
++        super(menu, playerInventory, title);
++        imageWidth = 176;
++        imageHeight = 168;
++        titleLabelX = 8;
++        titleLabelY = 6;
++        inventoryLabelX = 8;
++        inventoryLabelY = 74;
++    }
++
++    @Override
++    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
++        renderBackground(graphics, mouseX, mouseY, partialTick);
++        super.render(graphics, mouseX, mouseY, partialTick);
++        renderTooltip(graphics, mouseX, mouseY);
++    }
++
++    @Override
++    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
++        int x = leftPos;
++        int y = topPos;
++        graphics.fill(x, y, x + imageWidth, y + imageHeight, PANEL);
++        graphics.fill(x + 4, y + 14, x + imageWidth - 4, y + imageHeight - 4, PANEL_INNER);
++
++        // 15 case slots.
++        for (int row = 0; row < 3; row++) {
++            for (int col = 0; col < 5; col++) {
++                drawSlot(graphics, x + 43 + col * 18, y + 17 + row * 18);
++            }
++        }
++
++        // Player inventory + hotbar slots.
++        for (int row = 0; row < 3; row++) {
++            for (int col = 0; col < 9; col++) {
++                drawSlot(graphics, x + 7 + col * 18, y + 85 + row * 18);
++            }
++        }
++        for (int col = 0; col < 9; col++) {
++            drawSlot(graphics, x + 7 + col * 18, y + 143);
++        }
++    }
++
++    @Override
++    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
++        int labelColor = 0xFFE8D8B7;
++        graphics.drawString(font, title, titleLabelX, titleLabelY, labelColor, false);
++        graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, labelColor, false);
++    }
++
++    private static void drawSlot(GuiGraphics graphics, int x, int y) {
++        graphics.fill(x, y, x + 18, y + 18, SLOT_BORDER);
++        graphics.fill(x + 1, y + 1, x + 17, y + 17, SLOT_FILL);
++    }
++}
+diff --git a/src/main/java/com/createtobacco/command/CreateTobaccoCommands.java b/src/main/java/com/createtobacco/command/CreateTobaccoCommands.java
+index 075d7b0..2311d04 100644
+--- a/src/main/java/com/createtobacco/command/CreateTobaccoCommands.java
++++ b/src/main/java/com/createtobacco/command/CreateTobaccoCommands.java
+@@ -8,6 +8,7 @@ import com.createtobacco.registry.ModEffects;
+ import com.createtobacco.smoking.CoughingSystem;
+ import com.createtobacco.smoking.EnderRoulette;
+ import com.createtobacco.smoking.SmokingEffects;
++import com.createtobacco.smoking.SmokingBalance;
+ import com.createtobacco.smoking.SmokingProduct;
+ import com.createtobacco.smoking.WithdrawalSystem;
+ import com.mojang.brigadier.CommandDispatcher;
+@@ -38,7 +39,6 @@ public final class CreateTobaccoCommands {
+             SmokingProduct.CREPERFIELD,
+             SmokingProduct.CHUNKMAN,
+             SmokingProduct.PIGLIAMENT,
+-            SmokingProduct.ROTHMINES,
+             SmokingProduct.BEDROMORKANAL,
+             SmokingProduct.STONEO_Y_GLOWLIETA
+     );
+@@ -121,7 +121,7 @@ public final class CreateTobaccoCommands {
+     private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> productArgument() {
+         String[] products = {
+                 "marlbore_red", "winstone_blue", "creperfield", "chunkman",
+-                "pigliament", "rothmines", "bedromorkanal", "stoneo_y_glowlieta"
++                "pigliament", "bedromorkanal", "stoneo_y_glowlieta"
+         };
+         return Commands.argument("product", StringArgumentType.word())
+                 .suggests((context, builder) -> SharedSuggestionProvider.suggest(products, builder));
+@@ -198,8 +198,28 @@ public final class CreateTobaccoCommands {
+             return 0;
+         }
+         if (tier == WithdrawalTier.NONE) return 0;
+-        WithdrawalSystem.trigger(player, data(player), tier, false);
+-        send(context.getSource(), "Triggered " + tier + " Withdrawal for " + player.getGameProfile().getName());
++
++        // Debug trigger prepares a production-valid craving state first. Without
++        // this, the normal server tick correctly clears a manually injected
++        // Withdrawal effect immediately when dependence/safe time are too low.
++        SmokingData data = data(player);
++        float minimumDependence = switch (tier) {
++            case MILD -> SmokingBalance.MILD_DEPENDENCE;
++            case MODERATE -> SmokingBalance.MODERATE_DEPENDENCE;
++            case HIGH -> SmokingBalance.HIGH_DEPENDENCE;
++            case SEVERE -> SmokingBalance.SEVERE_DEPENDENCE;
++            case NONE -> 0.0F;
++        };
++        if (data.dependence() < minimumDependence) {
++            data.setDependence(minimumDependence);
++        }
++        if (data.activeTicksSinceSatisfied() < tier.safeIntervalTicks()) {
++            data.setActiveTicksSinceSatisfied(tier.safeIntervalTicks());
++        }
++
++        WithdrawalSystem.trigger(player, data, tier, false);
++        send(context.getSource(), "Triggered persistent " + tier + " Withdrawal for "
++                + player.getGameProfile().getName() + " (debug state prepared)");
+         return 1;
+     }
+ 
+diff --git a/src/main/java/com/createtobacco/component/CigarettePackContents.java b/src/main/java/com/createtobacco/component/CigarettePackContents.java
+deleted file mode 100644
+index d8c1c70..0000000
+--- a/src/main/java/com/createtobacco/component/CigarettePackContents.java
++++ /dev/null
+@@ -1,45 +0,0 @@
+-package com.createtobacco.component;
+-
+-import com.createtobacco.smoking.SmokingProduct;
+-import com.mojang.serialization.Codec;
+-import com.mojang.serialization.DataResult;
+-import com.mojang.serialization.codecs.RecordCodecBuilder;
+-import net.minecraft.network.RegistryFriendlyByteBuf;
+-import net.minecraft.network.codec.ByteBufCodecs;
+-import net.minecraft.network.codec.StreamCodec;
+-import net.minecraft.resources.ResourceLocation;
+-
+-public record CigarettePackContents(ResourceLocation cigaretteId, int count) {
+-    public static final int CAPACITY = 10;
+-
+-    private static final Codec<ResourceLocation> CIGARETTE_ID_CODEC = ResourceLocation.CODEC.validate(id ->
+-            SmokingProduct.isPackableCigaretteId(id)
+-                    ? DataResult.success(id)
+-                    : DataResult.error(() -> "Not an allowed Create Tobacco cigarette: " + id));
+-
+-    public static final Codec<CigarettePackContents> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+-            CIGARETTE_ID_CODEC.fieldOf("cigarette").forGetter(CigarettePackContents::cigaretteId),
+-            Codec.intRange(1, CAPACITY).fieldOf("count").forGetter(CigarettePackContents::count)
+-    ).apply(instance, CigarettePackContents::new));
+-
+-    public static final StreamCodec<RegistryFriendlyByteBuf, CigarettePackContents> STREAM_CODEC = StreamCodec.composite(
+-            ResourceLocation.STREAM_CODEC,
+-            CigarettePackContents::cigaretteId,
+-            ByteBufCodecs.VAR_INT,
+-            CigarettePackContents::count,
+-            CigarettePackContents::new
+-    );
+-
+-    public CigarettePackContents {
+-        if (!SmokingProduct.isPackableCigaretteId(cigaretteId)) {
+-            throw new IllegalArgumentException("Not an allowed finished cigarette: " + cigaretteId);
+-        }
+-        if (count < 1 || count > CAPACITY) {
+-            throw new IllegalArgumentException("Cigarette pack count must be 1.." + CAPACITY);
+-        }
+-    }
+-
+-    public CigarettePackContents withCount(int newCount) {
+-        return new CigarettePackContents(cigaretteId, newCount);
+-    }
+-}
+diff --git a/src/main/java/com/createtobacco/component/CigarettePackState.java b/src/main/java/com/createtobacco/component/CigarettePackState.java
+new file mode 100644
+index 0000000..7c91ad8
+--- /dev/null
++++ b/src/main/java/com/createtobacco/component/CigarettePackState.java
+@@ -0,0 +1,36 @@
++package com.createtobacco.component;
++
++import com.mojang.serialization.Codec;
++import com.mojang.serialization.codecs.RecordCodecBuilder;
++import net.minecraft.network.RegistryFriendlyByteBuf;
++import net.minecraft.network.codec.ByteBufCodecs;
++import net.minecraft.network.codec.StreamCodec;
++
++/** Remaining cigarettes in a brand-specific pack. */
++public record CigarettePackState(int count) {
++    public static final int CAPACITY = 10;
++
++    public static final Codec<CigarettePackState> CODEC = RecordCodecBuilder.create(instance -> instance.group(
++            Codec.intRange(1, CAPACITY).fieldOf("count").forGetter(CigarettePackState::count)
++    ).apply(instance, CigarettePackState::new));
++
++    public static final StreamCodec<RegistryFriendlyByteBuf, CigarettePackState> STREAM_CODEC = StreamCodec.composite(
++            ByteBufCodecs.VAR_INT,
++            CigarettePackState::count,
++            CigarettePackState::new
++    );
++
++    public CigarettePackState {
++        if (count < 1 || count > CAPACITY) {
++            throw new IllegalArgumentException("Cigarette pack count must be 1.." + CAPACITY);
++        }
++    }
++
++    public static CigarettePackState full() {
++        return new CigarettePackState(CAPACITY);
++    }
++
++    public CigarettePackState withCount(int newCount) {
++        return new CigarettePackState(newCount);
++    }
++}
+diff --git a/src/main/java/com/createtobacco/component/SmokingItemState.java b/src/main/java/com/createtobacco/component/SmokingItemState.java
+index 97f8fe4..d71363c 100644
+--- a/src/main/java/com/createtobacco/component/SmokingItemState.java
++++ b/src/main/java/com/createtobacco/component/SmokingItemState.java
+@@ -2,45 +2,66 @@ package com.createtobacco.component;
+ 
+ import com.mojang.serialization.Codec;
+ import com.mojang.serialization.codecs.RecordCodecBuilder;
++import net.minecraft.network.RegistryFriendlyByteBuf;
+ import net.minecraft.network.codec.ByteBufCodecs;
+ import net.minecraft.network.codec.StreamCodec;
+ 
+-public record SmokingItemState(int remainingPuffs, boolean lit) {
++/** Persistent per-stack state for cigarettes and cigars. */
++public record SmokingItemState(int remainingPuffs, boolean lit, int burnTicksRemaining) {
+     public static final int MAX_SERIALIZED_PUFFS = 64;
++    public static final int MAX_SERIALIZED_BURN_TICKS = 20 * 60 * 30;
+ 
+     public static final Codec<SmokingItemState> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+             Codec.intRange(0, MAX_SERIALIZED_PUFFS).fieldOf("remaining_puffs").forGetter(SmokingItemState::remainingPuffs),
+-            Codec.BOOL.fieldOf("lit").forGetter(SmokingItemState::lit)
++            Codec.BOOL.fieldOf("lit").forGetter(SmokingItemState::lit),
++            Codec.intRange(0, MAX_SERIALIZED_BURN_TICKS).optionalFieldOf("burn_ticks", 0)
++                    .forGetter(SmokingItemState::burnTicksRemaining)
+     ).apply(instance, SmokingItemState::new));
+ 
+-    public static final StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, SmokingItemState> STREAM_CODEC =
+-            StreamCodec.composite(
+-                    ByteBufCodecs.VAR_INT,
+-                    SmokingItemState::remainingPuffs,
+-                    ByteBufCodecs.BOOL,
+-                    SmokingItemState::lit,
+-                    SmokingItemState::new
+-            );
++    public static final StreamCodec<RegistryFriendlyByteBuf, SmokingItemState> STREAM_CODEC = StreamCodec.composite(
++            ByteBufCodecs.VAR_INT,
++            SmokingItemState::remainingPuffs,
++            ByteBufCodecs.BOOL,
++            SmokingItemState::lit,
++            ByteBufCodecs.VAR_INT,
++            SmokingItemState::burnTicksRemaining,
++            SmokingItemState::new
++    );
+ 
+     public SmokingItemState {
+         if (remainingPuffs < 0 || remainingPuffs > MAX_SERIALIZED_PUFFS) {
+             throw new IllegalArgumentException("remainingPuffs must be in range 0.." + MAX_SERIALIZED_PUFFS);
+         }
++        if (burnTicksRemaining < 0 || burnTicksRemaining > MAX_SERIALIZED_BURN_TICKS) {
++            throw new IllegalArgumentException("burnTicksRemaining must be in range 0.." + MAX_SERIALIZED_BURN_TICKS);
++        }
+     }
+ 
+     public static SmokingItemState cigarette() {
+-        return new SmokingItemState(5, false);
++        return new SmokingItemState(5, false, 0);
+     }
+ 
+     public static SmokingItemState cigar() {
+-        return new SmokingItemState(8, false);
++        return new SmokingItemState(8, false, 0);
++    }
++
++    public SmokingItemState ignite(int burnIntervalTicks) {
++        return new SmokingItemState(remainingPuffs, true, burnIntervalTicks);
++    }
++
++    public SmokingItemState afterPuff(int puffs, int burnIntervalTicks) {
++        return new SmokingItemState(puffs, true, burnIntervalTicks);
+     }
+ 
+     public SmokingItemState withRemainingPuffs(int puffs) {
+-        return new SmokingItemState(puffs, lit);
++        return new SmokingItemState(puffs, lit, burnTicksRemaining);
+     }
+ 
+     public SmokingItemState withLit(boolean isLit) {
+-        return new SmokingItemState(remainingPuffs, isLit);
++        return new SmokingItemState(remainingPuffs, isLit, isLit ? burnTicksRemaining : 0);
++    }
++
++    public SmokingItemState withBurnTicksRemaining(int ticks) {
++        return new SmokingItemState(remainingPuffs, lit, ticks);
+     }
+ }
+diff --git a/src/main/java/com/createtobacco/item/AbstractSmokingItem.java b/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
+index 3417df0..5944f0e 100644
+--- a/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
++++ b/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
+@@ -22,6 +22,7 @@ import net.minecraft.world.InteractionHand;
+ import net.minecraft.world.InteractionResultHolder;
+ import net.minecraft.world.entity.LivingEntity;
+ import net.minecraft.world.entity.player.Player;
++import net.minecraft.world.entity.Entity;
+ import net.minecraft.world.item.Item;
+ import net.minecraft.world.item.ItemStack;
+ import net.minecraft.world.item.Items;
+@@ -37,7 +38,7 @@ public abstract class AbstractSmokingItem extends Item {
+     public static final double HELD_SMOKE_FORWARD_OFFSET = 0.38D;
+     public static final double HELD_SMOKE_SIDE_OFFSET = 0.18D;
+     public static final double HELD_SMOKE_DOWN_OFFSET = 0.16D;
+-    public static final int HELD_SMOKE_INTERVAL_TICKS = 7;
++    public static final int HELD_SMOKE_INTERVAL_TICKS = 5;
+ 
+     private final SmokingItemState defaultState;
+     private final SmokingProduct product;
+@@ -50,9 +51,9 @@ public abstract class AbstractSmokingItem extends Item {
+     private AbstractSmokingItem(Properties properties, SmokingProduct product, SmokingProfile profile) {
+         super(properties.stacksTo(1).component(
+                 ModDataComponents.SMOKING_ITEM_STATE.get(),
+-                new SmokingItemState(profile.puffs(), false)
++                new SmokingItemState(profile.puffs(), false, 0)
+         ));
+-        this.defaultState = new SmokingItemState(profile.puffs(), false);
++        this.defaultState = new SmokingItemState(profile.puffs(), false, 0);
+         this.product = product;
+         this.profile = profile;
+     }
+@@ -72,7 +73,7 @@ public abstract class AbstractSmokingItem extends Item {
+             }
+ 
+             if (level instanceof ServerLevel serverLevel) {
+-                smokingStack.set(ModDataComponents.SMOKING_ITEM_STATE.get(), state.withLit(true));
++                smokingStack.set(ModDataComponents.SMOKING_ITEM_STATE.get(), state.ignite(naturalBurnIntervalTicks()));
+                 ignitionStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(ignitionHand));
+                 playIgnitionEffects(serverLevel, player);
+             }
+@@ -109,7 +110,7 @@ public abstract class AbstractSmokingItem extends Item {
+             }
+             stack.shrink(1);
+         } else {
+-            stack.set(ModDataComponents.SMOKING_ITEM_STATE.get(), state.withRemainingPuffs(remainingPuffs));
++            stack.set(ModDataComponents.SMOKING_ITEM_STATE.get(), state.afterPuff(remainingPuffs, naturalBurnIntervalTicks()));
+         }
+ 
+         return stack;
+@@ -122,7 +123,7 @@ public abstract class AbstractSmokingItem extends Item {
+ 
+     @Override
+     public UseAnim getUseAnimation(ItemStack stack) {
+-        return UseAnim.DRINK;
++        return UseAnim.NONE;
+     }
+ 
+     @Override
+@@ -156,6 +157,57 @@ public abstract class AbstractSmokingItem extends Item {
+                 state.remainingPuffs(),
+                 defaultState.remainingPuffs()
+         ));
++        if (state.lit() && state.burnTicksRemaining() > 0) {
++            tooltipComponents.add(Component.translatable(
++                    "tooltip.create_tobacco.burn_time",
++                    Math.max(1, (state.burnTicksRemaining() + 19) / 20)
++            ));
++        }
++    }
++
++    @Override
++    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
++        if (level.isClientSide() || entity.tickCount % SmokingBalance.TICKS_PER_SECOND != 0) {
++            return;
++        }
++        tickNaturalBurn(stack, SmokingBalance.TICKS_PER_SECOND);
++    }
++
++    /**
++     * Advances passive smouldering without awarding dependence relief, brand
++     * procs or completion rewards. Returns true when the stack state changed.
++     */
++    public boolean tickNaturalBurn(ItemStack stack, int elapsedTicks) {
++        SmokingItemState state = getState(stack);
++        if (!state.lit() || state.remainingPuffs() <= 0 || stack.isEmpty()) {
++            return false;
++        }
++
++        int interval = naturalBurnIntervalTicks();
++        int burnTicks = state.burnTicksRemaining();
++        if (burnTicks <= 0) {
++            stack.set(ModDataComponents.SMOKING_ITEM_STATE.get(), state.withBurnTicksRemaining(interval));
++            return true;
++        }
++
++        if (burnTicks > elapsedTicks) {
++            stack.set(ModDataComponents.SMOKING_ITEM_STATE.get(), state.withBurnTicksRemaining(burnTicks - elapsedTicks));
++            return true;
++        }
++
++        int remainingPuffs = state.remainingPuffs() - 1;
++        if (remainingPuffs <= 0) {
++            stack.shrink(1);
++        } else {
++            stack.set(ModDataComponents.SMOKING_ITEM_STATE.get(), state.afterPuff(remainingPuffs, interval));
++        }
++        return true;
++    }
++
++    private int naturalBurnIntervalTicks() {
++        return profile.puffs() > 5
++                ? SmokingBalance.CIGAR_NATURAL_BURN_INTERVAL_TICKS
++                : SmokingBalance.CIGARETTE_NATURAL_BURN_INTERVAL_TICKS;
+     }
+ 
+     @Override
+@@ -211,7 +263,9 @@ public abstract class AbstractSmokingItem extends Item {
+                 1.2F
+         );
+         level.sendParticles(ModParticles.TOBACCO_SMOKE.get(), position.x, position.y, position.z,
+-                7, 0.08, 0.05, 0.08, 0.012);
++                12, 0.11, 0.07, 0.11, 0.016);
++        level.sendParticles(ParticleTypes.POOF, position.x, position.y, position.z,
++                3, 0.08, 0.05, 0.08, 0.01);
+     }
+ 
+     private static Vec3 effectPosition(LivingEntity entity) {
+diff --git a/src/main/java/com/createtobacco/item/CigaretteCaseContainer.java b/src/main/java/com/createtobacco/item/CigaretteCaseContainer.java
+new file mode 100644
+index 0000000..dffdde5
+--- /dev/null
++++ b/src/main/java/com/createtobacco/item/CigaretteCaseContainer.java
+@@ -0,0 +1,29 @@
++package com.createtobacco.item;
++
++import net.minecraft.core.component.DataComponents;
++import net.minecraft.world.SimpleContainer;
++import net.minecraft.world.item.ItemStack;
++import net.minecraft.world.item.component.ItemContainerContents;
++
++/** ItemStack-backed 15-slot inventory for the cigarette case. */
++public final class CigaretteCaseContainer extends SimpleContainer {
++    public static final int SIZE = 15;
++    private final ItemStack caseStack;
++
++    public CigaretteCaseContainer(ItemStack caseStack) {
++        super(SIZE);
++        this.caseStack = caseStack;
++        caseStack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(getItems());
++    }
++
++    @Override
++    public boolean canPlaceItem(int slot, ItemStack stack) {
++        return CigaretteCaseItem.isAllowedContent(stack);
++    }
++
++    @Override
++    public void setChanged() {
++        super.setChanged();
++        caseStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getItems()));
++    }
++}
+diff --git a/src/main/java/com/createtobacco/item/CigaretteCaseItem.java b/src/main/java/com/createtobacco/item/CigaretteCaseItem.java
+new file mode 100644
+index 0000000..8a3e09e
+--- /dev/null
++++ b/src/main/java/com/createtobacco/item/CigaretteCaseItem.java
+@@ -0,0 +1,45 @@
++package com.createtobacco.item;
++
++import com.createtobacco.menu.CigaretteCaseMenu;
++import com.createtobacco.smoking.SmokingProduct;
++import net.minecraft.core.component.DataComponents;
++import net.minecraft.network.chat.Component;
++import net.minecraft.server.level.ServerPlayer;
++import net.minecraft.world.InteractionHand;
++import net.minecraft.world.InteractionResultHolder;
++import net.minecraft.world.SimpleMenuProvider;
++import net.minecraft.world.entity.player.Player;
++import net.minecraft.world.item.Item;
++import net.minecraft.world.item.ItemStack;
++import net.minecraft.world.item.component.ItemContainerContents;
++import net.minecraft.world.level.Level;
++
++/** Portable 15-slot case which accepts only active cigarettes and cigars. */
++public final class CigaretteCaseItem extends Item {
++    public CigaretteCaseItem(Properties properties) {
++        super(properties.stacksTo(1).component(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
++    }
++
++    public static boolean isAllowedContent(ItemStack stack) {
++        return !stack.isEmpty()
++                && stack.getItem() instanceof AbstractSmokingItem
++                && SmokingProduct.fromItem(stack.getItem()).map(SmokingProduct::isActiveSmokingProduct).orElse(false);
++    }
++
++    @Override
++    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
++        ItemStack stack = player.getItemInHand(usedHand);
++        if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
++            boolean mainHand = usedHand == InteractionHand.MAIN_HAND;
++            serverPlayer.openMenu(
++                    new SimpleMenuProvider(
++                            (containerId, inventory, menuPlayer) ->
++                                    new CigaretteCaseMenu(containerId, inventory, stack, usedHand),
++                            Component.translatable("container.create_tobacco.cigarette_case")
++                    ),
++                    buffer -> buffer.writeBoolean(mainHand)
++            );
++        }
++        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
++    }
++}
+diff --git a/src/main/java/com/createtobacco/item/CigarettePackItem.java b/src/main/java/com/createtobacco/item/CigarettePackItem.java
+index c8a8b4e..fa1903f 100644
+--- a/src/main/java/com/createtobacco/item/CigarettePackItem.java
++++ b/src/main/java/com/createtobacco/item/CigarettePackItem.java
+@@ -1,36 +1,50 @@
+ package com.createtobacco.item;
+ 
+-import com.createtobacco.component.CigarettePackContents;
+-import com.createtobacco.registry.ModDataComponents;
++import com.createtobacco.component.CigarettePackState;
+ import com.createtobacco.registry.ModCriteriaTriggers;
++import com.createtobacco.registry.ModDataComponents;
+ import com.createtobacco.registry.ModItems;
++import com.createtobacco.smoking.SmokingProduct;
+ import java.util.List;
+ import net.minecraft.core.registries.BuiltInRegistries;
+ import net.minecraft.network.chat.Component;
+-import net.minecraft.resources.ResourceLocation;
++import net.minecraft.server.level.ServerPlayer;
+ import net.minecraft.world.InteractionHand;
+ import net.minecraft.world.InteractionResultHolder;
+-import net.minecraft.world.entity.player.Player;
+ import net.minecraft.world.entity.Entity;
+-import net.minecraft.server.level.ServerPlayer;
++import net.minecraft.world.entity.player.Player;
+ import net.minecraft.world.item.Item;
+ import net.minecraft.world.item.ItemStack;
+ import net.minecraft.world.item.TooltipFlag;
+ import net.minecraft.world.level.Level;
+ 
++/**
++ * A pack is a real brand-specific item. Only the remaining count is dynamic;
++ * the contained cigarette type is defined by the item itself.
++ */
+ public final class CigarettePackItem extends Item {
+-    public CigarettePackItem(Properties properties) {
+-        super(properties.stacksTo(1));
++    private final SmokingProduct product;
++
++    public CigarettePackItem(Properties properties, SmokingProduct product) {
++        super(properties.stacksTo(1).component(ModDataComponents.CIGARETTE_PACK_STATE.get(), CigarettePackState.full()));
++        if (!product.isPackableCigarette()) {
++            throw new IllegalArgumentException("Only cigarettes can have packs: " + product);
++        }
++        this.product = product;
++    }
++
++    public SmokingProduct product() {
++        return product;
+     }
+ 
+     @Override
+     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+-        if (level.isClientSide() || !(entity instanceof ServerPlayer player)) {
++        if (level.isClientSide() || !(entity instanceof ServerPlayer player) || player.tickCount % 20 != 0) {
+             return;
+         }
+ 
+-        CigarettePackContents contents = stack.get(ModDataComponents.CIGARETTE_PACK_CONTENTS);
+-        if (contents != null && contents.count() == CigarettePackContents.CAPACITY) {
++        CigarettePackState state = stack.get(ModDataComponents.CIGARETTE_PACK_STATE);
++        if (state != null && state.count() == CigarettePackState.CAPACITY) {
+             ModCriteriaTriggers.FULL_CIGARETTE_PACK.get().trigger(player);
+         }
+     }
+@@ -38,25 +52,25 @@ public final class CigarettePackItem extends Item {
+     @Override
+     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+         ItemStack pack = player.getItemInHand(usedHand);
+-        CigarettePackContents contents = pack.get(ModDataComponents.CIGARETTE_PACK_CONTENTS);
+-        if (contents == null) {
++        CigarettePackState state = pack.get(ModDataComponents.CIGARETTE_PACK_STATE);
++        if (state == null) {
+             return InteractionResultHolder.fail(pack);
+         }
+ 
+         if (!level.isClientSide()) {
+-            Item cigarette = BuiltInRegistries.ITEM.get(contents.cigaretteId());
++            Item cigarette = BuiltInRegistries.ITEM.get(product.itemId());
+             ItemStack extracted = new ItemStack(cigarette);
+             if (!player.getInventory().add(extracted) || !extracted.isEmpty()) {
+                 return InteractionResultHolder.fail(pack);
+             }
+ 
+-            if (contents.count() == 1) {
++            if (state.count() == 1) {
+                 ItemStack emptyPack = new ItemStack(ModItems.EMPTY_CIGARETTE_PACK.get());
+                 player.setItemInHand(usedHand, emptyPack);
+                 return InteractionResultHolder.success(emptyPack);
+             }
+ 
+-            pack.set(ModDataComponents.CIGARETTE_PACK_CONTENTS, contents.withCount(contents.count() - 1));
++            pack.set(ModDataComponents.CIGARETTE_PACK_STATE.get(), state.withCount(state.count() - 1));
+         }
+ 
+         return InteractionResultHolder.sidedSuccess(pack, level.isClientSide());
+@@ -69,18 +83,16 @@ public final class CigarettePackItem extends Item {
+             List<Component> tooltipComponents,
+             TooltipFlag tooltipFlag
+     ) {
+-        CigarettePackContents contents = stack.get(ModDataComponents.CIGARETTE_PACK_CONTENTS);
+-        if (contents == null) {
++        CigarettePackState state = stack.get(ModDataComponents.CIGARETTE_PACK_STATE);
++        if (state == null) {
+             tooltipComponents.add(Component.translatable("tooltip.create_tobacco.invalid_pack"));
+             return;
+         }
+ 
+-        Item cigarette = BuiltInRegistries.ITEM.get(contents.cigaretteId());
+-        tooltipComponents.add(cigarette.getDescription());
+         tooltipComponents.add(Component.translatable(
+                 "tooltip.create_tobacco.pack_count",
+-                contents.count(),
+-                CigarettePackContents.CAPACITY
++                state.count(),
++                CigarettePackState.CAPACITY
+         ));
+     }
+ }
+diff --git a/src/main/java/com/createtobacco/menu/CigaretteCaseMenu.java b/src/main/java/com/createtobacco/menu/CigaretteCaseMenu.java
+new file mode 100644
+index 0000000..86fa4d1
+--- /dev/null
++++ b/src/main/java/com/createtobacco/menu/CigaretteCaseMenu.java
+@@ -0,0 +1,163 @@
++package com.createtobacco.menu;
++
++import com.createtobacco.item.CigaretteCaseContainer;
++import com.createtobacco.item.CigaretteCaseItem;
++import com.createtobacco.registry.ModMenus;
++import net.minecraft.network.RegistryFriendlyByteBuf;
++import net.minecraft.world.Container;
++import net.minecraft.world.InteractionHand;
++import net.minecraft.world.SimpleContainer;
++import net.minecraft.world.entity.player.Inventory;
++import net.minecraft.world.entity.player.Player;
++import net.minecraft.world.inventory.AbstractContainerMenu;
++import net.minecraft.world.inventory.Slot;
++import net.minecraft.world.item.ItemStack;
++
++public final class CigaretteCaseMenu extends AbstractContainerMenu {
++    public static final int CASE_SLOTS = CigaretteCaseContainer.SIZE;
++    private static final int PLAYER_INVENTORY_START = CASE_SLOTS;
++    private static final int PLAYER_INVENTORY_END = PLAYER_INVENTORY_START + 27;
++    private static final int HOTBAR_START = PLAYER_INVENTORY_END;
++    private static final int HOTBAR_END = HOTBAR_START + 9;
++
++    private final Container caseContainer;
++    private final ItemStack sourceCaseStack;
++    private final InteractionHand sourceHand;
++
++    /** Client constructor used by IContainerFactory. */
++    public CigaretteCaseMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buffer) {
++        this(containerId, playerInventory, new SimpleContainer(CASE_SLOTS), ItemStack.EMPTY,
++                buffer.readBoolean() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
++    }
++
++    /** Server constructor used when the item is opened. */
++    public CigaretteCaseMenu(int containerId, Inventory playerInventory, ItemStack caseStack, InteractionHand sourceHand) {
++        this(containerId, playerInventory, new CigaretteCaseContainer(caseStack), caseStack, sourceHand);
++    }
++
++    private CigaretteCaseMenu(
++            int containerId,
++            Inventory playerInventory,
++            Container caseContainer,
++            ItemStack sourceCaseStack,
++            InteractionHand sourceHand
++    ) {
++        super(ModMenus.CIGARETTE_CASE.get(), containerId);
++        checkContainerSize(caseContainer, CASE_SLOTS);
++        this.caseContainer = caseContainer;
++        this.sourceCaseStack = sourceCaseStack;
++        this.sourceHand = sourceHand;
++
++        // 5 x 3 case slots, centered above the normal player inventory.
++        for (int row = 0; row < 3; row++) {
++            for (int column = 0; column < 5; column++) {
++                int index = column + row * 5;
++                addSlot(new CopyingCaseSlot(caseContainer, index, 44 + column * 18, 18 + row * 18));
++            }
++        }
++
++        // Player inventory.
++        for (int row = 0; row < 3; row++) {
++            for (int column = 0; column < 9; column++) {
++                addSlot(new Slot(playerInventory, column + row * 9 + 9, 8 + column * 18, 86 + row * 18));
++            }
++        }
++
++        // Hotbar. Lock the source slot while a main-hand case is open so the
++        // storage item cannot be moved out from under its own menu.
++        for (int column = 0; column < 9; column++) {
++            int index = column;
++            if (sourceHand == InteractionHand.MAIN_HAND && index == playerInventory.selected) {
++                addSlot(new LockedSourceSlot(playerInventory, index, 8 + column * 18, 144));
++            } else {
++                addSlot(new Slot(playerInventory, index, 8 + column * 18, 144));
++            }
++        }
++    }
++
++    @Override
++    public boolean stillValid(Player player) {
++        if (sourceCaseStack.isEmpty()) {
++            return true; // Client-side dummy menu.
++        }
++        ItemStack current = player.getItemInHand(sourceHand);
++        return current == sourceCaseStack
++                || (!current.isEmpty() && current.getItem() instanceof CigaretteCaseItem
++                && ItemStack.isSameItemSameComponents(current, sourceCaseStack));
++    }
++
++    @Override
++    public ItemStack quickMoveStack(Player player, int slotIndex) {
++        if (slotIndex < 0 || slotIndex >= slots.size()) {
++            return ItemStack.EMPTY;
++        }
++        Slot slot = slots.get(slotIndex);
++        if (!slot.hasItem()) {
++            return ItemStack.EMPTY;
++        }
++
++        ItemStack source = slot.getItem();
++        ItemStack original = source.copy();
++
++        if (slotIndex < CASE_SLOTS) {
++            if (!moveItemStackTo(source, PLAYER_INVENTORY_START, HOTBAR_END, true)) {
++                return ItemStack.EMPTY;
++            }
++        } else if (CigaretteCaseItem.isAllowedContent(source)) {
++            if (!moveItemStackTo(source, 0, CASE_SLOTS, false)) {
++                return ItemStack.EMPTY;
++            }
++        } else if (slotIndex < PLAYER_INVENTORY_END) {
++            if (!moveItemStackTo(source, HOTBAR_START, HOTBAR_END, false)) {
++                return ItemStack.EMPTY;
++            }
++        } else if (!moveItemStackTo(source, PLAYER_INVENTORY_START, PLAYER_INVENTORY_END, false)) {
++            return ItemStack.EMPTY;
++        }
++
++        if (source.isEmpty()) {
++            slot.set(ItemStack.EMPTY);
++        } else {
++            slot.setChanged();
++        }
++        slot.onTake(player, source);
++        return original;
++    }
++
++    private static final class CopyingCaseSlot extends Slot {
++        private CopyingCaseSlot(Container container, int slot, int x, int y) {
++            super(container, slot, x, y);
++        }
++
++        @Override
++        public boolean mayPlace(ItemStack stack) {
++            return CigaretteCaseItem.isAllowedContent(stack);
++        }
++
++        @Override
++        public void set(ItemStack stack) {
++            super.set(stack.copy());
++        }
++
++        @Override
++        public ItemStack remove(int amount) {
++            return super.remove(amount).copy();
++        }
++    }
++
++    private static final class LockedSourceSlot extends Slot {
++        private LockedSourceSlot(Container container, int slot, int x, int y) {
++            super(container, slot, x, y);
++        }
++
++        @Override
++        public boolean mayPickup(Player player) {
++            return false;
++        }
++
++        @Override
++        public boolean mayPlace(ItemStack stack) {
++            return false;
++        }
++    }
++}
+diff --git a/src/main/java/com/createtobacco/registry/ModBlocks.java b/src/main/java/com/createtobacco/registry/ModBlocks.java
+index 8c40c6c..f52cba2 100644
+--- a/src/main/java/com/createtobacco/registry/ModBlocks.java
++++ b/src/main/java/com/createtobacco/registry/ModBlocks.java
+@@ -3,6 +3,7 @@ package com.createtobacco.registry;
+ import com.createtobacco.CreateTobacco;
+ import com.createtobacco.block.TobaccoCropBlock;
+ import com.createtobacco.block.TobaccoVariety;
++import com.createtobacco.block.WildTobaccoBlock;
+ import net.minecraft.world.level.block.Blocks;
+ import net.minecraft.world.level.block.state.BlockBehaviour;
+ import net.neoforged.bus.api.IEventBus;
+@@ -19,6 +20,10 @@ public final class ModBlocks {
+     public static final DeferredBlock<TobaccoCropBlock> HAVANA_TOBACCO = registerCrop(
+             "havana_tobacco", TobaccoVariety.HAVANA);
+ 
++    public static final DeferredBlock<WildTobaccoBlock> WILD_VIRGINIA_TOBACCO = registerWild("wild_virginia_tobacco");
++    public static final DeferredBlock<WildTobaccoBlock> WILD_BURLEY_TOBACCO = registerWild("wild_burley_tobacco");
++    public static final DeferredBlock<WildTobaccoBlock> WILD_HAVANA_TOBACCO = registerWild("wild_havana_tobacco");
++
+     private ModBlocks() {
+     }
+ 
+@@ -29,6 +34,13 @@ public final class ModBlocks {
+                 BlockBehaviour.Properties.ofFullCopy(Blocks.WHEAT));
+     }
+ 
++    private static DeferredBlock<WildTobaccoBlock> registerWild(String name) {
++        return BLOCKS.registerBlock(
++                name,
++                WildTobaccoBlock::new,
++                BlockBehaviour.Properties.ofFullCopy(Blocks.FERN));
++    }
++
+     public static void register(IEventBus modEventBus) {
+         BLOCKS.register(modEventBus);
+     }
+diff --git a/src/main/java/com/createtobacco/registry/ModCreativeTabs.java b/src/main/java/com/createtobacco/registry/ModCreativeTabs.java
+index cebae2f..1177be6 100644
+--- a/src/main/java/com/createtobacco/registry/ModCreativeTabs.java
++++ b/src/main/java/com/createtobacco/registry/ModCreativeTabs.java
+@@ -4,7 +4,6 @@ import com.createtobacco.CreateTobacco;
+ import net.minecraft.core.registries.Registries;
+ import net.minecraft.network.chat.Component;
+ import net.minecraft.world.item.CreativeModeTab;
+-import net.minecraft.world.item.Items;
+ import net.neoforged.bus.api.IEventBus;
+ import net.neoforged.neoforge.registries.DeferredHolder;
+ import net.neoforged.neoforge.registries.DeferredRegister;
+@@ -17,7 +16,7 @@ public final class ModCreativeTabs {
+             "main",
+             () -> CreativeModeTab.builder()
+                     .title(Component.translatable("itemGroup.create_tobacco.main"))
+-                    .icon(() -> Items.PAPER.getDefaultInstance())
++                    .icon(() -> ModItems.CIGARETTE_CASE.get().getDefaultInstance())
+                     .displayItems((parameters, output) ->
+                             ModItems.CREATIVE_TAB_ITEMS.forEach(output::accept))
+                     .build()
+diff --git a/src/main/java/com/createtobacco/registry/ModDataComponents.java b/src/main/java/com/createtobacco/registry/ModDataComponents.java
+index a7c34a9..2c911ce 100644
+--- a/src/main/java/com/createtobacco/registry/ModDataComponents.java
++++ b/src/main/java/com/createtobacco/registry/ModDataComponents.java
+@@ -2,7 +2,7 @@ package com.createtobacco.registry;
+ 
+ import com.createtobacco.CreateTobacco;
+ import com.createtobacco.component.SmokingItemState;
+-import com.createtobacco.component.CigarettePackContents;
++import com.createtobacco.component.CigarettePackState;
+ import net.minecraft.core.component.DataComponentType;
+ import net.minecraft.core.registries.Registries;
+ import net.neoforged.bus.api.IEventBus;
+@@ -21,12 +21,12 @@ public final class ModDataComponents {
+                             .networkSynchronized(SmokingItemState.STREAM_CODEC)
+             );
+ 
+-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CigarettePackContents>> CIGARETTE_PACK_CONTENTS =
++    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CigarettePackState>> CIGARETTE_PACK_STATE =
+             DATA_COMPONENTS.registerComponentType(
+-                    "cigarette_pack_contents",
++                    "cigarette_pack_state",
+                     builder -> builder
+-                            .persistent(CigarettePackContents.CODEC)
+-                            .networkSynchronized(CigarettePackContents.STREAM_CODEC)
++                            .persistent(CigarettePackState.CODEC)
++                            .networkSynchronized(CigarettePackState.STREAM_CODEC)
+             );
+ 
+     private ModDataComponents() {
+diff --git a/src/main/java/com/createtobacco/registry/ModItems.java b/src/main/java/com/createtobacco/registry/ModItems.java
+index dc49a56..aaf8922 100644
+--- a/src/main/java/com/createtobacco/registry/ModItems.java
++++ b/src/main/java/com/createtobacco/registry/ModItems.java
+@@ -4,6 +4,7 @@ import com.createtobacco.CreateTobacco;
+ import com.createtobacco.item.CigaretteItem;
+ import com.createtobacco.item.CigarItem;
+ import com.createtobacco.item.CigarettePackItem;
++import com.createtobacco.item.CigaretteCaseItem;
+ import com.createtobacco.smoking.SmokingProduct;
+ import java.util.List;
+ import net.minecraft.world.item.Item;
+@@ -59,22 +60,27 @@ public final class ModItems {
+ 
+     public static final DeferredItem<Item> FERMENTED_HAVANA_TOBACCO_BUNDLE =
+             ITEMS.registerSimpleItem("fermented_havana_tobacco_bundle");
+-    public static final DeferredItem<Item> MIXED_FERMENTED_TOBACCO_BUNDLE =
+-            ITEMS.registerSimpleItem("mixed_fermented_tobacco_bundle");
+     public static final DeferredItem<Item> CIGAR_FILLER = ITEMS.registerSimpleItem("cigar_filler");
+-    public static final DeferredItem<Item> MIXED_CIGAR_FILLER = ITEMS.registerSimpleItem("mixed_cigar_filler");
+     public static final DeferredItem<Item> CIGAR_WRAPPER = ITEMS.registerSimpleItem("cigar_wrapper");
+     public static final DeferredItem<Item> GLOWSTONE_CIGAR_FILLER = ITEMS.registerSimpleItem("glowstone_cigar_filler");
+     public static final DeferredItem<CigarItem> MINECRISTO_NO_1 = registerCigar(SmokingProduct.MINECRISTO_NO_1);
+     public static final DeferredItem<CigarItem> STONEO_Y_GLOWLIETA = registerCigar(SmokingProduct.STONEO_Y_GLOWLIETA);
+-    public static final DeferredItem<CigarItem> COBBLIBA_MADURO = registerCigar(SmokingProduct.COBBLIBA_MADURO);
+ 
+     public static final DeferredItem<Item> INCOMPLETE_CIGARETTE = ITEMS.registerSimpleItem("incomplete_cigarette");
+     public static final DeferredItem<Item> INCOMPLETE_CIGAR = ITEMS.registerSimpleItem("incomplete_cigar");
+     public static final DeferredItem<Item> EMPTY_CIGARETTE_PACK = ITEMS.registerSimpleItem(
+             "empty_cigarette_pack", new Item.Properties().stacksTo(16));
+-    public static final DeferredItem<CigarettePackItem> CIGARETTE_PACK = ITEMS.registerItem(
+-            "cigarette_pack", CigarettePackItem::new);
++    public static final DeferredItem<CigarettePackItem> MARLBORE_RED_PACK = registerPack(SmokingProduct.MARLBORE_RED);
++    public static final DeferredItem<CigarettePackItem> WINSTONE_BLUE_PACK = registerPack(SmokingProduct.WINSTONE_BLUE);
++    public static final DeferredItem<CigarettePackItem> CREPERFIELD_PACK = registerPack(SmokingProduct.CREPERFIELD);
++    public static final DeferredItem<CigarettePackItem> CRAFTMEL_PACK = registerPack(SmokingProduct.CRAFTMEL);
++    public static final DeferredItem<CigarettePackItem> CHUNKMAN_PACK = registerPack(SmokingProduct.CHUNKMAN);
++    public static final DeferredItem<CigarettePackItem> KEND_PACK = registerPack(SmokingProduct.KEND);
++    public static final DeferredItem<CigarettePackItem> PIGLIAMENT_PACK = registerPack(SmokingProduct.PIGLIAMENT);
++    public static final DeferredItem<CigarettePackItem> ROTHMINES_PACK = registerPack(SmokingProduct.ROTHMINES);
++    public static final DeferredItem<CigarettePackItem> BEDROMORKANAL_PACK = registerPack(SmokingProduct.BEDROMORKANAL);
++    public static final DeferredItem<CigaretteCaseItem> CIGARETTE_CASE = ITEMS.registerItem(
++            "cigarette_case", CigaretteCaseItem::new);
+ 
+     public static final List<DeferredItem<? extends Item>> CREATIVE_TAB_ITEMS = List.of(
+             VIRGINIA_SEEDS,
+@@ -110,14 +116,22 @@ public final class ModItems {
+             ROTHMINES,
+             BEDROMORKANAL,
+             FERMENTED_HAVANA_TOBACCO_BUNDLE,
+-            MIXED_FERMENTED_TOBACCO_BUNDLE,
+             CIGAR_FILLER,
+-            MIXED_CIGAR_FILLER,
+             CIGAR_WRAPPER,
+             MINECRISTO_NO_1,
+             GLOWSTONE_CIGAR_FILLER,
+             STONEO_Y_GLOWLIETA,
+-            EMPTY_CIGARETTE_PACK
++            EMPTY_CIGARETTE_PACK,
++            MARLBORE_RED_PACK,
++            WINSTONE_BLUE_PACK,
++            CREPERFIELD_PACK,
++            CRAFTMEL_PACK,
++            CHUNKMAN_PACK,
++            KEND_PACK,
++            PIGLIAMENT_PACK,
++            ROTHMINES_PACK,
++            BEDROMORKANAL_PACK,
++            CIGARETTE_CASE
+     );
+ 
+     private ModItems() {
+@@ -131,6 +145,11 @@ public final class ModItems {
+         return ITEMS.registerItem(product.itemId().getPath(), properties -> new CigarItem(properties, product));
+     }
+ 
++    private static DeferredItem<CigarettePackItem> registerPack(SmokingProduct product) {
++        return ITEMS.registerItem(product.itemId().getPath() + "_pack",
++                properties -> new CigarettePackItem(properties, product));
++    }
++
+     public static void register(IEventBus modEventBus) {
+         ITEMS.register(modEventBus);
+     }
+diff --git a/src/main/java/com/createtobacco/registry/ModMenus.java b/src/main/java/com/createtobacco/registry/ModMenus.java
+new file mode 100644
+index 0000000..14a7c5d
+--- /dev/null
++++ b/src/main/java/com/createtobacco/registry/ModMenus.java
+@@ -0,0 +1,25 @@
++package com.createtobacco.registry;
++
++import com.createtobacco.CreateTobacco;
++import com.createtobacco.menu.CigaretteCaseMenu;
++import net.minecraft.core.registries.Registries;
++import net.minecraft.world.inventory.MenuType;
++import net.neoforged.bus.api.IEventBus;
++import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
++import net.neoforged.neoforge.registries.DeferredHolder;
++import net.neoforged.neoforge.registries.DeferredRegister;
++
++public final class ModMenus {
++    public static final DeferredRegister<MenuType<?>> MENUS =
++            DeferredRegister.create(Registries.MENU, CreateTobacco.MOD_ID);
++
++    public static final DeferredHolder<MenuType<?>, MenuType<CigaretteCaseMenu>> CIGARETTE_CASE =
++            MENUS.register("cigarette_case", () -> IMenuTypeExtension.create(CigaretteCaseMenu::new));
++
++    private ModMenus() {
++    }
++
++    public static void register(IEventBus modEventBus) {
++        MENUS.register(modEventBus);
++    }
++}
+diff --git a/src/main/java/com/createtobacco/smoking/SmokingBalance.java b/src/main/java/com/createtobacco/smoking/SmokingBalance.java
+index 0dfb9f1..7e5fdbd 100644
+--- a/src/main/java/com/createtobacco/smoking/SmokingBalance.java
++++ b/src/main/java/com/createtobacco/smoking/SmokingBalance.java
+@@ -19,6 +19,10 @@ public final class SmokingBalance {
+     public static final long DEPENDENCE_DECAY_INTERVAL_TICKS = hours(1);
+     public static final float DEPENDENCE_DECAY_PER_INTERVAL = 2.5F;
+     public static final int PUFF_USE_DURATION_TICKS = 24;
++    // A lit cigarette/cigar smoulders even when the player is not puffing it.
++    // Natural burn consumes one puff at each interval but grants no benefits.
++    public static final int CIGARETTE_NATURAL_BURN_INTERVAL_TICKS = seconds(60);
++    public static final int CIGAR_NATURAL_BURN_INTERVAL_TICKS = seconds(90);
+ 
+     public static final float STANDARD_RUSH_DAMAGE_REDUCTION = 0.05F;
+     public static final float PREMIUM_RUSH_DAMAGE_REDUCTION = 0.05F;
+@@ -34,7 +38,6 @@ public final class SmokingBalance {
+     public static final SmokingProfile BEDROMORKANAL = cigarette(0.9F, minutes(5), 0, 0.05D, 0.6F, 0.15F);
+     public static final SmokingProfile MINECRISTO_NO_1 = cigar(1.6F, minutes(8), 1, 0.10D, 1.0F, 0.0F);
+     public static final SmokingProfile STONEO_Y_GLOWLIETA = cigar(1.4F, minutes(7), 0, 0.05D, 0.9F, 0.30F);
+-    public static final SmokingProfile COBBLIBA_MADURO = cigar(1.4F, minutes(7), 0, 0.05D, 0.9F, 0.0F);
+ 
+     public static final int MARLBORE_HASTE_TICKS = seconds(20);
+     public static final int MARLBORE_HASTE_AMPLIFIER = 0;
+@@ -42,9 +45,9 @@ public final class SmokingBalance {
+     public static final int WINSTONE_MAX_RAW_XP = 2;
+     public static final int MICROBLAST_BUFF_TICKS = seconds(10);
+     public static final int MICROBLAST_BUFF_AMPLIFIER = 1;
+-    public static final double MICROBLAST_RADIUS = 3.25D;
+-    public static final double MICROBLAST_KNOCKBACK = 0.42D;
+-    public static final double MICROBLAST_VERTICAL_KNOCKBACK = 0.12D;
++    public static final double MICROBLAST_RADIUS = 4.5D;
++    public static final double MICROBLAST_KNOCKBACK = 0.55D;
++    public static final double MICROBLAST_VERTICAL_KNOCKBACK = 0.16D;
+     public static final int CHUNKMAN_FOOD = 1;
+     public static final float CHUNKMAN_SATURATION = 0.5F;
+     public static final int PIGLIAMENT_RESISTANCE_TICKS = seconds(10);
+@@ -110,7 +113,6 @@ public final class SmokingBalance {
+             case BEDROMORKANAL -> BEDROMORKANAL;
+             case MINECRISTO_NO_1 -> MINECRISTO_NO_1;
+             case STONEO_Y_GLOWLIETA -> STONEO_Y_GLOWLIETA;
+-            case COBBLIBA_MADURO -> COBBLIBA_MADURO;
+         };
+     }
+ 
+diff --git a/src/main/java/com/createtobacco/smoking/SmokingEffects.java b/src/main/java/com/createtobacco/smoking/SmokingEffects.java
+index 2c63840..c901dd0 100644
+--- a/src/main/java/com/createtobacco/smoking/SmokingEffects.java
++++ b/src/main/java/com/createtobacco/smoking/SmokingEffects.java
+@@ -42,8 +42,6 @@ public final class SmokingEffects {
+             case KEND -> EnderRoulette.trigger(player, EnderRoulette.randomOutcome(player));
+             case PIGLIAMENT -> addEffect(player, MobEffects.DAMAGE_RESISTANCE,
+                     SmokingBalance.PIGLIAMENT_RESISTANCE_TICKS, SmokingBalance.PIGLIAMENT_RESISTANCE_AMPLIFIER);
+-            case ROTHMINES -> addEffect(player, MobEffects.DIG_SPEED,
+-                    SmokingBalance.ROTHMINES_HASTE_TICKS, SmokingBalance.ROTHMINES_HASTE_AMPLIFIER);
+             case BEDROMORKANAL -> heal(player);
+             case STONEO_Y_GLOWLIETA -> {
+                 addEffect(player, MobEffects.NIGHT_VISION,
+@@ -85,12 +83,15 @@ public final class SmokingEffects {
+         ServerLevel level = player.serverLevel();
+         level.playSound(null, player.getX(), player.getY(), player.getZ(),
+                 SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 0.65F, 1.25F);
++        level.sendParticles(ParticleTypes.EXPLOSION_EMITTER,
++                player.getX(), player.getY() + 0.9D, player.getZ(),
++                1, 0.0D, 0.0D, 0.0D, 0.0D);
+         level.sendParticles(ParticleTypes.EXPLOSION,
+                 player.getX(), player.getY() + 1.0D, player.getZ(),
+-                2, 0.25D, 0.25D, 0.25D, 0.0D);
++                4, 0.45D, 0.35D, 0.45D, 0.0D);
+         level.sendParticles(ParticleTypes.POOF,
+                 player.getX(), player.getY() + 0.8D, player.getZ(),
+-                18, 0.7D, 0.45D, 0.7D, 0.04D);
++                32, 1.05D, 0.6D, 1.05D, 0.055D);
+ 
+         List<LivingEntity> nearby = level.getEntitiesOfClass(
+                 LivingEntity.class,
+diff --git a/src/main/java/com/createtobacco/smoking/SmokingProduct.java b/src/main/java/com/createtobacco/smoking/SmokingProduct.java
+index a410d0c..0d88f82 100644
+--- a/src/main/java/com/createtobacco/smoking/SmokingProduct.java
++++ b/src/main/java/com/createtobacco/smoking/SmokingProduct.java
+@@ -18,8 +18,7 @@ public enum SmokingProduct {
+     ROTHMINES("rothmines", true),
+     BEDROMORKANAL("bedromorkanal", true),
+     MINECRISTO_NO_1("minecristo_no_1", false),
+-    STONEO_Y_GLOWLIETA("stoneo_y_glowlieta", false),
+-    COBBLIBA_MADURO("cobbliba_maduro", false);
++    STONEO_Y_GLOWLIETA("stoneo_y_glowlieta", false);
+ 
+     private final ResourceLocation itemId;
+     private final boolean packableCigarette;
+@@ -38,7 +37,7 @@ public enum SmokingProduct {
+     }
+ 
+     public boolean isActiveSmokingProduct() {
+-        return this != COBBLIBA_MADURO;
++        return true;
+     }
+ 
+     public static Optional<SmokingProduct> fromId(ResourceLocation id) {
+diff --git a/src/main/resources/assets/create_tobacco/blockstates/wild_burley_tobacco.json b/src/main/resources/assets/create_tobacco/blockstates/wild_burley_tobacco.json
+new file mode 100644
+index 0000000..fd58c95
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/blockstates/wild_burley_tobacco.json
+@@ -0,0 +1,7 @@
++{
++  "variants": {
++    "": {
++      "model": "create_tobacco:block/wild_burley_tobacco"
++    }
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/blockstates/wild_havana_tobacco.json b/src/main/resources/assets/create_tobacco/blockstates/wild_havana_tobacco.json
+new file mode 100644
+index 0000000..bc486fe
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/blockstates/wild_havana_tobacco.json
+@@ -0,0 +1,7 @@
++{
++  "variants": {
++    "": {
++      "model": "create_tobacco:block/wild_havana_tobacco"
++    }
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/blockstates/wild_virginia_tobacco.json b/src/main/resources/assets/create_tobacco/blockstates/wild_virginia_tobacco.json
+new file mode 100644
+index 0000000..3755eb2
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/blockstates/wild_virginia_tobacco.json
+@@ -0,0 +1,7 @@
++{
++  "variants": {
++    "": {
++      "model": "create_tobacco:block/wild_virginia_tobacco"
++    }
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/lang/en_us.json b/src/main/resources/assets/create_tobacco/lang/en_us.json
+index 0a9b170..8214b16 100644
+--- a/src/main/resources/assets/create_tobacco/lang/en_us.json
++++ b/src/main/resources/assets/create_tobacco/lang/en_us.json
+@@ -33,16 +33,12 @@
+   "item.create_tobacco.rothmines": "Rothmines",
+   "item.create_tobacco.bedromorkanal": "Bedromorkanal",
+   "item.create_tobacco.fermented_havana_tobacco_bundle": "Fermented Havana Tobacco Bundle",
+-  "item.create_tobacco.mixed_fermented_tobacco_bundle": "Mixed Fermented Tobacco Bundle",
+   "item.create_tobacco.cigar_filler": "Cigar Filler",
+-  "item.create_tobacco.mixed_cigar_filler": "Mixed Cigar Filler",
+   "item.create_tobacco.cigar_wrapper": "Cigar Wrapper",
+   "item.create_tobacco.minecristo_no_1": "Minecristo No. 1",
+-  "item.create_tobacco.cobbliba_maduro": "Cobbliba Maduro",
+   "item.create_tobacco.glowstone_cigar_filler": "Glowstone Cigar Filler",
+   "item.create_tobacco.stoneo_y_glowlieta": "Stoneo y Glowlieta",
+   "item.create_tobacco.empty_cigarette_pack": "Empty Cigarette Pack",
+-  "item.create_tobacco.cigarette_pack": "Cigarette Pack",
+   "item.create_tobacco.incomplete_cigarette": "Incomplete Cigarette",
+   "item.create_tobacco.incomplete_cigar": "Incomplete Cigar",
+   "effect.create_tobacco.nicotine_rush": "Nicotine Rush",
+@@ -57,5 +53,20 @@
+   "advancements.create_tobacco.pack_it_up.title": "Pack It Up",
+   "advancements.create_tobacco.pack_it_up.description": "Fill a pack with ten matching cigarettes",
+   "advancements.create_tobacco.smoke_and_gears.title": "Smoke and Gears",
+-  "advancements.create_tobacco.smoke_and_gears.description": "Fully smoke a cigarette or cigar"
++  "advancements.create_tobacco.smoke_and_gears.description": "Fully smoke a cigarette or cigar",
++  "block.create_tobacco.wild_virginia_tobacco": "Wild Virginia Tobacco",
++  "block.create_tobacco.wild_burley_tobacco": "Wild Burley Tobacco",
++  "block.create_tobacco.wild_havana_tobacco": "Wild Havana Tobacco",
++  "item.create_tobacco.marlbore_red_pack": "MarlbOre Red Pack",
++  "item.create_tobacco.winstone_blue_pack": "WinStone Blue Pack",
++  "item.create_tobacco.creperfield_pack": "Creperfield Pack",
++  "item.create_tobacco.craftmel_pack": "Craftmel Pack",
++  "item.create_tobacco.chunkman_pack": "Chunkman Pack",
++  "item.create_tobacco.kend_pack": "KEnd Pack",
++  "item.create_tobacco.pigliament_pack": "Pigliament Pack",
++  "item.create_tobacco.rothmines_pack": "Rothmines Pack",
++  "item.create_tobacco.bedromorkanal_pack": "Bedromorkanal Pack",
++  "item.create_tobacco.cigarette_case": "Cigarette Case",
++  "container.create_tobacco.cigarette_case": "Cigarette Case",
++  "tooltip.create_tobacco.burn_time": "Smoulders for ~%s s"
+ }
+diff --git a/src/main/resources/assets/create_tobacco/lang/ru_ru.json b/src/main/resources/assets/create_tobacco/lang/ru_ru.json
+index bf3c3ef..4cfa0bb 100644
+--- a/src/main/resources/assets/create_tobacco/lang/ru_ru.json
++++ b/src/main/resources/assets/create_tobacco/lang/ru_ru.json
+@@ -33,16 +33,12 @@
+   "item.create_tobacco.rothmines": "Rothmines",
+   "item.create_tobacco.bedromorkanal": "Bedromorkanal",
+   "item.create_tobacco.fermented_havana_tobacco_bundle": "Ферментированный свёрток табака Гавана",
+-  "item.create_tobacco.mixed_fermented_tobacco_bundle": "Смешанный ферментированный табачный свёрток",
+   "item.create_tobacco.cigar_filler": "Сигарная начинка",
+-  "item.create_tobacco.mixed_cigar_filler": "Смешанная сигарная начинка",
+   "item.create_tobacco.cigar_wrapper": "Сигарный покровный лист",
+   "item.create_tobacco.minecristo_no_1": "Minecristo № 1",
+-  "item.create_tobacco.cobbliba_maduro": "Cobbliba Maduro",
+   "item.create_tobacco.glowstone_cigar_filler": "Светокаменная сигарная начинка",
+   "item.create_tobacco.stoneo_y_glowlieta": "Stoneo y Glowlieta",
+   "item.create_tobacco.empty_cigarette_pack": "Пустая пачка сигарет",
+-  "item.create_tobacco.cigarette_pack": "Пачка сигарет",
+   "item.create_tobacco.incomplete_cigarette": "Незавершённая сигарета",
+   "item.create_tobacco.incomplete_cigar": "Незавершённая сигара",
+   "effect.create_tobacco.nicotine_rush": "Никотиновый прилив",
+@@ -57,5 +53,20 @@
+   "advancements.create_tobacco.pack_it_up.title": "Пора по пачкам",
+   "advancements.create_tobacco.pack_it_up.description": "Соберите десять одинаковых сигарет в пачку",
+   "advancements.create_tobacco.smoke_and_gears.title": "Дым и шестерни",
+-  "advancements.create_tobacco.smoke_and_gears.description": "Полностью выкурите сигарету или сигару"
++  "advancements.create_tobacco.smoke_and_gears.description": "Полностью выкурите сигарету или сигару",
++  "block.create_tobacco.wild_virginia_tobacco": "Дикий табак Вирджиния",
++  "block.create_tobacco.wild_burley_tobacco": "Дикий табак Берли",
++  "block.create_tobacco.wild_havana_tobacco": "Дикий табак Гавана",
++  "item.create_tobacco.marlbore_red_pack": "Пачка MarlbOre Red",
++  "item.create_tobacco.winstone_blue_pack": "Пачка WinStone Blue",
++  "item.create_tobacco.creperfield_pack": "Пачка Creperfield",
++  "item.create_tobacco.craftmel_pack": "Пачка Craftmel",
++  "item.create_tobacco.chunkman_pack": "Пачка Chunkman",
++  "item.create_tobacco.kend_pack": "Пачка KEnd",
++  "item.create_tobacco.pigliament_pack": "Пачка Pigliament",
++  "item.create_tobacco.rothmines_pack": "Пачка Rothmines",
++  "item.create_tobacco.bedromorkanal_pack": "Пачка Bedromorkanal",
++  "item.create_tobacco.cigarette_case": "Портсигар",
++  "container.create_tobacco.cigarette_case": "Портсигар",
++  "tooltip.create_tobacco.burn_time": "Догорает примерно через %s с"
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/block/wild_burley_tobacco.json b/src/main/resources/assets/create_tobacco/models/block/wild_burley_tobacco.json
+new file mode 100644
+index 0000000..bdaa623
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/block/wild_burley_tobacco.json
+@@ -0,0 +1,7 @@
++{
++  "render_type": "minecraft:cutout",
++  "parent": "minecraft:block/cross",
++  "textures": {
++    "cross": "create_tobacco:block/wild_burley_tobacco"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/block/wild_havana_tobacco.json b/src/main/resources/assets/create_tobacco/models/block/wild_havana_tobacco.json
+new file mode 100644
+index 0000000..ba6c16e
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/block/wild_havana_tobacco.json
+@@ -0,0 +1,7 @@
++{
++  "render_type": "minecraft:cutout",
++  "parent": "minecraft:block/cross",
++  "textures": {
++    "cross": "create_tobacco:block/wild_havana_tobacco"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/block/wild_virginia_tobacco.json b/src/main/resources/assets/create_tobacco/models/block/wild_virginia_tobacco.json
+new file mode 100644
+index 0000000..c3222d4
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/block/wild_virginia_tobacco.json
+@@ -0,0 +1,7 @@
++{
++  "render_type": "minecraft:cutout",
++  "parent": "minecraft:block/cross",
++  "textures": {
++    "cross": "create_tobacco:block/wild_virginia_tobacco"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/cigarette_pack.json b/src/main/resources/assets/create_tobacco/models/item/bedromorkanal_pack.json
+similarity index 100%
+rename from src/main/resources/assets/create_tobacco/models/item/cigarette_pack.json
+rename to src/main/resources/assets/create_tobacco/models/item/bedromorkanal_pack.json
+diff --git a/src/main/resources/assets/create_tobacco/models/item/cobbliba_maduro.json b/src/main/resources/assets/create_tobacco/models/item/chunkman_pack.json
+similarity index 54%
+rename from src/main/resources/assets/create_tobacco/models/item/cobbliba_maduro.json
+rename to src/main/resources/assets/create_tobacco/models/item/chunkman_pack.json
+index b06bc2b..123a168 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/cobbliba_maduro.json
++++ b/src/main/resources/assets/create_tobacco/models/item/chunkman_pack.json
+@@ -1,6 +1,6 @@
+ {
+   "parent": "minecraft:item/generated",
+   "textures": {
+-    "layer0": "create_tobacco:item/cured_burley_leaf"
++    "layer0": "create:item/cardboard"
+   }
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/item/mixed_fermented_tobacco_bundle.json b/src/main/resources/assets/create_tobacco/models/item/cigarette_case.json
+similarity index 54%
+rename from src/main/resources/assets/create_tobacco/models/item/mixed_fermented_tobacco_bundle.json
+rename to src/main/resources/assets/create_tobacco/models/item/cigarette_case.json
+index b06bc2b..c973b02 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/mixed_fermented_tobacco_bundle.json
++++ b/src/main/resources/assets/create_tobacco/models/item/cigarette_case.json
+@@ -1,6 +1,6 @@
+ {
+   "parent": "minecraft:item/generated",
+   "textures": {
+-    "layer0": "create_tobacco:item/cured_burley_leaf"
++    "layer0": "create:item/brass_sheet"
+   }
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/item/mixed_cigar_filler.json b/src/main/resources/assets/create_tobacco/models/item/craftmel_pack.json
+similarity index 53%
+rename from src/main/resources/assets/create_tobacco/models/item/mixed_cigar_filler.json
+rename to src/main/resources/assets/create_tobacco/models/item/craftmel_pack.json
+index e7a7b47..123a168 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/mixed_cigar_filler.json
++++ b/src/main/resources/assets/create_tobacco/models/item/craftmel_pack.json
+@@ -1,6 +1,6 @@
+ {
+   "parent": "minecraft:item/generated",
+   "textures": {
+-    "layer0": "create_tobacco:item/cut_burley_tobacco"
++    "layer0": "create:item/cardboard"
+   }
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/item/creperfield_pack.json b/src/main/resources/assets/create_tobacco/models/item/creperfield_pack.json
+new file mode 100644
+index 0000000..123a168
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/creperfield_pack.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create:item/cardboard"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/kend_pack.json b/src/main/resources/assets/create_tobacco/models/item/kend_pack.json
+new file mode 100644
+index 0000000..123a168
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/kend_pack.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create:item/cardboard"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/marlbore_red_pack.json b/src/main/resources/assets/create_tobacco/models/item/marlbore_red_pack.json
+new file mode 100644
+index 0000000..123a168
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/marlbore_red_pack.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create:item/cardboard"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/pigliament_pack.json b/src/main/resources/assets/create_tobacco/models/item/pigliament_pack.json
+new file mode 100644
+index 0000000..123a168
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/pigliament_pack.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create:item/cardboard"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/rothmines_pack.json b/src/main/resources/assets/create_tobacco/models/item/rothmines_pack.json
+new file mode 100644
+index 0000000..123a168
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/rothmines_pack.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create:item/cardboard"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/winstone_blue_pack.json b/src/main/resources/assets/create_tobacco/models/item/winstone_blue_pack.json
+new file mode 100644
+index 0000000..123a168
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/winstone_blue_pack.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create:item/cardboard"
++  }
++}
+diff --git a/src/main/resources/data/create_tobacco/advancement/pack_it_up.json b/src/main/resources/data/create_tobacco/advancement/pack_it_up.json
+index e9535c5..948d38f 100644
+--- a/src/main/resources/data/create_tobacco/advancement/pack_it_up.json
++++ b/src/main/resources/data/create_tobacco/advancement/pack_it_up.json
+@@ -11,7 +11,7 @@
+     },
+     "icon": {
+       "count": 1,
+-      "id": "create_tobacco:cigarette_pack"
++      "id": "create_tobacco:marlbore_red_pack"
+     },
+     "title": {
+       "translate": "advancements.create_tobacco.pack_it_up.title"
+diff --git a/src/main/resources/data/create_tobacco/loot_table/blocks/wild_burley_tobacco.json b/src/main/resources/data/create_tobacco/loot_table/blocks/wild_burley_tobacco.json
+new file mode 100644
+index 0000000..d4fd70c
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/loot_table/blocks/wild_burley_tobacco.json
+@@ -0,0 +1,45 @@
++{
++  "type": "minecraft:block",
++  "pools": [
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:burley_seeds"
++        }
++      ]
++    },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:burley_seeds"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:random_chance",
++          "chance": 0.5
++        }
++      ]
++    },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:fresh_burley_leaf"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:random_chance",
++          "chance": 0.25
++        }
++      ]
++    }
++  ],
++  "random_sequence": "create_tobacco:blocks/wild_burley_tobacco"
++}
+diff --git a/src/main/resources/data/create_tobacco/loot_table/blocks/wild_havana_tobacco.json b/src/main/resources/data/create_tobacco/loot_table/blocks/wild_havana_tobacco.json
+new file mode 100644
+index 0000000..c51da3d
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/loot_table/blocks/wild_havana_tobacco.json
+@@ -0,0 +1,45 @@
++{
++  "type": "minecraft:block",
++  "pools": [
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:havana_seeds"
++        }
++      ]
++    },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:havana_seeds"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:random_chance",
++          "chance": 0.5
++        }
++      ]
++    },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:fresh_havana_leaf"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:random_chance",
++          "chance": 0.25
++        }
++      ]
++    }
++  ],
++  "random_sequence": "create_tobacco:blocks/wild_havana_tobacco"
++}
+diff --git a/src/main/resources/data/create_tobacco/loot_table/blocks/wild_virginia_tobacco.json b/src/main/resources/data/create_tobacco/loot_table/blocks/wild_virginia_tobacco.json
+new file mode 100644
+index 0000000..9de2df1
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/loot_table/blocks/wild_virginia_tobacco.json
+@@ -0,0 +1,45 @@
++{
++  "type": "minecraft:block",
++  "pools": [
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:virginia_seeds"
++        }
++      ]
++    },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:virginia_seeds"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:random_chance",
++          "chance": 0.5
++        }
++      ]
++    },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "create_tobacco:fresh_virginia_leaf"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:random_chance",
++          "chance": 0.25
++        }
++      ]
++    }
++  ],
++  "random_sequence": "create_tobacco:blocks/wild_virginia_tobacco"
++}
+diff --git a/src/main/resources/data/create_tobacco/neoforge/biome_modifier/add_wild_burley_tobacco.json b/src/main/resources/data/create_tobacco/neoforge/biome_modifier/add_wild_burley_tobacco.json
+new file mode 100644
+index 0000000..9c19445
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/neoforge/biome_modifier/add_wild_burley_tobacco.json
+@@ -0,0 +1,12 @@
++{
++  "type": "neoforge:add_features",
++  "biomes": [
++    "minecraft:meadow",
++    "minecraft:windswept_hills",
++    "minecraft:windswept_forest",
++    "minecraft:savanna",
++    "minecraft:savanna_plateau"
++  ],
++  "features": "create_tobacco:wild_burley_tobacco",
++  "step": "vegetal_decoration"
++}
+diff --git a/src/main/resources/data/create_tobacco/neoforge/biome_modifier/add_wild_havana_tobacco.json b/src/main/resources/data/create_tobacco/neoforge/biome_modifier/add_wild_havana_tobacco.json
+new file mode 100644
+index 0000000..b446f59
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/neoforge/biome_modifier/add_wild_havana_tobacco.json
+@@ -0,0 +1,10 @@
++{
++  "type": "neoforge:add_features",
++  "biomes": [
++    "minecraft:jungle",
++    "minecraft:sparse_jungle",
++    "minecraft:bamboo_jungle"
++  ],
++  "features": "create_tobacco:wild_havana_tobacco",
++  "step": "vegetal_decoration"
++}
+diff --git a/src/main/resources/data/create_tobacco/neoforge/biome_modifier/add_wild_virginia_tobacco.json b/src/main/resources/data/create_tobacco/neoforge/biome_modifier/add_wild_virginia_tobacco.json
+new file mode 100644
+index 0000000..03b70fd
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/neoforge/biome_modifier/add_wild_virginia_tobacco.json
+@@ -0,0 +1,13 @@
++{
++  "type": "neoforge:add_features",
++  "biomes": [
++    "minecraft:plains",
++    "minecraft:sunflower_plains",
++    "minecraft:forest",
++    "minecraft:flower_forest",
++    "minecraft:birch_forest",
++    "minecraft:old_growth_birch_forest"
++  ],
++  "features": "create_tobacco:wild_virginia_tobacco",
++  "step": "vegetal_decoration"
++}
+diff --git a/src/main/resources/data/create_tobacco/recipe/compacting/mixed_fermented_tobacco_bundle.json b/src/main/resources/data/create_tobacco/recipe/compacting/mixed_fermented_tobacco_bundle.json
+deleted file mode 100644
+index 3855c76..0000000
+--- a/src/main/resources/data/create_tobacco/recipe/compacting/mixed_fermented_tobacco_bundle.json
++++ /dev/null
+@@ -1,27 +0,0 @@
+-{
+-  "type": "create:compacting",
+-  "ingredients": [
+-    {
+-      "item": "create_tobacco:cured_havana_leaf"
+-    },
+-    {
+-      "item": "create_tobacco:cured_havana_leaf"
+-    },
+-    {
+-      "item": "create_tobacco:cured_havana_leaf"
+-    },
+-    {
+-      "item": "create_tobacco:cured_burley_leaf"
+-    },
+-    {
+-      "type": "neoforge:single",
+-      "amount": 250,
+-      "fluid": "minecraft:water"
+-    }
+-  ],
+-  "results": [
+-    {
+-      "id": "create_tobacco:mixed_fermented_tobacco_bundle"
+-    }
+-  ]
+-}
+diff --git a/src/main/resources/data/create_tobacco/recipe/compacting/pack_bedromorkanal.json b/src/main/resources/data/create_tobacco/recipe/compacting/pack_bedromorkanal.json
+deleted file mode 100644
+index 7170ef3..0000000
+--- a/src/main/resources/data/create_tobacco/recipe/compacting/pack_bedromorkanal.json
++++ /dev/null
+@@ -1,17 +0,0 @@
+-{
+-  "type": "create:compacting",
+-  "ingredients": [
+-    { "item": "create_tobacco:empty_cigarette_pack" },
+-    { "type": "neoforge:components", "items": "create_tobacco:bedromorkanal", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:bedromorkanal", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:bedromorkanal", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:bedromorkanal", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:bedromorkanal", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:bedromorkanal", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:bedromorkanal", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:bedromorkanal", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:bedromorkanal", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:bedromorkanal", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } }
+-  ],
+-  "results": [{ "id": "create_tobacco:cigarette_pack", "components": { "create_tobacco:cigarette_pack_contents": { "cigarette": "create_tobacco:bedromorkanal", "count": 10 } } }]
+-}
+diff --git a/src/main/resources/data/create_tobacco/recipe/compacting/pack_chunkman.json b/src/main/resources/data/create_tobacco/recipe/compacting/pack_chunkman.json
+deleted file mode 100644
+index 21caf15..0000000
+--- a/src/main/resources/data/create_tobacco/recipe/compacting/pack_chunkman.json
++++ /dev/null
+@@ -1,17 +0,0 @@
+-{
+-  "type": "create:compacting",
+-  "ingredients": [
+-    { "item": "create_tobacco:empty_cigarette_pack" },
+-    { "type": "neoforge:components", "items": "create_tobacco:chunkman", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:chunkman", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:chunkman", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:chunkman", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:chunkman", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:chunkman", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:chunkman", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:chunkman", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:chunkman", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:chunkman", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } }
+-  ],
+-  "results": [{ "id": "create_tobacco:cigarette_pack", "components": { "create_tobacco:cigarette_pack_contents": { "cigarette": "create_tobacco:chunkman", "count": 10 } } }]
+-}
+diff --git a/src/main/resources/data/create_tobacco/recipe/compacting/pack_craftmel.json b/src/main/resources/data/create_tobacco/recipe/compacting/pack_craftmel.json
+deleted file mode 100644
+index 5154363..0000000
+--- a/src/main/resources/data/create_tobacco/recipe/compacting/pack_craftmel.json
++++ /dev/null
+@@ -1,17 +0,0 @@
+-{
+-  "type": "create:compacting",
+-  "ingredients": [
+-    { "item": "create_tobacco:empty_cigarette_pack" },
+-    { "type": "neoforge:components", "items": "create_tobacco:craftmel", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:craftmel", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:craftmel", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:craftmel", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:craftmel", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:craftmel", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:craftmel", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:craftmel", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:craftmel", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:craftmel", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } }
+-  ],
+-  "results": [{ "id": "create_tobacco:cigarette_pack", "components": { "create_tobacco:cigarette_pack_contents": { "cigarette": "create_tobacco:craftmel", "count": 10 } } }]
+-}
+diff --git a/src/main/resources/data/create_tobacco/recipe/compacting/pack_creperfield.json b/src/main/resources/data/create_tobacco/recipe/compacting/pack_creperfield.json
+deleted file mode 100644
+index 31cd4f4..0000000
+--- a/src/main/resources/data/create_tobacco/recipe/compacting/pack_creperfield.json
++++ /dev/null
+@@ -1,17 +0,0 @@
+-{
+-  "type": "create:compacting",
+-  "ingredients": [
+-    { "item": "create_tobacco:empty_cigarette_pack" },
+-    { "type": "neoforge:components", "items": "create_tobacco:creperfield", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:creperfield", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:creperfield", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:creperfield", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:creperfield", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:creperfield", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:creperfield", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:creperfield", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:creperfield", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:creperfield", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } }
+-  ],
+-  "results": [{ "id": "create_tobacco:cigarette_pack", "components": { "create_tobacco:cigarette_pack_contents": { "cigarette": "create_tobacco:creperfield", "count": 10 } } }]
+-}
+diff --git a/src/main/resources/data/create_tobacco/recipe/compacting/pack_kend.json b/src/main/resources/data/create_tobacco/recipe/compacting/pack_kend.json
+deleted file mode 100644
+index be0d495..0000000
+--- a/src/main/resources/data/create_tobacco/recipe/compacting/pack_kend.json
++++ /dev/null
+@@ -1,17 +0,0 @@
+-{
+-  "type": "create:compacting",
+-  "ingredients": [
+-    { "item": "create_tobacco:empty_cigarette_pack" },
+-    { "type": "neoforge:components", "items": "create_tobacco:kend", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:kend", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:kend", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:kend", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:kend", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:kend", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:kend", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:kend", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:kend", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:kend", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } }
+-  ],
+-  "results": [{ "id": "create_tobacco:cigarette_pack", "components": { "create_tobacco:cigarette_pack_contents": { "cigarette": "create_tobacco:kend", "count": 10 } } }]
+-}
+diff --git a/src/main/resources/data/create_tobacco/recipe/compacting/pack_marlbore_red.json b/src/main/resources/data/create_tobacco/recipe/compacting/pack_marlbore_red.json
+deleted file mode 100644
+index f32fc85..0000000
+--- a/src/main/resources/data/create_tobacco/recipe/compacting/pack_marlbore_red.json
++++ /dev/null
+@@ -1,19 +0,0 @@
+-{
+-  "type": "create:compacting",
+-  "ingredients": [
+-    { "item": "create_tobacco:empty_cigarette_pack" },
+-    { "type": "neoforge:components", "items": "create_tobacco:marlbore_red", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:marlbore_red", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:marlbore_red", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:marlbore_red", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:marlbore_red", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:marlbore_red", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:marlbore_red", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:marlbore_red", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:marlbore_red", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:marlbore_red", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } }
+-  ],
+-  "results": [
+-    { "id": "create_tobacco:cigarette_pack", "components": { "create_tobacco:cigarette_pack_contents": { "cigarette": "create_tobacco:marlbore_red", "count": 10 } } }
+-  ]
+-}
+diff --git a/src/main/resources/data/create_tobacco/recipe/compacting/pack_pigliament.json b/src/main/resources/data/create_tobacco/recipe/compacting/pack_pigliament.json
+deleted file mode 100644
+index fd85295..0000000
+--- a/src/main/resources/data/create_tobacco/recipe/compacting/pack_pigliament.json
++++ /dev/null
+@@ -1,17 +0,0 @@
+-{
+-  "type": "create:compacting",
+-  "ingredients": [
+-    { "item": "create_tobacco:empty_cigarette_pack" },
+-    { "type": "neoforge:components", "items": "create_tobacco:pigliament", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:pigliament", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:pigliament", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:pigliament", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:pigliament", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:pigliament", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:pigliament", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:pigliament", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:pigliament", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:pigliament", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } }
+-  ],
+-  "results": [{ "id": "create_tobacco:cigarette_pack", "components": { "create_tobacco:cigarette_pack_contents": { "cigarette": "create_tobacco:pigliament", "count": 10 } } }]
+-}
+diff --git a/src/main/resources/data/create_tobacco/recipe/compacting/pack_rothmines.json b/src/main/resources/data/create_tobacco/recipe/compacting/pack_rothmines.json
+deleted file mode 100644
+index 7b34e05..0000000
+--- a/src/main/resources/data/create_tobacco/recipe/compacting/pack_rothmines.json
++++ /dev/null
+@@ -1,17 +0,0 @@
+-{
+-  "type": "create:compacting",
+-  "ingredients": [
+-    { "item": "create_tobacco:empty_cigarette_pack" },
+-    { "type": "neoforge:components", "items": "create_tobacco:rothmines", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:rothmines", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:rothmines", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:rothmines", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:rothmines", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:rothmines", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:rothmines", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:rothmines", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:rothmines", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:rothmines", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } }
+-  ],
+-  "results": [{ "id": "create_tobacco:cigarette_pack", "components": { "create_tobacco:cigarette_pack_contents": { "cigarette": "create_tobacco:rothmines", "count": 10 } } }]
+-}
+diff --git a/src/main/resources/data/create_tobacco/recipe/compacting/pack_winstone_blue.json b/src/main/resources/data/create_tobacco/recipe/compacting/pack_winstone_blue.json
+deleted file mode 100644
+index 3b7448d..0000000
+--- a/src/main/resources/data/create_tobacco/recipe/compacting/pack_winstone_blue.json
++++ /dev/null
+@@ -1,17 +0,0 @@
+-{
+-  "type": "create:compacting",
+-  "ingredients": [
+-    { "item": "create_tobacco:empty_cigarette_pack" },
+-    { "type": "neoforge:components", "items": "create_tobacco:winstone_blue", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:winstone_blue", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:winstone_blue", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:winstone_blue", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:winstone_blue", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:winstone_blue", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:winstone_blue", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:winstone_blue", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:winstone_blue", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } },
+-    { "type": "neoforge:components", "items": "create_tobacco:winstone_blue", "components": { "create_tobacco:smoking_item_state": { "remaining_puffs": 5, "lit": false } } }
+-  ],
+-  "results": [{ "id": "create_tobacco:cigarette_pack", "components": { "create_tobacco:cigarette_pack_contents": { "cigarette": "create_tobacco:winstone_blue", "count": 10 } } }]
+-}
+diff --git a/src/main/resources/data/create_tobacco/recipe/crafting/cigarette_case.json b/src/main/resources/data/create_tobacco/recipe/crafting/cigarette_case.json
+new file mode 100644
+index 0000000..32a24ab
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/recipe/crafting/cigarette_case.json
+@@ -0,0 +1,19 @@
++{
++  "type": "minecraft:crafting_shaped",
++  "category": "misc",
++  "pattern": [
++    "BIB",
++    "LCL",
++    "BIB"
++  ],
++  "key": {
++    "B": { "item": "create:brass_sheet" },
++    "I": { "item": "minecraft:iron_nugget" },
++    "L": { "item": "minecraft:leather" },
++    "C": { "item": "minecraft:chest" }
++  },
++  "result": {
++    "id": "create_tobacco:cigarette_case",
++    "count": 1
++  }
++}
+diff --git a/src/main/resources/data/create_tobacco/recipe/cutting/mixed_cigar_filler.json b/src/main/resources/data/create_tobacco/recipe/cutting/mixed_cigar_filler.json
+deleted file mode 100644
+index 5382918..0000000
+--- a/src/main/resources/data/create_tobacco/recipe/cutting/mixed_cigar_filler.json
++++ /dev/null
+@@ -1,14 +0,0 @@
+-{
+-  "type": "create:cutting",
+-  "ingredients": [
+-    {
+-      "item": "create_tobacco:mixed_fermented_tobacco_bundle"
+-    }
+-  ],
+-  "processing_time": 100,
+-  "results": [
+-    {
+-      "id": "create_tobacco:mixed_cigar_filler"
+-    }
+-  ]
+-}
+diff --git a/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_bedromorkanal.json b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_bedromorkanal.json
+new file mode 100644
+index 0000000..cbeafb6
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_bedromorkanal.json
+@@ -0,0 +1,34 @@
++{
++  "type": "create:mechanical_crafting",
++  "accept_mirrored": false,
++  "category": "misc",
++  "key": {
++    "C": {
++      "type": "neoforge:components",
++      "items": "create_tobacco:bedromorkanal",
++      "components": {
++        "create_tobacco:smoking_item_state": {
++          "remaining_puffs": 5,
++          "lit": false,
++          "burn_ticks": 0
++        }
++      }
++    },
++    "P": {
++      "item": "create_tobacco:empty_cigarette_pack"
++    },
++    "D": {
++      "item": "minecraft:light_blue_dye"
++    }
++  },
++  "pattern": [
++    "CCCC",
++    "CPCD",
++    "CCCC"
++  ],
++  "result": {
++    "count": 1,
++    "id": "create_tobacco:bedromorkanal_pack"
++  },
++  "show_notification": false
++}
+diff --git a/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_chunkman.json b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_chunkman.json
+new file mode 100644
+index 0000000..fd281da
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_chunkman.json
+@@ -0,0 +1,34 @@
++{
++  "type": "create:mechanical_crafting",
++  "accept_mirrored": false,
++  "category": "misc",
++  "key": {
++    "C": {
++      "type": "neoforge:components",
++      "items": "create_tobacco:chunkman",
++      "components": {
++        "create_tobacco:smoking_item_state": {
++          "remaining_puffs": 5,
++          "lit": false,
++          "burn_ticks": 0
++        }
++      }
++    },
++    "P": {
++      "item": "create_tobacco:empty_cigarette_pack"
++    },
++    "D": {
++      "item": "minecraft:brown_dye"
++    }
++  },
++  "pattern": [
++    "CCCC",
++    "CPCD",
++    "CCCC"
++  ],
++  "result": {
++    "count": 1,
++    "id": "create_tobacco:chunkman_pack"
++  },
++  "show_notification": false
++}
+diff --git a/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_craftmel.json b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_craftmel.json
+new file mode 100644
+index 0000000..9e30e05
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_craftmel.json
+@@ -0,0 +1,34 @@
++{
++  "type": "create:mechanical_crafting",
++  "accept_mirrored": false,
++  "category": "misc",
++  "key": {
++    "C": {
++      "type": "neoforge:components",
++      "items": "create_tobacco:craftmel",
++      "components": {
++        "create_tobacco:smoking_item_state": {
++          "remaining_puffs": 5,
++          "lit": false,
++          "burn_ticks": 0
++        }
++      }
++    },
++    "P": {
++      "item": "create_tobacco:empty_cigarette_pack"
++    },
++    "D": {
++      "item": "minecraft:orange_dye"
++    }
++  },
++  "pattern": [
++    "CCCC",
++    "CPCD",
++    "CCCC"
++  ],
++  "result": {
++    "count": 1,
++    "id": "create_tobacco:craftmel_pack"
++  },
++  "show_notification": false
++}
+diff --git a/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_creperfield.json b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_creperfield.json
+new file mode 100644
+index 0000000..326bbbd
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_creperfield.json
+@@ -0,0 +1,34 @@
++{
++  "type": "create:mechanical_crafting",
++  "accept_mirrored": false,
++  "category": "misc",
++  "key": {
++    "C": {
++      "type": "neoforge:components",
++      "items": "create_tobacco:creperfield",
++      "components": {
++        "create_tobacco:smoking_item_state": {
++          "remaining_puffs": 5,
++          "lit": false,
++          "burn_ticks": 0
++        }
++      }
++    },
++    "P": {
++      "item": "create_tobacco:empty_cigarette_pack"
++    },
++    "D": {
++      "item": "minecraft:lime_dye"
++    }
++  },
++  "pattern": [
++    "CCCC",
++    "CPCD",
++    "CCCC"
++  ],
++  "result": {
++    "count": 1,
++    "id": "create_tobacco:creperfield_pack"
++  },
++  "show_notification": false
++}
+diff --git a/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_kend.json b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_kend.json
+new file mode 100644
+index 0000000..d7ec4e1
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_kend.json
+@@ -0,0 +1,34 @@
++{
++  "type": "create:mechanical_crafting",
++  "accept_mirrored": false,
++  "category": "misc",
++  "key": {
++    "C": {
++      "type": "neoforge:components",
++      "items": "create_tobacco:kend",
++      "components": {
++        "create_tobacco:smoking_item_state": {
++          "remaining_puffs": 5,
++          "lit": false,
++          "burn_ticks": 0
++        }
++      }
++    },
++    "P": {
++      "item": "create_tobacco:empty_cigarette_pack"
++    },
++    "D": {
++      "item": "minecraft:purple_dye"
++    }
++  },
++  "pattern": [
++    "CCCC",
++    "CPCD",
++    "CCCC"
++  ],
++  "result": {
++    "count": 1,
++    "id": "create_tobacco:kend_pack"
++  },
++  "show_notification": false
++}
+diff --git a/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_marlbore_red.json b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_marlbore_red.json
+new file mode 100644
+index 0000000..c41a3dd
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_marlbore_red.json
+@@ -0,0 +1,34 @@
++{
++  "type": "create:mechanical_crafting",
++  "accept_mirrored": false,
++  "category": "misc",
++  "key": {
++    "C": {
++      "type": "neoforge:components",
++      "items": "create_tobacco:marlbore_red",
++      "components": {
++        "create_tobacco:smoking_item_state": {
++          "remaining_puffs": 5,
++          "lit": false,
++          "burn_ticks": 0
++        }
++      }
++    },
++    "P": {
++      "item": "create_tobacco:empty_cigarette_pack"
++    },
++    "D": {
++      "item": "minecraft:red_dye"
++    }
++  },
++  "pattern": [
++    "CCCC",
++    "CPCD",
++    "CCCC"
++  ],
++  "result": {
++    "count": 1,
++    "id": "create_tobacco:marlbore_red_pack"
++  },
++  "show_notification": false
++}
+diff --git a/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_pigliament.json b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_pigliament.json
+new file mode 100644
+index 0000000..1ca1db4
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_pigliament.json
+@@ -0,0 +1,34 @@
++{
++  "type": "create:mechanical_crafting",
++  "accept_mirrored": false,
++  "category": "misc",
++  "key": {
++    "C": {
++      "type": "neoforge:components",
++      "items": "create_tobacco:pigliament",
++      "components": {
++        "create_tobacco:smoking_item_state": {
++          "remaining_puffs": 5,
++          "lit": false,
++          "burn_ticks": 0
++        }
++      }
++    },
++    "P": {
++      "item": "create_tobacco:empty_cigarette_pack"
++    },
++    "D": {
++      "item": "minecraft:yellow_dye"
++    }
++  },
++  "pattern": [
++    "CCCC",
++    "CPCD",
++    "CCCC"
++  ],
++  "result": {
++    "count": 1,
++    "id": "create_tobacco:pigliament_pack"
++  },
++  "show_notification": false
++}
+diff --git a/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_rothmines.json b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_rothmines.json
+new file mode 100644
+index 0000000..9460ea5
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_rothmines.json
+@@ -0,0 +1,34 @@
++{
++  "type": "create:mechanical_crafting",
++  "accept_mirrored": false,
++  "category": "misc",
++  "key": {
++    "C": {
++      "type": "neoforge:components",
++      "items": "create_tobacco:rothmines",
++      "components": {
++        "create_tobacco:smoking_item_state": {
++          "remaining_puffs": 5,
++          "lit": false,
++          "burn_ticks": 0
++        }
++      }
++    },
++    "P": {
++      "item": "create_tobacco:empty_cigarette_pack"
++    },
++    "D": {
++      "item": "minecraft:black_dye"
++    }
++  },
++  "pattern": [
++    "CCCC",
++    "CPCD",
++    "CCCC"
++  ],
++  "result": {
++    "count": 1,
++    "id": "create_tobacco:rothmines_pack"
++  },
++  "show_notification": false
++}
+diff --git a/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_winstone_blue.json b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_winstone_blue.json
+new file mode 100644
+index 0000000..b75ae6b
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/recipe/mechanical_crafting/pack_winstone_blue.json
+@@ -0,0 +1,34 @@
++{
++  "type": "create:mechanical_crafting",
++  "accept_mirrored": false,
++  "category": "misc",
++  "key": {
++    "C": {
++      "type": "neoforge:components",
++      "items": "create_tobacco:winstone_blue",
++      "components": {
++        "create_tobacco:smoking_item_state": {
++          "remaining_puffs": 5,
++          "lit": false,
++          "burn_ticks": 0
++        }
++      }
++    },
++    "P": {
++      "item": "create_tobacco:empty_cigarette_pack"
++    },
++    "D": {
++      "item": "minecraft:blue_dye"
++    }
++  },
++  "pattern": [
++    "CCCC",
++    "CPCD",
++    "CCCC"
++  ],
++  "result": {
++    "count": 1,
++    "id": "create_tobacco:winstone_blue_pack"
++  },
++  "show_notification": false
++}
+diff --git a/src/main/resources/data/create_tobacco/recipe/sequenced_assembly/cobbliba_maduro.json b/src/main/resources/data/create_tobacco/recipe/sequenced_assembly/cobbliba_maduro.json
+deleted file mode 100644
+index dd50e54..0000000
+--- a/src/main/resources/data/create_tobacco/recipe/sequenced_assembly/cobbliba_maduro.json
++++ /dev/null
+@@ -1,45 +0,0 @@
+-{
+-  "type": "create:sequenced_assembly",
+-  "ingredient": {
+-    "item": "create_tobacco:cigar_wrapper"
+-  },
+-  "transitional_item": {
+-    "id": "create_tobacco:incomplete_cigar"
+-  },
+-  "sequence": [
+-    {
+-      "type": "create:deploying",
+-      "ingredients": [
+-        {
+-          "item": "create_tobacco:incomplete_cigar"
+-        },
+-        {
+-          "item": "create_tobacco:mixed_cigar_filler"
+-        }
+-      ],
+-      "results": [
+-        {
+-          "id": "create_tobacco:incomplete_cigar"
+-        }
+-      ]
+-    },
+-    {
+-      "type": "create:pressing",
+-      "ingredients": [
+-        {
+-          "item": "create_tobacco:incomplete_cigar"
+-        }
+-      ],
+-      "results": [
+-        {
+-          "id": "create_tobacco:incomplete_cigar"
+-        }
+-      ]
+-    }
+-  ],
+-  "results": [
+-    {
+-      "id": "create_tobacco:cobbliba_maduro"
+-    }
+-  ]
+-}
+diff --git a/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_burley_tobacco_patch.json b/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_burley_tobacco_patch.json
+new file mode 100644
+index 0000000..1e7eaaa
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_burley_tobacco_patch.json
+@@ -0,0 +1,22 @@
++{
++  "type": "minecraft:random_patch",
++  "config": {
++    "tries": 15,
++    "xz_spread": 5,
++    "y_spread": 2,
++    "feature": {
++      "feature": {
++        "type": "minecraft:simple_block",
++        "config": {
++          "to_place": {
++            "type": "minecraft:simple_state_provider",
++            "state": {
++              "Name": "create_tobacco:wild_burley_tobacco"
++            }
++          }
++        }
++      },
++      "placement": []
++    }
++  }
++}
+diff --git a/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_havana_tobacco_patch.json b/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_havana_tobacco_patch.json
+new file mode 100644
+index 0000000..105ec4a
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_havana_tobacco_patch.json
+@@ -0,0 +1,22 @@
++{
++  "type": "minecraft:random_patch",
++  "config": {
++    "tries": 12,
++    "xz_spread": 5,
++    "y_spread": 2,
++    "feature": {
++      "feature": {
++        "type": "minecraft:simple_block",
++        "config": {
++          "to_place": {
++            "type": "minecraft:simple_state_provider",
++            "state": {
++              "Name": "create_tobacco:wild_havana_tobacco"
++            }
++          }
++        }
++      },
++      "placement": []
++    }
++  }
++}
+diff --git a/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_virginia_tobacco_patch.json b/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_virginia_tobacco_patch.json
+new file mode 100644
+index 0000000..d1fb9e5
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/worldgen/configured_feature/wild_virginia_tobacco_patch.json
+@@ -0,0 +1,22 @@
++{
++  "type": "minecraft:random_patch",
++  "config": {
++    "tries": 18,
++    "xz_spread": 5,
++    "y_spread": 2,
++    "feature": {
++      "feature": {
++        "type": "minecraft:simple_block",
++        "config": {
++          "to_place": {
++            "type": "minecraft:simple_state_provider",
++            "state": {
++              "Name": "create_tobacco:wild_virginia_tobacco"
++            }
++          }
++        }
++      },
++      "placement": []
++    }
++  }
++}
+diff --git a/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_burley_tobacco.json b/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_burley_tobacco.json
+new file mode 100644
+index 0000000..b04b5bb
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_burley_tobacco.json
+@@ -0,0 +1,19 @@
++{
++  "feature": "create_tobacco:wild_burley_tobacco_patch",
++  "placement": [
++    {
++      "type": "minecraft:rarity_filter",
++      "chance": 20
++    },
++    {
++      "type": "minecraft:in_square"
++    },
++    {
++      "type": "minecraft:heightmap",
++      "heightmap": "MOTION_BLOCKING"
++    },
++    {
++      "type": "minecraft:biome"
++    }
++  ]
++}
+diff --git a/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_havana_tobacco.json b/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_havana_tobacco.json
+new file mode 100644
+index 0000000..fa55c97
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_havana_tobacco.json
+@@ -0,0 +1,19 @@
++{
++  "feature": "create_tobacco:wild_havana_tobacco_patch",
++  "placement": [
++    {
++      "type": "minecraft:rarity_filter",
++      "chance": 24
++    },
++    {
++      "type": "minecraft:in_square"
++    },
++    {
++      "type": "minecraft:heightmap",
++      "heightmap": "MOTION_BLOCKING"
++    },
++    {
++      "type": "minecraft:biome"
++    }
++  ]
++}
+diff --git a/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_virginia_tobacco.json b/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_virginia_tobacco.json
+new file mode 100644
+index 0000000..f84395d
+--- /dev/null
++++ b/src/main/resources/data/create_tobacco/worldgen/placed_feature/wild_virginia_tobacco.json
+@@ -0,0 +1,19 @@
++{
++  "feature": "create_tobacco:wild_virginia_tobacco_patch",
++  "placement": [
++    {
++      "type": "minecraft:rarity_filter",
++      "chance": 16
++    },
++    {
++      "type": "minecraft:in_square"
++    },
++    {
++      "type": "minecraft:heightmap",
++      "heightmap": "MOTION_BLOCKING"
++    },
++    {
++      "type": "minecraft:biome"
++    }
++  ]
++}

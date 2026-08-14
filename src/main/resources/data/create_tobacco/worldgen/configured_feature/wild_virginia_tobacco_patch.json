@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:random_patch",
+  "config": {
+    "tries": 18,
+    "xz_spread": 5,
+    "y_spread": 0,
+    "feature": {
+      "feature": {
+        "type": "create_tobacco:wild_virginia_tobacco_plant",
+        "config": {}
+      },
+      "placement": []
+    }
+  }
+}

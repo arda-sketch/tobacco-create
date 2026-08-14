@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "create_tobacco:block/wild_havana_tobacco_bottom"
+    },
+    "half=upper": {
+      "model": "create_tobacco:block/wild_havana_tobacco_top"
+    }
+  }
+}

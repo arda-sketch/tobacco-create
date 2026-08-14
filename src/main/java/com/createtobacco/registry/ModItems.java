@@ -4,6 +4,7 @@ import com.createtobacco.CreateTobacco;
 import com.createtobacco.item.CigaretteItem;
 import com.createtobacco.item.CigarItem;
 import com.createtobacco.item.CigarettePackItem;
+import com.createtobacco.item.CigaretteCaseItem;
 import com.createtobacco.smoking.SmokingProduct;
 import java.util.List;
 import net.minecraft.world.item.Item;
@@ -59,22 +60,27 @@ public final class ModItems {
 
     public static final DeferredItem<Item> FERMENTED_HAVANA_TOBACCO_BUNDLE =
             ITEMS.registerSimpleItem("fermented_havana_tobacco_bundle");
-    public static final DeferredItem<Item> MIXED_FERMENTED_TOBACCO_BUNDLE =
-            ITEMS.registerSimpleItem("mixed_fermented_tobacco_bundle");
     public static final DeferredItem<Item> CIGAR_FILLER = ITEMS.registerSimpleItem("cigar_filler");
-    public static final DeferredItem<Item> MIXED_CIGAR_FILLER = ITEMS.registerSimpleItem("mixed_cigar_filler");
     public static final DeferredItem<Item> CIGAR_WRAPPER = ITEMS.registerSimpleItem("cigar_wrapper");
     public static final DeferredItem<Item> GLOWSTONE_CIGAR_FILLER = ITEMS.registerSimpleItem("glowstone_cigar_filler");
     public static final DeferredItem<CigarItem> MINECRISTO_NO_1 = registerCigar(SmokingProduct.MINECRISTO_NO_1);
     public static final DeferredItem<CigarItem> STONEO_Y_GLOWLIETA = registerCigar(SmokingProduct.STONEO_Y_GLOWLIETA);
-    public static final DeferredItem<CigarItem> COBBLIBA_MADURO = registerCigar(SmokingProduct.COBBLIBA_MADURO);
 
     public static final DeferredItem<Item> INCOMPLETE_CIGARETTE = ITEMS.registerSimpleItem("incomplete_cigarette");
     public static final DeferredItem<Item> INCOMPLETE_CIGAR = ITEMS.registerSimpleItem("incomplete_cigar");
     public static final DeferredItem<Item> EMPTY_CIGARETTE_PACK = ITEMS.registerSimpleItem(
             "empty_cigarette_pack", new Item.Properties().stacksTo(16));
-    public static final DeferredItem<CigarettePackItem> CIGARETTE_PACK = ITEMS.registerItem(
-            "cigarette_pack", CigarettePackItem::new);
+    public static final DeferredItem<CigarettePackItem> MARLBORE_RED_PACK = registerPack(SmokingProduct.MARLBORE_RED);
+    public static final DeferredItem<CigarettePackItem> WINSTONE_BLUE_PACK = registerPack(SmokingProduct.WINSTONE_BLUE);
+    public static final DeferredItem<CigarettePackItem> CREPERFIELD_PACK = registerPack(SmokingProduct.CREPERFIELD);
+    public static final DeferredItem<CigarettePackItem> CRAFTMEL_PACK = registerPack(SmokingProduct.CRAFTMEL);
+    public static final DeferredItem<CigarettePackItem> CHUNKMAN_PACK = registerPack(SmokingProduct.CHUNKMAN);
+    public static final DeferredItem<CigarettePackItem> KEND_PACK = registerPack(SmokingProduct.KEND);
+    public static final DeferredItem<CigarettePackItem> PIGLIAMENT_PACK = registerPack(SmokingProduct.PIGLIAMENT);
+    public static final DeferredItem<CigarettePackItem> ROTHMINES_PACK = registerPack(SmokingProduct.ROTHMINES);
+    public static final DeferredItem<CigarettePackItem> BEDROMORKANAL_PACK = registerPack(SmokingProduct.BEDROMORKANAL);
+    public static final DeferredItem<CigaretteCaseItem> CIGARETTE_CASE = ITEMS.registerItem(
+            "cigarette_case", CigaretteCaseItem::new);
 
     public static final List<DeferredItem<? extends Item>> CREATIVE_TAB_ITEMS = List.of(
             VIRGINIA_SEEDS,
@@ -110,14 +116,22 @@ public final class ModItems {
             ROTHMINES,
             BEDROMORKANAL,
             FERMENTED_HAVANA_TOBACCO_BUNDLE,
-            MIXED_FERMENTED_TOBACCO_BUNDLE,
             CIGAR_FILLER,
-            MIXED_CIGAR_FILLER,
             CIGAR_WRAPPER,
             MINECRISTO_NO_1,
             GLOWSTONE_CIGAR_FILLER,
             STONEO_Y_GLOWLIETA,
-            EMPTY_CIGARETTE_PACK
+            EMPTY_CIGARETTE_PACK,
+            MARLBORE_RED_PACK,
+            WINSTONE_BLUE_PACK,
+            CREPERFIELD_PACK,
+            CRAFTMEL_PACK,
+            CHUNKMAN_PACK,
+            KEND_PACK,
+            PIGLIAMENT_PACK,
+            ROTHMINES_PACK,
+            BEDROMORKANAL_PACK,
+            CIGARETTE_CASE
     );
 
     private ModItems() {
@@ -129,6 +143,11 @@ public final class ModItems {
 
     private static DeferredItem<CigarItem> registerCigar(SmokingProduct product) {
         return ITEMS.registerItem(product.itemId().getPath(), properties -> new CigarItem(properties, product));
+    }
+
+    private static DeferredItem<CigarettePackItem> registerPack(SmokingProduct product) {
+        return ITEMS.registerItem(product.itemId().getPath() + "_pack",
+                properties -> new CigarettePackItem(properties, product));
     }
 
     public static void register(IEventBus modEventBus) {
