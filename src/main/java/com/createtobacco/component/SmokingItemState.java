@@ -6,8 +6,10 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 public record SmokingItemState(int remainingPuffs, boolean lit) {
+    public static final int MAX_SERIALIZED_PUFFS = 64;
+
     public static final Codec<SmokingItemState> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.intRange(0, 64).fieldOf("remaining_puffs").forGetter(SmokingItemState::remainingPuffs),
+            Codec.intRange(0, MAX_SERIALIZED_PUFFS).fieldOf("remaining_puffs").forGetter(SmokingItemState::remainingPuffs),
             Codec.BOOL.fieldOf("lit").forGetter(SmokingItemState::lit)
     ).apply(instance, SmokingItemState::new));
 
@@ -21,8 +23,8 @@ public record SmokingItemState(int remainingPuffs, boolean lit) {
             );
 
     public SmokingItemState {
-        if (remainingPuffs < 0) {
-            throw new IllegalArgumentException("remainingPuffs must not be negative");
+        if (remainingPuffs < 0 || remainingPuffs > MAX_SERIALIZED_PUFFS) {
+            throw new IllegalArgumentException("remainingPuffs must be in range 0.." + MAX_SERIALIZED_PUFFS);
         }
     }
 

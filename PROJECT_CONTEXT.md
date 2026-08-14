@@ -14,7 +14,7 @@
 
 ## Current phase
 
-Phase 14 — Create Tobacco advancement branch.
+Phase 15 — Dedicated-server and multiplayer hardening.
 
 The Phase 0 skeleton loads with Create on both the development client and the
 dedicated development server. Phase 1 added the requested basic items,
@@ -175,6 +175,31 @@ packs do not qualify. `Smoke and Gears` is fired from the common final-puff
 completion handler only for the nine active cigarettes, Minecristo No. 1, or
 Stoneo y Glowlieta. Ignition, item acquisition, and partial smoking never fire
 it.
+
+Phase 15 audited the common/client boundary, player attachment lifetime,
+ItemStack Data Components, product effects, coughing, packs, and teleport
+safety. The only code change is consistent `SmokingItemState` validation:
+both persistent and network construction now reject puff counts outside
+0–64. Normal products remain fixed to their five- or eight-puff profiles.
+
+A real local dedicated-server regression used two simultaneous clients,
+`Phase15A` and `Phase15B`. Their dependence values (90 and 0), partial smoking
+items, and different partial packs remained independent. Server-console debug
+handlers applied MarlbOre and KEnd behavior once, and Phase15A travelled
+Overworld → Nether → End → Overworld without losing its attachment. After
+disconnect and a full server restart, Phase15A still had dependence 90.000, a
+lit KEnd with three puffs, and a KEnd pack with count four. Only reconnect
+ticks advanced active time; the offline interval did not advance dependence,
+craving, or cough scheduling. The dedicated server loaded all 2,828 recipes
+and 2,478 advancements without client-class linkage or mod errors.
+
+The audit also confirms that product rolls, XP, food, healing, effects,
+Microblast knockback, puff completion, and pack extraction run only from
+server-side paths. Microblast never creates an Explosion and therefore cannot
+damage blocks, fire, Create contraptions, or storage. Client imports remain
+isolated under `client.particle` with a `Dist.CLIENT` subscriber. Death copies
+SmokingData through the attachment's `copyOnDeath()`, while ItemStack state
+uses Minecraft's normal persistent and network-synchronized Data Components.
 
 ## Explicitly out of scope
 
