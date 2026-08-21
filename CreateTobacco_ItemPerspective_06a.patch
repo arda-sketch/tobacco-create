@@ -1,0 +1,469 @@
+diff --git a/src/main/resources/assets/create_tobacco/models/item/cigarette_generated.json b/src/main/resources/assets/create_tobacco/models/item/cigarette_generated.json
+index c9ae5ee..a6a55fa 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/cigarette_generated.json
++++ b/src/main/resources/assets/create_tobacco/models/item/cigarette_generated.json
+@@ -42,7 +42,7 @@
+         25
+       ],
+       "translation": [
+-        1.13,
++        0.63,
+         3.2,
+         1.13
+       ],
+@@ -59,7 +59,7 @@
+         -25
+       ],
+       "translation": [
+-        1.13,
++        0.63,
+         3.2,
+         1.13
+       ],
+diff --git a/src/main/resources/assets/create_tobacco/player_animations/smoking.json b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+index 41f0038..eb0e6f3 100644
+--- a/src/main/resources/assets/create_tobacco/player_animations/smoking.json
++++ b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+@@ -436,6 +436,442 @@
+           }
+         }
+       }
++    },
++    "smoking_raise_right_fp": {
++      "animation_length": 0.3333,
++      "bones": {
++        "head": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                0,
++                0,
++                0
++              ]
++            },
++            "0.3333": {
++              "vector": [
++                22.5,
++                0,
++                0
++              ]
++            }
++          }
++        },
++        "right_arm": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                0,
++                0,
++                0
++              ]
++            },
++            "0.3333": {
++              "vector": [
++                -53.9263,
++                -20.56,
++                10.7226
++              ]
++            }
++          }
++        },
++        "right_item": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                -19.0142,
++                83.2395,
++                167.4672
++              ]
++            },
++            "0.3333": {
++              "vector": [
++                -37.1453,
++                92.2099,
++                163.1403
++              ]
++            }
++          },
++          "position": {
++            "0.0": {
++              "vector": [
++                0,
++                0,
++                0
++              ]
++            },
++            "0.3333": {
++              "vector": [
++                -1,
++                0,
++                1
++              ]
++            }
++          }
++        }
++      }
++    },
++    "smoking_hold_right_fp": {
++      "loop": true,
++      "animation_length": 1.2083,
++      "bones": {
++        "head": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                22.5,
++                0,
++                0
++              ]
++            },
++            "0.25": {
++              "vector": [
++                15,
++                0,
++                0
++              ]
++            },
++            "0.625": {
++              "vector": [
++                5,
++                0,
++                0
++              ]
++            },
++            "1.2083": {
++              "vector": [
++                22.5,
++                0,
++                0
++              ]
++            }
++          }
++        },
++        "right_arm": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                -53.9263,
++                -20.56,
++                10.7226
++              ]
++            },
++            "0.625": {
++              "vector": [
++                -68.4622,
++                -17.2854,
++                9.1101
++              ]
++            },
++            "1.0417": {
++              "vector": [
++                -56.08,
++                -19.62,
++                10.26
++              ]
++            },
++            "1.2083": {
++              "vector": [
++                -53.9263,
++                -20.56,
++                10.7226
++              ]
++            }
++          }
++        },
++        "right_item": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                -37.1453,
++                92.2099,
++                163.1403
++              ]
++            },
++            "1.0417": {
++              "vector": [
++                -39.5057,
++                94.1981,
++                161.583
++              ]
++            },
++            "1.2083": {
++              "vector": [
++                -37.1453,
++                92.2099,
++                163.1403
++              ]
++            }
++          },
++          "position": {
++            "0.0": {
++              "vector": [
++                -1,
++                0,
++                1
++              ]
++            },
++            "0.625": {
++              "vector": [
++                -1,
++                0,
++                2
++              ]
++            },
++            "1.2083": {
++              "vector": [
++                -1,
++                0,
++                1
++              ]
++            }
++          }
++        },
++        "left_arm": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                0,
++                0,
++                0
++              ]
++            },
++            "0.8333": {
++              "vector": [
++                2,
++                0,
++                0
++              ]
++            },
++            "1.2083": {
++              "vector": [
++                0,
++                0,
++                0
++              ]
++            }
++          }
++        }
++      }
++    },
++    "smoking_raise_left_fp": {
++      "animation_length": 0.3333,
++      "bones": {
++        "head": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                0,
++                0,
++                0
++              ]
++            },
++            "0.3333": {
++              "vector": [
++                22.5,
++                0,
++                0
++              ]
++            }
++          }
++        },
++        "left_arm": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                0,
++                0,
++                0
++              ]
++            },
++            "0.3333": {
++              "vector": [
++                -53.9263,
++                20.56,
++                -10.7226
++              ]
++            }
++          }
++        },
++        "left_item": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                -19.0142,
++                -93.2395,
++                -177.4672
++              ]
++            },
++            "0.3333": {
++              "vector": [
++                -37.1453,
++                -102.2099,
++                -173.1403
++              ]
++            }
++          },
++          "position": {
++            "0.0": {
++              "vector": [
++                0,
++                0,
++                0
++              ]
++            },
++            "0.3333": {
++              "vector": [
++                1,
++                0,
++                1
++              ]
++            }
++          }
++        }
++      }
++    },
++    "smoking_hold_left_fp": {
++      "loop": true,
++      "animation_length": 1.2083,
++      "bones": {
++        "head": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                22.5,
++                0,
++                0
++              ]
++            },
++            "0.25": {
++              "vector": [
++                15,
++                0,
++                0
++              ]
++            },
++            "0.625": {
++              "vector": [
++                5,
++                0,
++                0
++              ]
++            },
++            "1.2083": {
++              "vector": [
++                22.5,
++                0,
++                0
++              ]
++            }
++          }
++        },
++        "left_arm": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                -53.9263,
++                20.56,
++                -10.7226
++              ]
++            },
++            "0.625": {
++              "vector": [
++                -68.4622,
++                17.2854,
++                -9.1101
++              ]
++            },
++            "1.0417": {
++              "vector": [
++                -56.08,
++                19.62,
++                -10.26
++              ]
++            },
++            "1.2083": {
++              "vector": [
++                -53.9263,
++                20.56,
++                -10.7226
++              ]
++            }
++          }
++        },
++        "left_item": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                -37.1453,
++                -102.2099,
++                -173.1403
++              ]
++            },
++            "1.0417": {
++              "vector": [
++                -39.5057,
++                -104.1981,
++                -171.583
++              ]
++            },
++            "1.2083": {
++              "vector": [
++                -37.1453,
++                -102.2099,
++                -173.1403
++              ]
++            }
++          },
++          "position": {
++            "0.0": {
++              "vector": [
++                1,
++                0,
++                1
++              ]
++            },
++            "0.625": {
++              "vector": [
++                1,
++                0,
++                2
++              ]
++            },
++            "1.2083": {
++              "vector": [
++                1,
++                0,
++                1
++              ]
++            }
++          }
++        },
++        "right_arm": {
++          "rotation": {
++            "0.0": {
++              "vector": [
++                0,
++                0,
++                0
++              ]
++            },
++            "0.8333": {
++              "vector": [
++                2,
++                0,
++                0
++              ]
++            },
++            "1.2083": {
++              "vector": [
++                0,
++                0,
++                0
++              ]
++            }
++          }
++        }
++      }
+     }
+   },
+   "geckolib_format_version": 2

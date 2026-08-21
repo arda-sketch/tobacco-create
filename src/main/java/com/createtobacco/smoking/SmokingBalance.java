@@ -19,6 +19,22 @@ public final class SmokingBalance {
     public static final long DEPENDENCE_DECAY_INTERVAL_TICKS = hours(1);
     public static final float DEPENDENCE_DECAY_PER_INTERVAL = 2.5F;
     public static final int PUFF_USE_DURATION_TICKS = 24;
+    // Keep one vanilla use action alive while the button is held. Individual
+    // successful puffs are completed every PUFF_USE_DURATION_TICKS inside it.
+    public static final int CONTINUOUS_SMOKING_USE_DURATION_TICKS = 72_000;
+
+    // Rapid-smoking streak: 1.5 seconds without a successful puff resets it.
+    public static final int RAPID_PUFF_STREAK_RESET_TICKS = 30;
+    public static final float RAPID_PUFF_3_NAUSEA_CHANCE = 0.20F;
+    public static final int RAPID_PUFF_3_NAUSEA_TICKS = seconds(2);
+    public static final int RAPID_PUFF_3_NAUSEA_AMPLIFIER = 0;
+    public static final float RAPID_PUFF_4_NAUSEA_CHANCE = 0.40F;
+    public static final int RAPID_PUFF_4_NAUSEA_TICKS = seconds(2);
+    public static final int RAPID_PUFF_4_NAUSEA_AMPLIFIER = 1;
+    public static final float RAPID_PUFF_5_PLUS_NAUSEA_CHANCE = 0.60F;
+    public static final int RAPID_PUFF_5_PLUS_NAUSEA_TICKS = seconds(5);
+    public static final int RAPID_PUFF_5_PLUS_NAUSEA_AMPLIFIER = 1;
+
     // A lit cigarette/cigar smoulders even when the player is not puffing it.
     // Natural burn consumes one puff at each interval but grants no benefits.
     public static final int CIGARETTE_NATURAL_BURN_INTERVAL_TICKS = seconds(60);

@@ -1,0 +1,77 @@
+diff --git a/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java b/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
+--- a/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
++++ b/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
+@@ -77,6 +77,11 @@ public final class ModPlayerAnimations {
+                                         ? PlayState.STOP
+                                         : animationSetter.setAnimation(animation);
+                             });
++
++                    // During PAL's THIRD_PERSON_MODEL first-person pass Minecraft
++                    // still applies the third-person item transform. Compensate
++                    // only for that pass, while keeping the F5 transform intact.
++                    controller.addModifierLast(new SmokingFirstPersonItemModifier());
+
+                     controller.setFirstPersonMode(
+                             FirstPersonMode.THIRD_PERSON_MODEL);
+diff --git a/src/main/java/com/createtobacco/client/animation/SmokingFirstPersonItemModifier.java b/src/main/java/com/createtobacco/client/animation/SmokingFirstPersonItemModifier.java
+new file mode 100644
+--- /dev/null
++++ b/src/main/java/com/createtobacco/client/animation/SmokingFirstPersonItemModifier.java
+@@ -0,0 +1,58 @@
++package com.createtobacco.client.animation;
++
++import com.zigythebird.playeranimcore.animation.AnimationData;
++import com.zigythebird.playeranimcore.animation.layered.modifier.AbstractModifier;
++import com.zigythebird.playeranimcore.bones.PlayerAnimBone;
++
++/**
++ * Keeps cigarette/cigar item transforms independent between PAL first person
++ * and normal third person.
++ *
++ * The shared item model intentionally uses scale 0.45 and a third-person
++ * rotation for F5. PAL's THIRD_PERSON_MODEL mode renders that same transform
++ * during its first-person pass, so here we undo only the rotation and multiply
++ * item-bone scale by 2:
++ *
++ *     0.45 * 2.0 = 0.90
++ *
++ * Normal third person never enters this branch and remains at scale 0.45.
++ */
++final class SmokingFirstPersonItemModifier extends AbstractModifier {
++
++    private static final float FIRST_PERSON_SCALE_COMPENSATION = 2.0F;
++    private static final float DEG_TO_RAD = (float) (Math.PI / 180.0);
++
++    private boolean firstPersonPass;
++
++    @Override
++    public void setupAnim(AnimationData state) {
++        super.setupAnim(state);
++        this.firstPersonPass = state.isFirstPersonPass();
++    }
++
++    @Override
++    public void get3DTransform(PlayerAnimBone bone) {
++        super.get3DTransform(bone);
++
++        if (!this.firstPersonPass) {
++            return;
++        }
++
++        if ("right_item".equals(bone.getName())) {
++            bone.scale.mul(FIRST_PERSON_SCALE_COMPENSATION);
++
++            // Inverse of cigarette_generated.json thirdperson_righthand
++            // rotation [0, -80, -115].
++            bone.rotation.y += 80.0F * DEG_TO_RAD;
++            bone.rotation.z += 115.0F * DEG_TO_RAD;
++        } else if ("left_item".equals(bone.getName())) {
++            bone.scale.mul(FIRST_PERSON_SCALE_COMPENSATION);
++
++            // Inverse of cigarette_generated.json thirdperson_lefthand
++            // rotation [0, 90, 125].
++            bone.rotation.y -= 90.0F * DEG_TO_RAD;
++            bone.rotation.z -= 125.0F * DEG_TO_RAD;
++        }
++    }
++}

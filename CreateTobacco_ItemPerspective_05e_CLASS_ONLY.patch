@@ -1,0 +1,51 @@
+diff --git a/src/main/java/com/createtobacco/client/animation/SmokingFirstPersonItemModifier.java b/src/main/java/com/createtobacco/client/animation/SmokingFirstPersonItemModifier.java
+new file mode 100644
+index 0000000..080e905
+--- /dev/null
++++ b/src/main/java/com/createtobacco/client/animation/SmokingFirstPersonItemModifier.java
+@@ -0,0 +1,45 @@
++package com.createtobacco.client.animation;
++
++import com.zigythebird.playeranimcore.animation.layered.modifier.AbstractModifier;
++import com.zigythebird.playeranimcore.bones.PlayerAnimBone;
++import net.minecraft.client.Minecraft;
++
++/**
++ * PAL 1.1.5 / MC 1.21.1 perspective compensation for smoking items.
++ *
++ * Third person keeps the transform from cigarette_generated.json.
++ * In first person, PAL uses THIRD_PERSON_MODEL, so compensate the item bone:
++ * 0.45 * 2.0 = 0.90 and undo the F5-only rotation.
++ */
++final class SmokingFirstPersonItemModifier extends AbstractModifier {
++
++    private static final float FIRST_PERSON_SCALE_COMPENSATION = 2.0F;
++    private static final float DEG_TO_RAD = (float) (Math.PI / 180.0);
++
++    @Override
++    public PlayerAnimBone get3DTransform(PlayerAnimBone bone) {
++        PlayerAnimBone transformed = super.get3DTransform(bone);
++
++        if (!Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
++            return transformed;
++        }
++
++        String name = transformed.getName();
++
++        if ("right_item".equals(name)) {
++            transformed.scaleX *= FIRST_PERSON_SCALE_COMPENSATION;
++            transformed.scaleY *= FIRST_PERSON_SCALE_COMPENSATION;
++            transformed.scaleZ *= FIRST_PERSON_SCALE_COMPENSATION;
++            transformed.rotY += 80.0F * DEG_TO_RAD;
++            transformed.rotZ += 115.0F * DEG_TO_RAD;
++        } else if ("left_item".equals(name)) {
++            transformed.scaleX *= FIRST_PERSON_SCALE_COMPENSATION;
++            transformed.scaleY *= FIRST_PERSON_SCALE_COMPENSATION;
++            transformed.scaleZ *= FIRST_PERSON_SCALE_COMPENSATION;
++            transformed.rotY -= 90.0F * DEG_TO_RAD;
++            transformed.rotZ -= 125.0F * DEG_TO_RAD;
++        }
++
++        return transformed;
++    }
++}

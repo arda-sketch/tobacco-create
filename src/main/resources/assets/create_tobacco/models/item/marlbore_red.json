@@ -1,6 +1,14 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "create_tobacco:item/cigarette_generated",
   "textures": {
-    "layer0": "create_tobacco:item/marlbore_red_blend"
-  }
+    "layer0": "create_tobacco:item/marlbore_red"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "create_tobacco:lit": 1.0
+      },
+      "model": "create_tobacco:item/marlbore_red_lit"
+    }
+  ]
 }

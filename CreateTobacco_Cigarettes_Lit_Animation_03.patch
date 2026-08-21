@@ -1,0 +1,768 @@
+diff --git a/src/main/java/com/createtobacco/client/CreateTobaccoClient.java b/src/main/java/com/createtobacco/client/CreateTobaccoClient.java
+index 51ac3f7..f0c7b59 100644
+--- a/src/main/java/com/createtobacco/client/CreateTobaccoClient.java
++++ b/src/main/java/com/createtobacco/client/CreateTobaccoClient.java
+@@ -17,7 +17,10 @@ public final class CreateTobaccoClient {
+ 
+     @SubscribeEvent
+     public static void clientSetup(FMLClientSetupEvent event) {
+-        event.enqueueWork(ModPlayerAnimations::register);
++        event.enqueueWork(() -> {
++            ModPlayerAnimations.register();
++            ModItemProperties.register();
++        });
+     }
+ 
+     @SubscribeEvent
+diff --git a/src/main/java/com/createtobacco/client/ModItemProperties.java b/src/main/java/com/createtobacco/client/ModItemProperties.java
+new file mode 100644
+index 0000000..19e5f5a
+--- /dev/null
++++ b/src/main/java/com/createtobacco/client/ModItemProperties.java
+@@ -0,0 +1,26 @@
++package com.createtobacco.client;
++
++import com.createtobacco.CreateTobacco;
++import com.createtobacco.component.SmokingItemState;
++import com.createtobacco.registry.ModDataComponents;
++import net.minecraft.client.renderer.item.ItemProperties;
++import net.minecraft.resources.ResourceLocation;
++
++/** Client-only item model properties shared by smoking products. */
++public final class ModItemProperties {
++    private static final ResourceLocation LIT =
++            ResourceLocation.fromNamespaceAndPath(CreateTobacco.MOD_ID, "lit");
++
++    private ModItemProperties() {
++    }
++
++    public static void register() {
++        ItemProperties.registerGeneric(
++                LIT,
++                (stack, level, entity, seed) -> {
++                    SmokingItemState state = stack.get(ModDataComponents.SMOKING_ITEM_STATE.get());
++                    return state != null && state.lit() ? 1.0F : 0.0F;
++                }
++        );
++    }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/bedromorkanal.json b/src/main/resources/assets/create_tobacco/models/item/bedromorkanal.json
+index bb379d0..d83f616 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/bedromorkanal.json
++++ b/src/main/resources/assets/create_tobacco/models/item/bedromorkanal.json
+@@ -1,6 +1,14 @@
+ {
+   "parent": "minecraft:item/generated",
+   "textures": {
+-    "layer0": "minecraft:item/dried_kelp"
+-  }
++    "layer0": "create_tobacco:item/bedromorkanal"
++  },
++  "overrides": [
++    {
++      "predicate": {
++        "create_tobacco:lit": 1.0
++      },
++      "model": "create_tobacco:item/bedromorkanal_lit"
++    }
++  ]
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/item/bedromorkanal_lit.json b/src/main/resources/assets/create_tobacco/models/item/bedromorkanal_lit.json
+new file mode 100644
+index 0000000..834861a
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/bedromorkanal_lit.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create_tobacco:item/bedromorkanal_lit"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/chunkman.json b/src/main/resources/assets/create_tobacco/models/item/chunkman.json
+index ffa2b49..7d6d6ee 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/chunkman.json
++++ b/src/main/resources/assets/create_tobacco/models/item/chunkman.json
+@@ -1,6 +1,14 @@
+ {
+   "parent": "minecraft:item/generated",
+   "textures": {
+-    "layer0": "create_tobacco:item/chunkman_blend"
+-  }
++    "layer0": "create_tobacco:item/chunkman"
++  },
++  "overrides": [
++    {
++      "predicate": {
++        "create_tobacco:lit": 1.0
++      },
++      "model": "create_tobacco:item/chunkman_lit"
++    }
++  ]
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/item/chunkman_lit.json b/src/main/resources/assets/create_tobacco/models/item/chunkman_lit.json
+new file mode 100644
+index 0000000..1dc897d
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/chunkman_lit.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create_tobacco:item/chunkman_lit"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/craftmel.json b/src/main/resources/assets/create_tobacco/models/item/craftmel.json
+index 7b11eb4..2e4a4ac 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/craftmel.json
++++ b/src/main/resources/assets/create_tobacco/models/item/craftmel.json
+@@ -1,6 +1,14 @@
+ {
+   "parent": "minecraft:item/generated",
+   "textures": {
+-    "layer0": "create_tobacco:item/craftmel_blend"
+-  }
++    "layer0": "create_tobacco:item/craftmel"
++  },
++  "overrides": [
++    {
++      "predicate": {
++        "create_tobacco:lit": 1.0
++      },
++      "model": "create_tobacco:item/craftmel_lit"
++    }
++  ]
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/item/craftmel_lit.json b/src/main/resources/assets/create_tobacco/models/item/craftmel_lit.json
+new file mode 100644
+index 0000000..7de9e63
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/craftmel_lit.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create_tobacco:item/craftmel_lit"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/creperfield.json b/src/main/resources/assets/create_tobacco/models/item/creperfield.json
+index 57706c0..b280b01 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/creperfield.json
++++ b/src/main/resources/assets/create_tobacco/models/item/creperfield.json
+@@ -1,6 +1,14 @@
+ {
+   "parent": "minecraft:item/generated",
+   "textures": {
+-    "layer0": "create_tobacco:item/creperfield_blend"
+-  }
++    "layer0": "create_tobacco:item/creperfield"
++  },
++  "overrides": [
++    {
++      "predicate": {
++        "create_tobacco:lit": 1.0
++      },
++      "model": "create_tobacco:item/creperfield_lit"
++    }
++  ]
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/item/creperfield_lit.json b/src/main/resources/assets/create_tobacco/models/item/creperfield_lit.json
+new file mode 100644
+index 0000000..fe8c70b
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/creperfield_lit.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create_tobacco:item/creperfield_lit"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/kend.json b/src/main/resources/assets/create_tobacco/models/item/kend.json
+index e04a50b..4afd827 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/kend.json
++++ b/src/main/resources/assets/create_tobacco/models/item/kend.json
+@@ -1,6 +1,14 @@
+ {
+   "parent": "minecraft:item/generated",
+   "textures": {
+-    "layer0": "create_tobacco:item/kend_blend"
+-  }
++    "layer0": "create_tobacco:item/kend"
++  },
++  "overrides": [
++    {
++      "predicate": {
++        "create_tobacco:lit": 1.0
++      },
++      "model": "create_tobacco:item/kend_lit"
++    }
++  ]
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/item/kend_lit.json b/src/main/resources/assets/create_tobacco/models/item/kend_lit.json
+new file mode 100644
+index 0000000..202f2f5
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/kend_lit.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create_tobacco:item/kend_lit"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/marlbore_red.json b/src/main/resources/assets/create_tobacco/models/item/marlbore_red.json
+index f9adb70..683d0cb 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/marlbore_red.json
++++ b/src/main/resources/assets/create_tobacco/models/item/marlbore_red.json
+@@ -1,6 +1,14 @@
+ {
+   "parent": "minecraft:item/generated",
+   "textures": {
+-    "layer0": "create_tobacco:item/marlbore_red_blend"
+-  }
++    "layer0": "create_tobacco:item/marlbore_red"
++  },
++  "overrides": [
++    {
++      "predicate": {
++        "create_tobacco:lit": 1.0
++      },
++      "model": "create_tobacco:item/marlbore_red_lit"
++    }
++  ]
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/item/marlbore_red_lit.json b/src/main/resources/assets/create_tobacco/models/item/marlbore_red_lit.json
+new file mode 100644
+index 0000000..13f2da9
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/marlbore_red_lit.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create_tobacco:item/marlbore_red_lit"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/pigliament.json b/src/main/resources/assets/create_tobacco/models/item/pigliament.json
+index 31b2382..693eef3 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/pigliament.json
++++ b/src/main/resources/assets/create_tobacco/models/item/pigliament.json
+@@ -1,6 +1,14 @@
+ {
+   "parent": "minecraft:item/generated",
+   "textures": {
+-    "layer0": "create_tobacco:item/pigliament_blend"
+-  }
++    "layer0": "create_tobacco:item/pigliament"
++  },
++  "overrides": [
++    {
++      "predicate": {
++        "create_tobacco:lit": 1.0
++      },
++      "model": "create_tobacco:item/pigliament_lit"
++    }
++  ]
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/item/pigliament_lit.json b/src/main/resources/assets/create_tobacco/models/item/pigliament_lit.json
+new file mode 100644
+index 0000000..60800a2
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/pigliament_lit.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create_tobacco:item/pigliament_lit"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/rothmines.json b/src/main/resources/assets/create_tobacco/models/item/rothmines.json
+index e24d55d..b39bc3b 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/rothmines.json
++++ b/src/main/resources/assets/create_tobacco/models/item/rothmines.json
+@@ -1,6 +1,14 @@
+ {
+   "parent": "minecraft:item/generated",
+   "textures": {
+-    "layer0": "create_tobacco:item/rothmines_blend"
+-  }
++    "layer0": "create_tobacco:item/rothmines"
++  },
++  "overrides": [
++    {
++      "predicate": {
++        "create_tobacco:lit": 1.0
++      },
++      "model": "create_tobacco:item/rothmines_lit"
++    }
++  ]
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/item/rothmines_lit.json b/src/main/resources/assets/create_tobacco/models/item/rothmines_lit.json
+new file mode 100644
+index 0000000..e364046
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/rothmines_lit.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create_tobacco:item/rothmines_lit"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/winstone_blue.json b/src/main/resources/assets/create_tobacco/models/item/winstone_blue.json
+index e4cf3a6..aa00d88 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/winstone_blue.json
++++ b/src/main/resources/assets/create_tobacco/models/item/winstone_blue.json
+@@ -1,6 +1,14 @@
+ {
+   "parent": "minecraft:item/generated",
+   "textures": {
+-    "layer0": "create_tobacco:item/winstone_blue_blend"
+-  }
++    "layer0": "create_tobacco:item/winstone_blue"
++  },
++  "overrides": [
++    {
++      "predicate": {
++        "create_tobacco:lit": 1.0
++      },
++      "model": "create_tobacco:item/winstone_blue_lit"
++    }
++  ]
+ }
+diff --git a/src/main/resources/assets/create_tobacco/models/item/winstone_blue_lit.json b/src/main/resources/assets/create_tobacco/models/item/winstone_blue_lit.json
+new file mode 100644
+index 0000000..0a49a49
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/models/item/winstone_blue_lit.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:item/generated",
++  "textures": {
++    "layer0": "create_tobacco:item/winstone_blue_lit"
++  }
++}
+diff --git a/src/main/resources/assets/create_tobacco/player_animations/smoking.json b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+index 81f0fce..6dfa911 100644
+--- a/src/main/resources/assets/create_tobacco/player_animations/smoking.json
++++ b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+@@ -2,92 +2,104 @@
+   "format_version": "1.8.0",
+   "animations": {
+     "smoking_raise_right": {
+-      "animation_length": 0.25,
++      "animation_length": 0.3333,
+       "bones": {
+-        "right_arm": {
++        "head": {
+           "rotation": {
+-            "0.0": [0, 0, 0],
+-            "0.25": [-68, -18, 8]
++            "0.0": { "vector": [0, 0, 0] },
++            "0.3333": { "vector": [22.5, 0, 0] }
+           }
+         },
+-        "right_item": {
++        "right_arm": {
+           "rotation": {
+-            "0.0": [0, 0, 0],
+-            "0.25": [-8, 18, -78]
++            "0.0": { "vector": [0, 0, 0] },
++            "0.3333": { "vector": [-75, -26, 20] }
+           }
++        },
++        "right_item": {
++          "rotation": { "vector": [-19.0142, 3.2395, 52.4672] },
++          "position": { "vector": [0, 0, 0] }
+         }
+       }
+     },
+     "smoking_hold_right": {
+       "animation_length": 1.2,
+       "bones": {
+-        "right_arm": {
++        "head": {
+           "rotation": {
+-            "0.0": [-68, -18, 8],
+-            "0.75": [-69, -18, 8],
+-            "0.95": [-70, -18, 8],
+-            "1.2": [-68, -18, 8]
++            "0.0": { "vector": [22.5, 0, 0] },
++            "0.8": { "vector": [22.5, 0, 0] },
++            "1.0": { "vector": [24, 0, 0] },
++            "1.2": { "vector": [22.5, 0, 0] }
+           }
+         },
+-        "right_item": {
++        "right_arm": {
+           "rotation": {
+-            "0.0": [-8, 18, -78],
+-            "0.95": [-10, 18, -78],
+-            "1.2": [-8, 18, -78]
++            "0.0": { "vector": [-75, -26, 20] },
++            "0.8": { "vector": [-75, -26, 20] },
++            "1.0": { "vector": [-77, -26, 20] },
++            "1.2": { "vector": [-75, -26, 20] }
+           }
+         },
+-        "head": {
++        "right_item": {
+           "rotation": {
+-            "0.0": [2, -2, 0],
+-            "0.75": [3, -2, 0],
+-            "0.95": [4, -2, 0],
+-            "1.2": [2, -2, 0]
+-          }
++            "0.0": { "vector": [-19.0142, 3.2395, 52.4672] },
++            "0.8": { "vector": [-19.0142, 3.2395, 52.4672] },
++            "1.0": { "vector": [-20.5, 3.2395, 52.4672] },
++            "1.2": { "vector": [-19.0142, 3.2395, 52.4672] }
++          },
++          "position": { "vector": [0, 0, 0] }
+         }
+       }
+     },
+     "smoking_raise_left": {
+-      "animation_length": 0.25,
++      "animation_length": 0.3333,
+       "bones": {
+-        "left_arm": {
++        "head": {
+           "rotation": {
+-            "0.0": [0, 0, 0],
+-            "0.25": [-68, 18, -8]
++            "0.0": { "vector": [0, 0, 0] },
++            "0.3333": { "vector": [22.5, 0, 0] }
+           }
+         },
+-        "left_item": {
++        "left_arm": {
+           "rotation": {
+-            "0.0": [0, 0, 0],
+-            "0.25": [-8, -18, 78]
++            "0.0": { "vector": [0, 0, 0] },
++            "0.3333": { "vector": [-75, 26, -20] }
+           }
++        },
++        "left_item": {
++          "rotation": { "vector": [-19.0142, -3.2395, -52.4672] },
++          "position": { "vector": [0, 0, 0] }
+         }
+       }
+     },
+     "smoking_hold_left": {
+       "animation_length": 1.2,
+       "bones": {
+-        "left_arm": {
++        "head": {
+           "rotation": {
+-            "0.0": [-68, 18, -8],
+-            "0.75": [-69, 18, -8],
+-            "0.95": [-70, 18, -8],
+-            "1.2": [-68, 18, -8]
++            "0.0": { "vector": [22.5, 0, 0] },
++            "0.8": { "vector": [22.5, 0, 0] },
++            "1.0": { "vector": [24, 0, 0] },
++            "1.2": { "vector": [22.5, 0, 0] }
+           }
+         },
+-        "left_item": {
++        "left_arm": {
+           "rotation": {
+-            "0.0": [-8, -18, 78],
+-            "0.95": [-10, -18, 78],
+-            "1.2": [-8, -18, 78]
++            "0.0": { "vector": [-75, 26, -20] },
++            "0.8": { "vector": [-75, 26, -20] },
++            "1.0": { "vector": [-77, 26, -20] },
++            "1.2": { "vector": [-75, 26, -20] }
+           }
+         },
+-        "head": {
++        "left_item": {
+           "rotation": {
+-            "0.0": [2, 2, 0],
+-            "0.75": [3, 2, 0],
+-            "0.95": [4, 2, 0],
+-            "1.2": [2, 2, 0]
+-          }
++            "0.0": { "vector": [-19.0142, -3.2395, -52.4672] },
++            "0.8": { "vector": [-19.0142, -3.2395, -52.4672] },
++            "1.0": { "vector": [-20.5, -3.2395, -52.4672] },
++            "1.2": { "vector": [-19.0142, -3.2395, -52.4672] }
++          },
++          "position": { "vector": [0, 0, 0] }
+         }
+       }
+     }
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/bedromorkanal.png b/src/main/resources/assets/create_tobacco/textures/item/bedromorkanal.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..6cbf00c1d428dbe4f9cc8fc5922b73440fa4d888
+GIT binary patch
+literal 282
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkQ1FbW
+zi(`mI@6yS8c@G%~w7z$pBC=)zXNJ$*E=>t#NhVGkwzc67nL#@pc_z&3;?=WS9HC}Z
+zC^IkRWzOsB@5z#9eEzRE!OE~<O(+|~4r}?9mNk!bm>Ftp->$6Q$8meEy?)Vy!0Eqd
+z&yeiqVJL{4R(Jo7oLt#=o6lTK*Gu0fCG&i({m*(njG<xms-lfs&A7VFR-Re3E!URE
+zA?epmCZ-6Z_5vSQ9<hR1mYEF;(wB;4uARJLKBJngeygmv%j(4V#*C8(7KxtF?vYm(
+b7i(uM2`yip?tk_#&|eImu6{1-oD!M<#RFwJ
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/bedromorkanal_lit.png b/src/main/resources/assets/create_tobacco/textures/item/bedromorkanal_lit.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..32d3ce931fc5aae4c0b7659c5168c243cbe68928
+GIT binary patch
+literal 269
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkP;kGe
+zi(`mI@6yQ|c@HZHxW12$Y~j3PVcML+W8@a0G%5PKW^B8fu)(SRK8+LGI&$aeE8cCq
+zx8GVoLG%BLm8=W_*A<x=p2W61_m4?sXxQ$p{qN$rZ?mN=p8E?<x&ah9He*iw@9?(E
+zmf>-ZiO*xY+7l;8Jm!ge%fPU9t0teKNaEGZ)tj<pj`J{Ih^Xsp;9N6xd4Z=dXIMdG
+z<z<G+Gk32Oe*af(&U=RLncoj}icUOS@XlfD^Fv*-FSKjy-E`OR<sUy(x|%CK>J!i_
+N44$rjF6*2UngEFAW*-0m
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/chunkman.png b/src/main/resources/assets/create_tobacco/textures/item/chunkman.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..669259bc4d5e4c7801a54543ac42423245919b19
+GIT binary patch
+literal 294
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkQ1FJQ
+zi(`mI@6yS8c@G%~w7zGRa`BSl%F5dH#$l$SM5CZUvVlXFiGf?x3T3NP9w8T<(;o|b
+z6u$i^C3@rH_xE;t^Gy2W-;>P9;3udx@5rI!ccaW^9`sqH61G#vf0EDhLRE$bX8vbC
+z@5^v`qIHJFk?%rtti_Gj4EY;YO=d}`<g+}$zoYo$pFcmo$^Upzr}F=RJSW41bk4Tj
+zQ5mNdX3xse_FcqY^1e;&%%W4dUyF>Qeol?$WXsFiz5BdQjQ~f<kK!A0K6zo5u^jq4
+o7nX4DT<Len?BK!EN*rOI80T{JajdvA5fl;(p00i_>zopr0Lj>Kn*aa+
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/chunkman_lit.png b/src/main/resources/assets/create_tobacco/textures/item/chunkman_lit.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..7de97a19f9cfc1e3720347e08785865493198b70
+GIT binary patch
+literal 278
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkQ1FDO
+zi(`mI@6yS(e1{BpT0e7f2f2r(rJ23Ec({Pg@4`;@6Op?P-I;1A6#R8U^3In1W=p3%
+zTH?7ceRrPYCEblldJGLl|AZJE%+7sW@j8-e!-}u3|5=IKg)UuJ+hOdPlG?yxW?T`(
+zkpJOkI|uWG&4rAA8Yb&}k=tLx9$b)hROp8@!=>llr`y`2R-{f?sQf$3C8fE{%uHae
+z%e&j@YO4>Iq-ZN1T6lT+@34o*Jm<HC^>VrF-<kQO=y}CjB~`uW{#ylp3Gv+ftrKyA
+Z{o|q@lT_iE@<2Z^c)I$ztaD0e0ssJKZa)A3
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/craftmel.png b/src/main/resources/assets/create_tobacco/textures/item/craftmel.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..8efe9e5431d61c85eceee10c75f248c0cefc1497
+GIT binary patch
+literal 264
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkP;i&0
+zi(`mI@6ro~e1{BpSTFqN<!+kT+BkRW+VTeqGOg7G&3XkqVKW4!m4$?ho-Xm!<mnCd
+z&s`(_f5xgVL({KJlQNZZcT{|Qx#93WE}a;adnZe4+s=gVQ=c%+Oii8h0pr>Oi&*{~
+zS}7#wb3i`la_Ce;*O;b?LcfdOj&$FCe`m7ckM~Sc`xZ%jpXPCRy|qC#lX;Ug&!Y>$
+zS3B&dzbn|Jd*~r&<)*9EFAv@2)7jQ|)asFPcfotkZ;xlrS;ctaTwQckfcti!FBm*s
+L{an^LB{Ts5*jH$u
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/craftmel_lit.png b/src/main/resources/assets/create_tobacco/textures/item/craftmel_lit.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..3ac8b1e3b5be054a9cd5be1c2f021c5302999de1
+GIT binary patch
+literal 253
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkP;kAc
+zi(`mI@6yQ|`3@QIxYRbXc23-Ctu0-DipTy4S8=$TidxAD&$-(aR`}|=77FdPwhnX%
+zdgju_#IWMAJ|n}Ez?R>W+F26TwSW9~>Fu4nq762aTUImiBycyYvwmP(z59?=w5lc-
+z|EeE)4e|xkuWvSC|0mFJNWAdy;`Ek7-@{T$g?Bn_nCfXUf1=KZ&v)|m%JeL@2h25<
+yn=NqXe&e*Y2X<+GSh;8O^X1pXN(2kHRWPo+Q_J79LEawdbOujXKbLh*2~7aEFJ3VK
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/creperfield.png b/src/main/resources/assets/create_tobacco/textures/item/creperfield.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..e37e06e55586c6c4cbd535ed17c0b0df6614ede5
+GIT binary patch
+literal 264
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkP;i&0
+zi(`mI@6w3}c@G)zxc)7E%i?o@YwrOj8Dj=<6}Ln_wg(ru=PtcmlVZM1v%_rRv^5c)
+z_x}6wOxmRCq|4AStDckL!RN9`+0tv)2{|zBS~vZ|n`O0Pe;N<f@i(kh3B1B+bmQ>D
+zP{x`Auhwl?ch7T0>t?+=?gU1^ufKJ28uzm-SZw8CXd~QU#UEH9cu>%F!`z87539FT
+z&U4$!63zZD=i)J~8_sui*Ir9sk|z@9J%9Dhf{w+X{{=o-^Mu=wdHNI|&VvtuzF_cl
+L^>bP0l+XkKDg0$x
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/creperfield_lit.png b/src/main/resources/assets/create_tobacco/textures/item/creperfield_lit.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..de53cf6fe1d001b04671cf268b96a8bbae93078b
+GIT binary patch
+literal 250
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkP;iZ>
+zi(`mI@6t)9d6^7(Tx<pRUU1U8;KKF5$$yS!L({fdj^B=n$vZxZ^`1DXciw%K$O%(y
+zOHVK{+~JryUFXbhj@7zr13hQwOZPFDe&5Zs;nnH{EylP6{q}aw4~(nlswf@Z&+>!O
+zy=!0irh@s$<8Ct7n>N^8^<4IFJ6pi#OD*Aoa|~H;%bomj_|fB|dYK&2Oy<#7r#0=p
+wl6Ux7RnI)PhZjGToAOTIHmkp1bMqvB&eX}gN^1%)1KrKw>FVdQ&MBb@0H?xU-v9sr
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/kend.png b/src/main/resources/assets/create_tobacco/textures/item/kend.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..1d68cb0df1a929a205e409c97e5fec70b7c80e33
+GIT binary patch
+literal 325
+zcmV-L0lNN)P)<h;3K|Lk000e1NJLTq000mG000mO1^@s6AM^iV00009a7bBm000XU
+z000XU0RWnu7ytkO_en%SR5*>Lk}VDbF%X64t-ydlV+e|H0FD3>gG6uug5wAza18_!
+z1d<I2YSmr<h2sVo%#hbIyUSlFFv)CZ+kTxl(?V6{AB(;P04V*Z0|00;@5rR><F5|D
+z4Op*YL8Y3{Yd{YOpD(eC%cYJRRTV)B0O)Akb@6VW-of@G@0`n<?Tp!-`|Y`6#!-lD
+zW~TIFW;+P4dQgO|Zi4}2@XHcJgf%<K98I=CPy6)&mPXCNto;*AM^+2(dC>E+l2qh)
+zdM~?RQ3g-Pex_9qhTXc8ZJBAyjp#xk!`tGAhn8O>GZQ}aedYkz_W9=VV{mg71e3f1
+XYcbo8qb^2r00000NkvXXu0mjf#ealJ
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/kend_lit.png b/src/main/resources/assets/create_tobacco/textures/item/kend_lit.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..60283e19d7b9cfa653eee951707bf4114caadc85
+GIT binary patch
+literal 321
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkQ1G*-
+zi(`mI@6yQ|c@G%~xW0GS;FZ3hpml^TQele86cL_=O{_x70m~OG@#J(`wCEI5NJ)-^
+zbMcFFHw-6CVDT$Tdj99n|C@X>X8!B+i)LsDZRudoP4w%uxU^7DWJ_4w{{SY2eRsbv
+zlRxHWr({yZ&>(&?;&*%UKc?A?#i^4^wncaDGBe(5v331yj`Q0z$`3~{EYA^lx@r3%
+zkyD=S!GlXe9UfU>r$24mru)Tk{`~~0FCx=!y-vt1*m}b9yxOsAn(Dh^R_9g=T2#!O
+zp})8;IpTBHZ7uH{qeoL5KBsSbmag3wIEB^Dzqg3_#yR8J>ipdN+j|of<qx}G{n>u1
+R_cGA?44$rjF6*2UngA{Ueuw}7
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/marlbore_red.png b/src/main/resources/assets/create_tobacco/textures/item/marlbore_red.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..9831bf7f0321ee3f13c78eb1860aadbea48c8a56
+GIT binary patch
+literal 267
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkP;jrO
+zi(`mI@6yQ!1(_6iTtDxOY81V3=-Y#dOg2$nr8$h%H@deaa7UjlXOd=-jVv%eJb~f8
+z`UFOm)c&1u3=E}zR2dq+-;P|@%w0E~AuM5@{3E{O->szYIV4)ME1Xfe7{X|D<IDqJ
+z#+n1OViV`C6}rxy9{NYjfi>>$mgnCN#4`o#=viH$$j~aTZ`8JcldoDudCdadI2VmY
+zA)<VuOU`69_kYlsJ@d4-&GH#PO*qBnAFc^C-Mp`DGH2MrWBLD>N*9(l+q(t+0(ykO
+M)78&qol`;+0CLV?NdN!<
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/marlbore_red_lit.png b/src/main/resources/assets/create_tobacco/textures/item/marlbore_red_lit.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..5845838ba6a29a9e7fb28021954ed57bbdaf9e40
+GIT binary patch
+literal 232
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`>pfi@Lo9liPI}FI*np#D=ZeE6
+zEnYW|zKZ*soI0y-LhcHN<fAKd*q<)3@%SVwps-8RpqPh2reV%BjWaVl!g(!I0*veZ
+z^p~{WOq@T{D@`x-jP`|1{{K6}U&nvxIKZ$(<iyphYZtJ~N57Zqc~EqJy#mvJNsT+l
+zoOc)oRQS6@HhUZV)cW0awLM>UTR^hJf~9F<dnX;7xoqZbv3;{G?aUw9O4dkR^{@-S
+g9o~NQ1sBf+{w2B-zHEK759AL9Pgg&ebxsLQ0Pw|MtN;K2
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/pigliament.png b/src/main/resources/assets/create_tobacco/textures/item/pigliament.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..73789db344d537261a8e8eb4d20af6d71647122f
+GIT binary patch
+literal 322
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkQ1FYV
+zi(`mIZ}Ol2|LvJo8#+UHdwP2QJI>HymXMVEFaNqARl~4#gQro0;Ht#Cx9;-v*f4Q)
+z{{R19_=rMkqL9%4?vheR8H2Wy8wHY!C$7`$x&f4vOw3VBGO@4xD|P1m?i$H8Gbc_I
+zRACoORy_7h`u%<5HB}#(j;2L?F@AVSMop11?fuTu?uVDo&yO%oHf@+V@#B6uYwPBo
+z6&f@8*GV$}ap!(J`7O_b3v8`cMH!EK7XJ5`m8$aephOCX;jD*j1_lOyo~NX-X0u&9
+zlEt>1dBS|4<iogM|Gt~wIlo|q(v+JIF8=s-)p(L=^VLR?gO@DtT{y<bAiewB>04Jk
+Rw*dXm;OXk;vd$@?2>_u0h$#R7
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/pigliament_lit.png b/src/main/resources/assets/create_tobacco/textures/item/pigliament_lit.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..b0a5c25752d2ea320d5bd298ca5d28e1a7489c07
+GIT binary patch
+literal 312
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkQ1F$f
+zi(`mI@6ySRTulxlZTItAOBfD1ykOb(T1$3`_m=F-yisLsdIE2Ygx4uA;+U=|SieV;
+zUDtRmJO5ns&wum(NwRwWRG+hqfg$Uk3PZ!3?t&i``6>--UayJBzuxM;Prvaw=e3C|
+zC%Wh|GRU+iE}V8SUiSg#dp~vKd2SOM8DGR~Wqo3mKiNgB-Fabg*<Zh@>Ak5kr`3GD
+z9|i$6>{w@M&>Q|k*W=cehgnLyO7Av`&6uz6ee$s5`urf*R|mozTyEr+@~k<(YeQPJ
+zE&JYmTT6Dvu1(*&D&Kzg-eaE&?@O4yE(!cLH+<f=_8rWnIak>W)&vIvea+zM>gTe~
+HDWM4fd3Spi
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/rothmines.png b/src/main/resources/assets/create_tobacco/textures/item/rothmines.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..18b8b87d349a4c96fe07d21755f362a583162fd3
+GIT binary patch
+literal 263
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkP;jTG
+zi(`mI@6t(oc@G%~wElI~)Ra)jHelken0g`T;s!6SJq)(lJ5I{A>m57D$a?#U=S2UF
+z`^(SUcXZrbv`mb_W&eI2hRT@!XC)k^QyKLS+<n(}_ut=mu5%6#yLrFfYz=hL@N!^s
+zceThqz`o|LC|k+9?Tp$5lal`OoH(#@mhOk?j0&;WMGtrDGF<xpH-!Ii!m+|Lhl-gT
+z*6{A!`~B#KRle4%=M)>S37=Y>k*l+%Sl4FlW!H~$ryukC$`Y1SsG;uiaU;+Z44$rj
+JF6*2UngD3?W(NQO
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/rothmines_lit.png b/src/main/resources/assets/create_tobacco/textures/item/rothmines_lit.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..e89d63b408e55bc015e326c4a8a1e76a688035d8
+GIT binary patch
+literal 251
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkP;jlM
+zi(`mI@6ySqd7BLcT>c8AUT~9ID0<FvX-mljY4PnxTJ6-LWTMsVZyN|DrG7ihm*hCf
+zdht3@hLr1y%nnr+%e`03=IIE2|NHYkv3<SkZ?*4MStT^#V4$F$)Cacs+6KnzZ}%JI
+z3#KW3d3joH%7d7@l0ObJTrl9d`r(}@gYV@nS3leAE{*Lj@M6f2aekK?xhgSuzQ0-J
+xd*Ph<tG;Yr>bvFS+7H*#eGAWLCqJ)Zx*M3Yx-$CI7ofu#JYD@<);T3K0RVSSVg3LB
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/winstone_blue.png b/src/main/resources/assets/create_tobacco/textures/item/winstone_blue.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..e87475e01e380ba8bd520fa7d345394b0e63ec27
+GIT binary patch
+literal 269
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkP;kGe
+zi(`mI@6w3}c@G%~u<ZR8#3*{fsp`Q?rivi0(j^S;r`WSR<^PD^z3I-Q(dp}F^)n^C
+z?7E@HF59Qkj0{u$c{4D)-@bWwS=@6q#*_pZ`E&AppY62&H6HjT%Mk0iNQ;r{#;FIs
+zj5P-z>1|ju?a1~+u3f2&YYtS_&Hripp`YQ&%A_@I_ACnLf(vTc+7nkaeeFqU`knOI
+z$o{I-8qPD3tGPMf$##i!Z<x9x`?b#X6PYacvZ}+kJ`@Rh6TGHK>=Ub&!mN#DicU5_
+PuP}JJ`njxgN@xNAVi{)N
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/create_tobacco/textures/item/winstone_blue_lit.png b/src/main/resources/assets/create_tobacco/textures/item/winstone_blue_lit.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..0c6e10bdd2637230b816d2a6f9809d8586aaa6ff
+GIT binary patch
+literal 254
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`oCO|{#S9GG!XV7ZFl&wkP;i5%
+zi(`mI@6t&Zc@Hb_xYVxLUBdb;p`q{Udme{xC*}U`Kf$(mODLDgv<V6?e##0=n4(=e
+zo0VaQpcemT193sO=%~d8xpn^vSyt@4C)%*6ziA<h#eq1!a^VNeVb-2oMD`0kV9C>b
+z6*r^x^`5t_+8@H1Uj#q3;n{E6Fl)O?jq1T&d<VC=Z~B|~_VHo8mE6%x=Fvw(9=H~G
+z6mnIsyxVs6tAuIqp}h~^XG!I)JhJb(;^s-#Oik0Y<O*uyfNp2-boFyt=akR{00Z}7
+AH2?qr
+
+literal 0
+HcmV?d00001
+

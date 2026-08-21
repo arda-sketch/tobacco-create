@@ -1,7 +1,6 @@
 package com.createtobacco.item;
 
 import com.createtobacco.component.SmokingItemState;
-import com.createtobacco.client.SmokingItemClientExtensions;
 import com.createtobacco.attachment.SmokingData;
 import com.createtobacco.attachment.WithdrawalTier;
 import com.createtobacco.registry.ModAttachments;
@@ -14,7 +13,6 @@ import com.createtobacco.smoking.SmokingProduct;
 import com.createtobacco.smoking.SmokingProfile;
 import net.minecraft.core.particles.ParticleTypes;
 import java.util.List;
-import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,6 +21,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
@@ -33,7 +33,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.util.Mth;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 public abstract class AbstractSmokingItem extends Item {
     // Phase 8 visual tuning. These offsets are measured from the entity's eye position.
@@ -59,11 +58,6 @@ public abstract class AbstractSmokingItem extends Item {
         this.defaultState = new SmokingItemState(profile.puffs(), false, 0);
         this.product = product;
         this.profile = profile;
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(SmokingItemClientExtensions.INSTANCE);
     }
 
     @Override
@@ -105,38 +99,14 @@ public abstract class AbstractSmokingItem extends Item {
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return stack;
-        }
-
-        SmokingItemState state = getState(stack);
-        if (!state.lit() || state.remainingPuffs() <= 0) {
-            return stack;
-        }
-
-        int remainingPuffs = state.remainingPuffs() - 1;
-        if (livingEntity instanceof ServerPlayer player) {
-            SmokingData smokingData = player.getData(ModAttachments.SMOKING_DATA);
-            smokingData.addDependence(profile.totalDependence() / profile.puffs());
-            relieveWithdrawal(player, smokingData);
-            SmokingEffects.onSuccessfulPuff(player, product);
-        }
-        playPuffEffects(serverLevel, livingEntity);
-        if (remainingPuffs == 0) {
-            if (livingEntity instanceof ServerPlayer player) {
-                SmokingEffects.onFullyConsumed(player, product);
-            }
-            stack.shrink(1);
-        } else {
-            stack.set(ModDataComponents.SMOKING_ITEM_STATE.get(), state.afterPuff(remainingPuffs, naturalBurnIntervalTicks()));
-        }
-
+        // Continuous smoking completes individual puffs from onUseTick(). Reaching
+        // the very long vanilla use duration should not award an extra puff.
         return stack;
     }
 
     @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
-        return SmokingBalance.PUFF_USE_DURATION_TICKS;
+        return SmokingBalance.CONTINUOUS_SMOKING_USE_DURATION_TICKS;
     }
 
     @Override
@@ -236,7 +206,19 @@ public abstract class AbstractSmokingItem extends Item {
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
         SmokingItemState state = getState(stack);
-        if (!level.isClientSide() || !state.lit() || remainingUseDuration % HELD_SMOKE_INTERVAL_TICKS != 0) {
+        if (!state.lit() || state.remainingPuffs() <= 0 || stack.isEmpty()) {
+            return;
+        }
+
+        int elapsedUseTicks = SmokingBalance.CONTINUOUS_SMOKING_USE_DURATION_TICKS - remainingUseDuration;
+        if (level instanceof ServerLevel serverLevel
+                && elapsedUseTicks > 0
+                && elapsedUseTicks % SmokingBalance.PUFF_USE_DURATION_TICKS == 0) {
+            completePuff(serverLevel, livingEntity, stack);
+            return;
+        }
+
+        if (!level.isClientSide() || remainingUseDuration % HELD_SMOKE_INTERVAL_TICKS != 0) {
             return;
         }
 
@@ -250,6 +232,72 @@ public abstract class AbstractSmokingItem extends Item {
                 0.008D,
                 0.0D
         );
+    }
+
+    /** Completes exactly one server-authoritative puff during a continuous use. */
+    private void completePuff(ServerLevel level, LivingEntity livingEntity, ItemStack stack) {
+        SmokingItemState state = getState(stack);
+        if (!state.lit() || state.remainingPuffs() <= 0 || stack.isEmpty()) {
+            return;
+        }
+
+        int remainingPuffs = state.remainingPuffs() - 1;
+        if (livingEntity instanceof ServerPlayer player) {
+            SmokingData smokingData = player.getData(ModAttachments.SMOKING_DATA);
+            smokingData.addDependence(profile.totalDependence() / profile.puffs());
+            relieveWithdrawal(player, smokingData);
+            SmokingEffects.onSuccessfulPuff(player, product);
+
+            int rapidPuffStreak = smokingData.recordRapidPuff(level.getGameTime());
+            maybeApplyRapidSmokingNausea(player, rapidPuffStreak);
+        }
+
+        playPuffEffects(level, livingEntity);
+        if (remainingPuffs == 0) {
+            if (livingEntity instanceof ServerPlayer player) {
+                SmokingEffects.onFullyConsumed(player, product);
+            }
+            stack.shrink(1);
+            livingEntity.stopUsingItem();
+        } else {
+            stack.set(
+                    ModDataComponents.SMOKING_ITEM_STATE.get(),
+                    state.afterPuff(remainingPuffs, naturalBurnIntervalTicks())
+            );
+        }
+    }
+
+    private static void maybeApplyRapidSmokingNausea(ServerPlayer player, int streak) {
+        float chance;
+        int duration;
+        int amplifier;
+
+        if (streak >= 5) {
+            chance = SmokingBalance.RAPID_PUFF_5_PLUS_NAUSEA_CHANCE;
+            duration = SmokingBalance.RAPID_PUFF_5_PLUS_NAUSEA_TICKS;
+            amplifier = SmokingBalance.RAPID_PUFF_5_PLUS_NAUSEA_AMPLIFIER;
+        } else if (streak == 4) {
+            chance = SmokingBalance.RAPID_PUFF_4_NAUSEA_CHANCE;
+            duration = SmokingBalance.RAPID_PUFF_4_NAUSEA_TICKS;
+            amplifier = SmokingBalance.RAPID_PUFF_4_NAUSEA_AMPLIFIER;
+        } else if (streak == 3) {
+            chance = SmokingBalance.RAPID_PUFF_3_NAUSEA_CHANCE;
+            duration = SmokingBalance.RAPID_PUFF_3_NAUSEA_TICKS;
+            amplifier = SmokingBalance.RAPID_PUFF_3_NAUSEA_AMPLIFIER;
+        } else {
+            return;
+        }
+
+        if (player.getRandom().nextFloat() < chance) {
+            player.addEffect(new MobEffectInstance(
+                    MobEffects.CONFUSION,
+                    duration,
+                    amplifier,
+                    false,
+                    true,
+                    true
+            ));
+        }
     }
 
     private SmokingItemState getState(ItemStack stack) {

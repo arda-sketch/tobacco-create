@@ -1,0 +1,88 @@
+diff --git a/src/main/resources/assets/create_tobacco/player_animations/smoking.json b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+index 8c7176f..5578d20 100644
+--- a/src/main/resources/assets/create_tobacco/player_animations/smoking.json
++++ b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+@@ -484,14 +484,14 @@
+               "vector": [
+                 -0.5,
+                 0.25,
+-                0.15000000000000002
++                0.4
+               ]
+             },
+             "0.3333": {
+               "vector": [
+                 -1.1,
+                 0.25,
+-                -1.1
++                -0.8500000000000001
+               ]
+             }
+           }
+@@ -597,21 +597,21 @@
+               "vector": [
+                 -1.1,
+                 0.25,
+-                -1.1
++                -0.8500000000000001
+               ]
+             },
+             "0.625": {
+               "vector": [
+                 -1.7999999999999998,
+                 0.25,
+-                -1.35
++                -1.1
+               ]
+             },
+             "1.2083": {
+               "vector": [
+                 -1.1,
+                 0.25,
+-                -1.1
++                -0.8500000000000001
+               ]
+             }
+           }
+@@ -713,14 +713,14 @@
+               "vector": [
+                 0.5,
+                 0.25,
+-                0.15000000000000002
++                0.4
+               ]
+             },
+             "0.3333": {
+               "vector": [
+                 1.1,
+                 0.25,
+-                -1.1
++                -0.8500000000000001
+               ]
+             }
+           }
+@@ -826,21 +826,21 @@
+               "vector": [
+                 1.1,
+                 0.25,
+-                -1.1
++                -0.8500000000000001
+               ]
+             },
+             "0.625": {
+               "vector": [
+                 1.7999999999999998,
+                 0.25,
+-                -1.35
++                -1.1
+               ]
+             },
+             "1.2083": {
+               "vector": [
+                 1.1,
+                 0.25,
+-                -1.1
++                -0.8500000000000001
+               ]
+             }
+           }

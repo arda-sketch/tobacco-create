@@ -28,6 +28,11 @@ public final class SmokingData {
     private int withdrawalReliefPuffs;
     private long ticksUntilNextCoughCheck;
 
+    // Runtime-only pacing state. Intentionally omitted from CODEC: reconnecting,
+    // cloning, or reloading a player starts a fresh rapid-smoking streak.
+    private int rapidPuffStreak;
+    private long lastRapidPuffGameTime = Long.MIN_VALUE;
+
     public SmokingData() {
         this(0.0F, 0L, 0L, -1L, 0, -1L);
     }
@@ -125,6 +130,23 @@ public final class SmokingData {
         withdrawalReliefPuffs = 0;
     }
 
+    /**
+     * Records one successful puff and returns the current rapid-smoking streak.
+     * A gap of 30 ticks (1.5 seconds) or more starts a new streak at one.
+     */
+    public int recordRapidPuff(long gameTime) {
+        long delta = gameTime - lastRapidPuffGameTime;
+        if (lastRapidPuffGameTime == Long.MIN_VALUE
+                || delta < 0L
+                || delta >= SmokingBalance.RAPID_PUFF_STREAK_RESET_TICKS) {
+            rapidPuffStreak = 1;
+        } else {
+            rapidPuffStreak++;
+        }
+        lastRapidPuffGameTime = gameTime;
+        return rapidPuffStreak;
+    }
+
     public float dependence() {
         return dependence;
     }
@@ -171,6 +193,8 @@ public final class SmokingData {
         dependenceDecayAccumulator = 0L;
         clearWithdrawalSchedule();
         clearCoughSchedule();
+        rapidPuffStreak = 0;
+        lastRapidPuffGameTime = Long.MIN_VALUE;
     }
 
     private static long saturatedAdd(long value, long increment) {

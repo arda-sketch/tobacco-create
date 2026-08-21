@@ -1,0 +1,467 @@
+diff --git a/PROJECT_CONTEXT.md b/PROJECT_CONTEXT.md
+index 8eec6c5..7b83360 100644
+--- a/PROJECT_CONTEXT.md
++++ b/PROJECT_CONTEXT.md
+@@ -55,9 +55,12 @@ non-stackable because the state belongs to each ItemStack.
+ consumption. An unlit smoking item can only be ignited with vanilla Flint and
+ Steel held in the other hand; ignition damages it once and starts its natural
+ smoulder timer. A lit item requires 24 ticks (1.2 seconds) of uninterrupted use
+-per puff. Early release consumes nothing, successful completion decrements the
+-data component and refreshes the smoulder interval, and the final puff removes
+-the item without producing a butt. Passive smouldering consumes one puff per
++per puff. Active smoking is one continuous vanilla use action: while the button
++is held, exactly one server-authoritative puff completes every 24 ticks. Releasing
++early leaves the unfinished interval unconsumed; holding continues into the next
++puff without lowering the hand. Each completed puff immediately updates the data
++component and refreshes the smoulder interval, and the final puff removes the item
++without producing a butt. Passive smouldering consumes one puff per
+ 60 seconds for cigarettes and 90 seconds for cigars while the smoking item is
+ in a player's ordinary inventory. Passive burn pauses during an active manual
+ puff, so the same interval cannot naturally expire and also be consumed by the
+@@ -68,7 +71,9 @@ Phase 8 registers a custom translucent `tobacco_smoke` particle backed by the
+ eight vanilla animated smoke sprites. Successful server-authoritative puffs
+ send a larger cloud near the player's mouth. While a lit item is actively held
+ in its 24-tick use action, the client creates a sparse local wisp near the used
+-hand without continuous networking. Smoking keeps `UseAnim.NONE`, but player posing is now delegated to Player Animation Library (PAL). The client registers a dedicated smoking animation layer and triggers right/left `smoking_puff` animations from vanilla-synchronized item-use state. PAL drives the same Blockbench-authored animation in third person and first person (`THIRD_PERSON_MODEL`), including separate `right_item`/`left_item` bones for cigarette orientation. The old manual `IClientItemExtensions` transform and NeoForge ArmPose enum extension are removed. Component updates from natural smouldering still do not trigger a hand re-equip animation, and active use may continue when only the smoking-state component changes.
++hand without continuous networking. Smoking keeps `UseAnim.NONE`, but player posing is now delegated to Player Animation Library (PAL). The client registers a dedicated smoking animation layer and selects physical right/left animations from vanilla-synchronized item-use state. Each use plays a short `smoking_raise` once and then loops `smoking_hold` for as long as the button remains held; the hold loop is 1.2 seconds so its inhale beat stays aligned with the 24-tick server puff cadence. PAL drives the same Blockbench-authored animation in third person and first person (`THIRD_PERSON_MODEL`), including separate `right_item`/`left_item` bones for cigarette orientation. The old manual `IClientItemExtensions` transform and NeoForge ArmPose enum extension are removed. Component updates from natural smouldering still do not trigger a hand re-equip animation, and active use may continue when only the smoking-state component changes.
++
++Rapid smoking is tracked as runtime-only server state: a gap of 30 ticks (1.5 seconds) or more between successful puffs resets the streak. Puff 3 has a 20% chance for Nausea I for 2 seconds; puff 4 has a 40% chance for Nausea II for 2 seconds; puff 5+ has a 60% chance for Nausea II for 5 seconds. The streak is intentionally not serialized and grants no extra benefit.
+ 
+ Phase 9 adds persistent player `SmokingData` through NeoForge 1.21.1 Data
+ Attachments. Its codec stores dependence, active satisfaction time, decay
+diff --git a/src/main/java/com/createtobacco/attachment/SmokingData.java b/src/main/java/com/createtobacco/attachment/SmokingData.java
+index 2a67e82..375e01b 100644
+--- a/src/main/java/com/createtobacco/attachment/SmokingData.java
++++ b/src/main/java/com/createtobacco/attachment/SmokingData.java
+@@ -28,6 +28,11 @@ public final class SmokingData {
+     private int withdrawalReliefPuffs;
+     private long ticksUntilNextCoughCheck;
+ 
++    // Runtime-only pacing state. Intentionally omitted from CODEC: reconnecting,
++    // cloning, or reloading a player starts a fresh rapid-smoking streak.
++    private int rapidPuffStreak;
++    private long lastRapidPuffGameTime = Long.MIN_VALUE;
++
+     public SmokingData() {
+         this(0.0F, 0L, 0L, -1L, 0, -1L);
+     }
+@@ -125,6 +130,23 @@ public final class SmokingData {
+         withdrawalReliefPuffs = 0;
+     }
+ 
++    /**
++     * Records one successful puff and returns the current rapid-smoking streak.
++     * A gap of 30 ticks (1.5 seconds) or more starts a new streak at one.
++     */
++    public int recordRapidPuff(long gameTime) {
++        long delta = gameTime - lastRapidPuffGameTime;
++        if (lastRapidPuffGameTime == Long.MIN_VALUE
++                || delta < 0L
++                || delta >= SmokingBalance.RAPID_PUFF_STREAK_RESET_TICKS) {
++            rapidPuffStreak = 1;
++        } else {
++            rapidPuffStreak++;
++        }
++        lastRapidPuffGameTime = gameTime;
++        return rapidPuffStreak;
++    }
++
+     public float dependence() {
+         return dependence;
+     }
+@@ -171,6 +193,8 @@ public final class SmokingData {
+         dependenceDecayAccumulator = 0L;
+         clearWithdrawalSchedule();
+         clearCoughSchedule();
++        rapidPuffStreak = 0;
++        lastRapidPuffGameTime = Long.MIN_VALUE;
+     }
+ 
+     private static long saturatedAdd(long value, long increment) {
+diff --git a/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java b/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
+index 8330043..c5ee9ba 100644
+--- a/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
++++ b/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
+@@ -24,8 +24,10 @@ import net.minecraft.world.entity.HumanoidArm;
+  */
+ public final class ModPlayerAnimations {
+     public static final ResourceLocation SMOKING_LAYER = id("smoking");
+-    public static final ResourceLocation SMOKING_PUFF_RIGHT = id("smoking_puff_right");
+-    public static final ResourceLocation SMOKING_PUFF_LEFT = id("smoking_puff_left");
++    public static final ResourceLocation SMOKING_RAISE_RIGHT = id("smoking_raise_right");
++    public static final ResourceLocation SMOKING_HOLD_RIGHT = id("smoking_hold_right");
++    public static final ResourceLocation SMOKING_RAISE_LEFT = id("smoking_raise_left");
++    public static final ResourceLocation SMOKING_HOLD_LEFT = id("smoking_hold_left");
+ 
+     private static final int SMOKING_PRIORITY = 1600;
+ 
+@@ -56,12 +58,11 @@ public final class ModPlayerAnimations {
+                                     wasSmoking[0] = true;
+                                 }
+ 
+-                                ResourceLocation animationId = physicalUsedArm(player.getUsedItemHand(), player.getMainArm())
+-                                        == HumanoidArm.RIGHT
+-                                        ? SMOKING_PUFF_RIGHT
+-                                        : SMOKING_PUFF_LEFT;
+-
+-                                RawAnimation animation = cache.resolve(animationId);
++                                boolean rightArm = physicalUsedArm(player.getUsedItemHand(), player.getMainArm())
++                                        == HumanoidArm.RIGHT;
++                                RawAnimation animation = rightArm
++                                        ? cache.resolve(SMOKING_RAISE_RIGHT, SMOKING_HOLD_RIGHT)
++                                        : cache.resolve(SMOKING_RAISE_LEFT, SMOKING_HOLD_LEFT);
+                                 return animation == null
+                                         ? PlayState.STOP
+                                         : animationSetter.setAnimation(animation);
+@@ -108,25 +109,42 @@ public final class ModPlayerAnimations {
+      * object changes on a resource reload, so rebuild only when that happens.
+      */
+     private static final class AnimationCache {
+-        private ResourceLocation id;
+-        private Animation source;
++        private ResourceLocation raiseId;
++        private ResourceLocation holdId;
++        private Animation raiseSource;
++        private Animation holdSource;
+         private RawAnimation raw;
+ 
+-        private RawAnimation resolve(ResourceLocation requestedId) {
+-            Animation requested = PlayerAnimResources.getAnimation(requestedId);
+-            if (requested == null) {
+-                id = null;
+-                source = null;
+-                raw = null;
++        private RawAnimation resolve(ResourceLocation requestedRaiseId, ResourceLocation requestedHoldId) {
++            Animation requestedRaise = PlayerAnimResources.getAnimation(requestedRaiseId);
++            Animation requestedHold = PlayerAnimResources.getAnimation(requestedHoldId);
++            if (requestedRaise == null || requestedHold == null) {
++                clear();
+                 return null;
+             }
+ 
+-            if (!requestedId.equals(id) || requested != source || raw == null) {
+-                id = requestedId;
+-                source = requested;
+-                raw = RawAnimation.begin().thenPlay(requested);
++            if (!requestedRaiseId.equals(raiseId)
++                    || !requestedHoldId.equals(holdId)
++                    || requestedRaise != raiseSource
++                    || requestedHold != holdSource
++                    || raw == null) {
++                raiseId = requestedRaiseId;
++                holdId = requestedHoldId;
++                raiseSource = requestedRaise;
++                holdSource = requestedHold;
++                raw = RawAnimation.begin()
++                        .thenPlay(requestedRaise)
++                        .thenLoop(requestedHold);
+             }
+             return raw;
+         }
++
++        private void clear() {
++            raiseId = null;
++            holdId = null;
++            raiseSource = null;
++            holdSource = null;
++            raw = null;
++        }
+     }
+ }
+diff --git a/src/main/java/com/createtobacco/item/AbstractSmokingItem.java b/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
+index 57e2d4c..0b33720 100644
+--- a/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
++++ b/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
+@@ -21,6 +21,8 @@ import net.minecraft.sounds.SoundSource;
+ import net.minecraft.world.InteractionHand;
+ import net.minecraft.world.InteractionResultHolder;
+ import net.minecraft.world.entity.LivingEntity;
++import net.minecraft.world.effect.MobEffectInstance;
++import net.minecraft.world.effect.MobEffects;
+ import net.minecraft.world.entity.player.Player;
+ import net.minecraft.world.entity.Entity;
+ import net.minecraft.world.item.Item;
+@@ -97,38 +99,14 @@ public abstract class AbstractSmokingItem extends Item {
+ 
+     @Override
+     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
+-        if (!(level instanceof ServerLevel serverLevel)) {
+-            return stack;
+-        }
+-
+-        SmokingItemState state = getState(stack);
+-        if (!state.lit() || state.remainingPuffs() <= 0) {
+-            return stack;
+-        }
+-
+-        int remainingPuffs = state.remainingPuffs() - 1;
+-        if (livingEntity instanceof ServerPlayer player) {
+-            SmokingData smokingData = player.getData(ModAttachments.SMOKING_DATA);
+-            smokingData.addDependence(profile.totalDependence() / profile.puffs());
+-            relieveWithdrawal(player, smokingData);
+-            SmokingEffects.onSuccessfulPuff(player, product);
+-        }
+-        playPuffEffects(serverLevel, livingEntity);
+-        if (remainingPuffs == 0) {
+-            if (livingEntity instanceof ServerPlayer player) {
+-                SmokingEffects.onFullyConsumed(player, product);
+-            }
+-            stack.shrink(1);
+-        } else {
+-            stack.set(ModDataComponents.SMOKING_ITEM_STATE.get(), state.afterPuff(remainingPuffs, naturalBurnIntervalTicks()));
+-        }
+-
++        // Continuous smoking completes individual puffs from onUseTick(). Reaching
++        // the very long vanilla use duration should not award an extra puff.
+         return stack;
+     }
+ 
+     @Override
+     public int getUseDuration(ItemStack stack, LivingEntity entity) {
+-        return SmokingBalance.PUFF_USE_DURATION_TICKS;
++        return SmokingBalance.CONTINUOUS_SMOKING_USE_DURATION_TICKS;
+     }
+ 
+     @Override
+@@ -228,7 +206,19 @@ public abstract class AbstractSmokingItem extends Item {
+     @Override
+     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
+         SmokingItemState state = getState(stack);
+-        if (!level.isClientSide() || !state.lit() || remainingUseDuration % HELD_SMOKE_INTERVAL_TICKS != 0) {
++        if (!state.lit() || state.remainingPuffs() <= 0 || stack.isEmpty()) {
++            return;
++        }
++
++        int elapsedUseTicks = SmokingBalance.CONTINUOUS_SMOKING_USE_DURATION_TICKS - remainingUseDuration;
++        if (level instanceof ServerLevel serverLevel
++                && elapsedUseTicks > 0
++                && elapsedUseTicks % SmokingBalance.PUFF_USE_DURATION_TICKS == 0) {
++            completePuff(serverLevel, livingEntity, stack);
++            return;
++        }
++
++        if (!level.isClientSide() || remainingUseDuration % HELD_SMOKE_INTERVAL_TICKS != 0) {
+             return;
+         }
+ 
+@@ -244,6 +234,72 @@ public abstract class AbstractSmokingItem extends Item {
+         );
+     }
+ 
++    /** Completes exactly one server-authoritative puff during a continuous use. */
++    private void completePuff(ServerLevel level, LivingEntity livingEntity, ItemStack stack) {
++        SmokingItemState state = getState(stack);
++        if (!state.lit() || state.remainingPuffs() <= 0 || stack.isEmpty()) {
++            return;
++        }
++
++        int remainingPuffs = state.remainingPuffs() - 1;
++        if (livingEntity instanceof ServerPlayer player) {
++            SmokingData smokingData = player.getData(ModAttachments.SMOKING_DATA);
++            smokingData.addDependence(profile.totalDependence() / profile.puffs());
++            relieveWithdrawal(player, smokingData);
++            SmokingEffects.onSuccessfulPuff(player, product);
++
++            int rapidPuffStreak = smokingData.recordRapidPuff(level.getGameTime());
++            maybeApplyRapidSmokingNausea(player, rapidPuffStreak);
++        }
++
++        playPuffEffects(level, livingEntity);
++        if (remainingPuffs == 0) {
++            if (livingEntity instanceof ServerPlayer player) {
++                SmokingEffects.onFullyConsumed(player, product);
++            }
++            stack.shrink(1);
++            livingEntity.stopUsingItem();
++        } else {
++            stack.set(
++                    ModDataComponents.SMOKING_ITEM_STATE.get(),
++                    state.afterPuff(remainingPuffs, naturalBurnIntervalTicks())
++            );
++        }
++    }
++
++    private static void maybeApplyRapidSmokingNausea(ServerPlayer player, int streak) {
++        float chance;
++        int duration;
++        int amplifier;
++
++        if (streak >= 5) {
++            chance = SmokingBalance.RAPID_PUFF_5_PLUS_NAUSEA_CHANCE;
++            duration = SmokingBalance.RAPID_PUFF_5_PLUS_NAUSEA_TICKS;
++            amplifier = SmokingBalance.RAPID_PUFF_5_PLUS_NAUSEA_AMPLIFIER;
++        } else if (streak == 4) {
++            chance = SmokingBalance.RAPID_PUFF_4_NAUSEA_CHANCE;
++            duration = SmokingBalance.RAPID_PUFF_4_NAUSEA_TICKS;
++            amplifier = SmokingBalance.RAPID_PUFF_4_NAUSEA_AMPLIFIER;
++        } else if (streak == 3) {
++            chance = SmokingBalance.RAPID_PUFF_3_NAUSEA_CHANCE;
++            duration = SmokingBalance.RAPID_PUFF_3_NAUSEA_TICKS;
++            amplifier = SmokingBalance.RAPID_PUFF_3_NAUSEA_AMPLIFIER;
++        } else {
++            return;
++        }
++
++        if (player.getRandom().nextFloat() < chance) {
++            player.addEffect(new MobEffectInstance(
++                    MobEffects.CONFUSION,
++                    duration,
++                    amplifier,
++                    false,
++                    true,
++                    true
++            ));
++        }
++    }
++
+     private SmokingItemState getState(ItemStack stack) {
+         return stack.getOrDefault(ModDataComponents.SMOKING_ITEM_STATE.get(), defaultState);
+     }
+diff --git a/src/main/java/com/createtobacco/smoking/SmokingBalance.java b/src/main/java/com/createtobacco/smoking/SmokingBalance.java
+index c1dad4d..781a84e 100644
+--- a/src/main/java/com/createtobacco/smoking/SmokingBalance.java
++++ b/src/main/java/com/createtobacco/smoking/SmokingBalance.java
+@@ -19,6 +19,22 @@ public final class SmokingBalance {
+     public static final long DEPENDENCE_DECAY_INTERVAL_TICKS = hours(1);
+     public static final float DEPENDENCE_DECAY_PER_INTERVAL = 2.5F;
+     public static final int PUFF_USE_DURATION_TICKS = 24;
++    // Keep one vanilla use action alive while the button is held. Individual
++    // successful puffs are completed every PUFF_USE_DURATION_TICKS inside it.
++    public static final int CONTINUOUS_SMOKING_USE_DURATION_TICKS = 72_000;
++
++    // Rapid-smoking streak: 1.5 seconds without a successful puff resets it.
++    public static final int RAPID_PUFF_STREAK_RESET_TICKS = 30;
++    public static final float RAPID_PUFF_3_NAUSEA_CHANCE = 0.20F;
++    public static final int RAPID_PUFF_3_NAUSEA_TICKS = seconds(2);
++    public static final int RAPID_PUFF_3_NAUSEA_AMPLIFIER = 0;
++    public static final float RAPID_PUFF_4_NAUSEA_CHANCE = 0.40F;
++    public static final int RAPID_PUFF_4_NAUSEA_TICKS = seconds(2);
++    public static final int RAPID_PUFF_4_NAUSEA_AMPLIFIER = 1;
++    public static final float RAPID_PUFF_5_PLUS_NAUSEA_CHANCE = 0.60F;
++    public static final int RAPID_PUFF_5_PLUS_NAUSEA_TICKS = seconds(5);
++    public static final int RAPID_PUFF_5_PLUS_NAUSEA_AMPLIFIER = 1;
++
+     // A lit cigarette/cigar smoulders even when the player is not puffing it.
+     // Natural burn consumes one puff at each interval but grants no benefits.
+     public static final int CIGARETTE_NATURAL_BURN_INTERVAL_TICKS = seconds(60);
+diff --git a/src/main/resources/assets/create_tobacco/player_animations/smoking.json b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+index d5ed932..81f0fce 100644
+--- a/src/main/resources/assets/create_tobacco/player_animations/smoking.json
++++ b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+@@ -1,60 +1,92 @@
+ {
+   "format_version": "1.8.0",
+   "animations": {
+-    "smoking_puff_right": {
+-      "animation_length": 1.2,
++    "smoking_raise_right": {
++      "animation_length": 0.25,
+       "bones": {
+         "right_arm": {
+           "rotation": {
+             "0.0": [0, 0, 0],
+-            "0.35": [-68, -18, 8],
+-            "0.9": [-68, -18, 8],
+-            "1.2": [0, 0, 0]
++            "0.25": [-68, -18, 8]
+           }
+         },
+         "right_item": {
+           "rotation": {
+             "0.0": [0, 0, 0],
+-            "0.35": [-8, 18, -78],
+-            "0.9": [-8, 18, -78],
+-            "1.2": [0, 0, 0]
++            "0.25": [-8, 18, -78]
++          }
++        }
++      }
++    },
++    "smoking_hold_right": {
++      "animation_length": 1.2,
++      "bones": {
++        "right_arm": {
++          "rotation": {
++            "0.0": [-68, -18, 8],
++            "0.75": [-69, -18, 8],
++            "0.95": [-70, -18, 8],
++            "1.2": [-68, -18, 8]
++          }
++        },
++        "right_item": {
++          "rotation": {
++            "0.0": [-8, 18, -78],
++            "0.95": [-10, 18, -78],
++            "1.2": [-8, 18, -78]
+           }
+         },
+         "head": {
+           "rotation": {
+-            "0.0": [0, 0, 0],
+-            "0.55": [3, -2, 0],
+-            "0.9": [3, -2, 0],
+-            "1.2": [0, 0, 0]
++            "0.0": [2, -2, 0],
++            "0.75": [3, -2, 0],
++            "0.95": [4, -2, 0],
++            "1.2": [2, -2, 0]
+           }
+         }
+       }
+     },
+-    "smoking_puff_left": {
+-      "animation_length": 1.2,
++    "smoking_raise_left": {
++      "animation_length": 0.25,
+       "bones": {
+         "left_arm": {
+           "rotation": {
+             "0.0": [0, 0, 0],
+-            "0.35": [-68, 18, -8],
+-            "0.9": [-68, 18, -8],
+-            "1.2": [0, 0, 0]
++            "0.25": [-68, 18, -8]
+           }
+         },
+         "left_item": {
+           "rotation": {
+             "0.0": [0, 0, 0],
+-            "0.35": [-8, -18, 78],
+-            "0.9": [-8, -18, 78],
+-            "1.2": [0, 0, 0]
++            "0.25": [-8, -18, 78]
++          }
++        }
++      }
++    },
++    "smoking_hold_left": {
++      "animation_length": 1.2,
++      "bones": {
++        "left_arm": {
++          "rotation": {
++            "0.0": [-68, 18, -8],
++            "0.75": [-69, 18, -8],
++            "0.95": [-70, 18, -8],
++            "1.2": [-68, 18, -8]
++          }
++        },
++        "left_item": {
++          "rotation": {
++            "0.0": [-8, -18, 78],
++            "0.95": [-10, -18, 78],
++            "1.2": [-8, -18, 78]
+           }
+         },
+         "head": {
+           "rotation": {
+-            "0.0": [0, 0, 0],
+-            "0.55": [3, 2, 0],
+-            "0.9": [3, 2, 0],
+-            "1.2": [0, 0, 0]
++            "0.0": [2, 2, 0],
++            "0.75": [3, 2, 0],
++            "0.95": [4, 2, 0],
++            "1.2": [2, 2, 0]
+           }
+         }
+       }

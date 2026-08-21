@@ -1,0 +1,108 @@
+diff --git a/src/main/resources/assets/create_tobacco/player_animations/smoking.json b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+index abd7372..66f251e 100644
+--- a/src/main/resources/assets/create_tobacco/player_animations/smoking.json
++++ b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+@@ -468,14 +468,14 @@
+               "vector": [
+                 -19.0142,
+                 83.2395,
+-                -47.5328
++                47.4672
+               ]
+             },
+             "0.3333": {
+               "vector": [
+                 -98.7377,
+                 96.6516,
+-                -68.8853
++                26.1147
+               ]
+             }
+           },
+@@ -500,7 +500,7 @@
+           "position": {
+             "vector": [
+               0,
+-              4.5,
++              4.0,
+               2
+             ]
+           }
+@@ -581,14 +581,14 @@
+               "vector": [
+                 -98.7377,
+                 96.6516,
+-                -68.8853
++                26.1147
+               ]
+             },
+             "1.2083": {
+               "vector": [
+                 -98.7377,
+                 96.6516,
+-                -68.8853
++                26.1147
+               ]
+             }
+           },
+@@ -645,7 +645,7 @@
+           "position": {
+             "vector": [
+               0,
+-              4.5,
++              4.0,
+               2
+             ]
+           }
+@@ -697,14 +697,14 @@
+               "vector": [
+                 -19.0142,
+                 -93.2395,
+-                37.5328
++                -57.4672
+               ]
+             },
+             "0.3333": {
+               "vector": [
+                 -98.7377,
+                 -106.6516,
+-                58.8853
++                -36.1147
+               ]
+             }
+           },
+@@ -729,7 +729,7 @@
+           "position": {
+             "vector": [
+               0,
+-              4.5,
++              4.0,
+               2
+             ]
+           }
+@@ -810,14 +810,14 @@
+               "vector": [
+                 -98.7377,
+                 -106.6516,
+-                58.8853
++                -36.1147
+               ]
+             },
+             "1.2083": {
+               "vector": [
+                 -98.7377,
+                 -106.6516,
+-                58.8853
++                -36.1147
+               ]
+             }
+           },
+@@ -874,7 +874,7 @@
+           "position": {
+             "vector": [
+               0,
+-              4.5,
++              4.0,
+               2
+             ]
+           }

@@ -1,0 +1,72 @@
+diff --git a/src/main/resources/assets/create_tobacco/player_animations/smoking.json b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+index 2a44491..54f5511 100644
+--- a/src/main/resources/assets/create_tobacco/player_animations/smoking.json
++++ b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+@@ -466,14 +466,14 @@
+           "rotation": {
+             "0.0": {
+               "vector": [
+-                50.9858,
++                -89.0142,
+                 83.2395,
+                 -12.532800000000002
+               ]
+             },
+             "0.3333": {
+               "vector": [
+-                -28.737700000000004,
++                -168.73770000000002,
+                 96.6516,
+                 -33.8853
+               ]
+@@ -579,14 +579,14 @@
+           "rotation": {
+             "0.0": {
+               "vector": [
+-                -28.737700000000004,
++                -168.73770000000002,
+                 96.6516,
+                 -33.8853
+               ]
+             },
+             "1.2083": {
+               "vector": [
+-                -28.737700000000004,
++                -168.73770000000002,
+                 96.6516,
+                 -33.8853
+               ]
+@@ -695,14 +695,14 @@
+           "rotation": {
+             "0.0": {
+               "vector": [
+-                -89.0142,
++                50.9858,
+                 -93.2395,
+                 2.5328000000000017
+               ]
+             },
+             "0.3333": {
+               "vector": [
+-                -168.73770000000002,
++                -28.737700000000018,
+                 -106.6516,
+                 23.8853
+               ]
+@@ -808,14 +808,14 @@
+           "rotation": {
+             "0.0": {
+               "vector": [
+-                -168.73770000000002,
++                -28.737700000000018,
+                 -106.6516,
+                 23.8853
+               ]
+             },
+             "1.2083": {
+               "vector": [
+-                -168.73770000000002,
++                -28.737700000000018,
+                 -106.6516,
+                 23.8853
+               ]

@@ -1,0 +1,296 @@
+diff --git a/PROJECT_CONTEXT.md b/PROJECT_CONTEXT.md
+index ea46fab..8eec6c5 100644
+--- a/PROJECT_CONTEXT.md
++++ b/PROJECT_CONTEXT.md
+@@ -14,7 +14,7 @@
+ 
+ ## Current phase
+ 
+-V1 Polish 02 — wild-tobacco ecology, smoking animation stability, Withdrawal relief, and Microblast tuning.
++PAL Migration 01 — migrate smoking player animation from manual NeoForge arm transforms to Player Animation Library while preserving gameplay.
+ 
+ The Phase 0 skeleton loads with Create on both the development client and the
+ dedicated development server. Phase 1 added the requested basic items,
+@@ -68,14 +68,7 @@ Phase 8 registers a custom translucent `tobacco_smoke` particle backed by the
+ eight vanilla animated smoke sprites. Successful server-authoritative puffs
+ send a larger cloud near the player's mouth. While a lit item is actively held
+ in its 24-tick use action, the client creates a sparse local wisp near the used
+-hand without continuous networking. Smoking uses `UseAnim.NONE` plus a
+-client-item extension. First person smoothly brings the item toward the mouth
+-and rotates the cigarette silhouette horizontally, then holds a stable pose.
+-Third person uses a dedicated NeoForge-extended `CREATE_TOBACCO_SMOKING`
+-`HumanoidModel.ArmPose` instead of borrowing the vanilla horn pose. Component
+-updates from natural smouldering do not trigger a hand re-equip animation, and
+-active use may continue when only the smoking-state component changes. No
+-GeckoLib dependency is used.
++hand without continuous networking. Smoking keeps `UseAnim.NONE`, but player posing is now delegated to Player Animation Library (PAL). The client registers a dedicated smoking animation layer and triggers right/left `smoking_puff` animations from vanilla-synchronized item-use state. PAL drives the same Blockbench-authored animation in third person and first person (`THIRD_PERSON_MODEL`), including separate `right_item`/`left_item` bones for cigarette orientation. The old manual `IClientItemExtensions` transform and NeoForge ArmPose enum extension are removed. Component updates from natural smouldering still do not trigger a hand re-equip animation, and active use may continue when only the smoking-state component changes.
+ 
+ Phase 9 adds persistent player `SmokingData` through NeoForge 1.21.1 Data
+ Attachments. Its codec stores dependence, active satisfaction time, decay
+diff --git a/build.gradle b/build.gradle
+index 9430003..e4a2bb2 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -23,6 +23,13 @@ repositories {
+     flatDir {
+         dirs 'libs'
+     }
++
++    mavenCentral()
++
++    maven {
++        name = 'RedlanceMinecraft'
++        url = 'https://repo.redlance.org/public'
++    }
+ }
+ 
+ neoForge {
+@@ -78,6 +85,7 @@ configurations {
+ 
+ dependencies {
+     implementation "blank:create-${minecraft_version}:${create_maven_version}"
++    implementation "com.zigythebird.playeranim:PlayerAnimationLibNeo:${pal_version}"
+ }
+ 
+ var generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
+diff --git a/gradle.properties b/gradle.properties
+index a60584c..b0ff1f9 100644
+--- a/gradle.properties
++++ b/gradle.properties
+@@ -26,3 +26,6 @@ mod_group_id=com.createtobacco
+ create_version=6.0.10
+ create_maven_version=6.0.10-223
+ 
++
++# Player Animation Library (PAL)
++pal_version=1.1.5+mc.1.21.1
+diff --git a/src/main/java/com/createtobacco/client/CreateTobaccoClient.java b/src/main/java/com/createtobacco/client/CreateTobaccoClient.java
+index c97156e..51ac3f7 100644
+--- a/src/main/java/com/createtobacco/client/CreateTobaccoClient.java
++++ b/src/main/java/com/createtobacco/client/CreateTobaccoClient.java
+@@ -1,11 +1,13 @@
+ package com.createtobacco.client;
+ 
+ import com.createtobacco.CreateTobacco;
++import com.createtobacco.client.animation.ModPlayerAnimations;
+ import com.createtobacco.client.screen.CigaretteCaseScreen;
+ import com.createtobacco.registry.ModMenus;
+ import net.neoforged.api.distmarker.Dist;
+ import net.neoforged.bus.api.SubscribeEvent;
+ import net.neoforged.fml.common.EventBusSubscriber;
++import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+ 
+ @EventBusSubscriber(modid = CreateTobacco.MOD_ID, value = Dist.CLIENT)
+@@ -13,6 +15,11 @@ public final class CreateTobaccoClient {
+     private CreateTobaccoClient() {
+     }
+ 
++    @SubscribeEvent
++    public static void clientSetup(FMLClientSetupEvent event) {
++        event.enqueueWork(ModPlayerAnimations::register);
++    }
++
+     @SubscribeEvent
+     public static void registerScreens(RegisterMenuScreensEvent event) {
+         event.register(ModMenus.CIGARETTE_CASE.get(), CigaretteCaseScreen::new);
+diff --git a/src/main/java/com/createtobacco/client/SmokingArmPoseParameters.java b/src/main/java/com/createtobacco/client/SmokingArmPoseParameters.java
+deleted file mode 100644
+index d413223..0000000
+--- a/src/main/java/com/createtobacco/client/SmokingArmPoseParameters.java
++++ /dev/null
+@@ -1,28 +0,0 @@
+-package com.createtobacco.client;
+-
+-import net.minecraft.client.model.HumanoidModel;
+-import net.minecraft.world.entity.HumanoidArm;
+-import net.neoforged.fml.common.asm.enumextension.EnumProxy;
+-import net.neoforged.neoforge.client.IArmPoseTransformer;
+-
+-/** Parameters used by NeoForge's runtime enum extension for the smoking arm pose. */
+-public final class SmokingArmPoseParameters {
+-    public static final EnumProxy<HumanoidModel.ArmPose> SMOKING_POSE = new EnumProxy<>(
+-            HumanoidModel.ArmPose.class,
+-            false,
+-            (IArmPoseTransformer) (model, entity, arm) -> {
+-                var modelArm = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
+-                float side = arm == HumanoidArm.RIGHT ? 1.0F : -1.0F;
+-
+-                // Bring one hand naturally inward and slightly below the mouth.
+-                // Small head-follow terms keep the pose from looking detached when
+-                // the player looks around, without turning it into the horn pose.
+-                modelArm.xRot = -1.18F + model.head.xRot * 0.25F;
+-                modelArm.yRot = -0.34F * side + model.head.yRot * 0.12F;
+-                modelArm.zRot = 0.10F * side;
+-            }
+-    );
+-
+-    private SmokingArmPoseParameters() {
+-    }
+-}
+diff --git a/src/main/java/com/createtobacco/client/SmokingItemClientExtensions.java b/src/main/java/com/createtobacco/client/SmokingItemClientExtensions.java
+deleted file mode 100644
+index fe61d1f..0000000
+--- a/src/main/java/com/createtobacco/client/SmokingItemClientExtensions.java
++++ /dev/null
+@@ -1,77 +0,0 @@
+-package com.createtobacco.client;
+-
+-import com.createtobacco.item.AbstractSmokingItem;
+-import com.createtobacco.smoking.SmokingBalance;
+-import com.mojang.blaze3d.vertex.PoseStack;
+-import com.mojang.math.Axis;
+-import net.minecraft.client.model.HumanoidModel;
+-import net.minecraft.client.player.LocalPlayer;
+-import net.minecraft.util.Mth;
+-import net.minecraft.world.InteractionHand;
+-import net.minecraft.world.entity.HumanoidArm;
+-import net.minecraft.world.entity.LivingEntity;
+-import net.minecraft.world.item.ItemStack;
+-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+-
+-/** Smooth hand-to-mouth transform without reusing a vanilla eating/drinking pose. */
+-public final class SmokingItemClientExtensions implements IClientItemExtensions {
+-    public static final SmokingItemClientExtensions INSTANCE = new SmokingItemClientExtensions();
+-
+-    private SmokingItemClientExtensions() {
+-    }
+-
+-    @Override
+-    public boolean applyForgeHandTransform(
+-            PoseStack poseStack,
+-            LocalPlayer player,
+-            HumanoidArm arm,
+-            ItemStack itemInHand,
+-            float partialTick,
+-            float equipProcess,
+-            float swingProcess
+-    ) {
+-        if (!(itemInHand.getItem() instanceof AbstractSmokingItem)
+-                || !player.isUsingItem()
+-                || player.getUseItem().getItem() != itemInHand.getItem()) {
+-            return false;
+-        }
+-
+-        HumanoidArm usingArm = player.getUsedItemHand() == InteractionHand.MAIN_HAND
+-                ? player.getMainArm()
+-                : player.getMainArm().getOpposite();
+-        if (usingArm != arm) {
+-            return false;
+-        }
+-
+-        float elapsed = SmokingBalance.PUFF_USE_DURATION_TICKS - player.getUseItemRemainingTicks() + partialTick;
+-        float progress = smoothstep(Mth.clamp(elapsed / 6.0F, 0.0F, 1.0F));
+-        float side = arm == HumanoidArm.RIGHT ? 1.0F : -1.0F;
+-
+-        // Move toward the mouth, then rotate the originally upright generated-item
+-        // silhouette into a cigarette-like horizontal orientation. After the first
+-        // six ticks progress remains 1, so the held pose is completely stable.
+-        poseStack.translate(-0.17F * side * progress, 0.19F * progress, 0.27F * progress);
+-        poseStack.mulPose(Axis.XP.rotationDegrees(-15.0F * progress));
+-        poseStack.mulPose(Axis.YP.rotationDegrees(22.0F * side * progress));
+-        poseStack.mulPose(Axis.ZP.rotationDegrees(-78.0F * side * progress));
+-
+-        // Keep the normal first-person base/equip transform; our use transform is
+-        // layered on top and UseAnim.NONE prevents vanilla drinking movement.
+-        return false;
+-    }
+-
+-    @Override
+-    public HumanoidModel.ArmPose getArmPose(LivingEntity entity, InteractionHand hand, ItemStack stack) {
+-        if (stack.getItem() instanceof AbstractSmokingItem
+-                && entity.isUsingItem()
+-                && entity.getUsedItemHand() == hand
+-                && entity.getUseItemRemainingTicks() > 0) {
+-            return SmokingArmPoseParameters.SMOKING_POSE.getValue();
+-        }
+-        return null;
+-    }
+-
+-    private static float smoothstep(float value) {
+-        return value * value * (3.0F - 2.0F * value);
+-    }
+-}
+diff --git a/src/main/java/com/createtobacco/item/AbstractSmokingItem.java b/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
+index c982560..57e2d4c 100644
+--- a/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
++++ b/src/main/java/com/createtobacco/item/AbstractSmokingItem.java
+@@ -1,7 +1,6 @@
+ package com.createtobacco.item;
+ 
+ import com.createtobacco.component.SmokingItemState;
+-import com.createtobacco.client.SmokingItemClientExtensions;
+ import com.createtobacco.attachment.SmokingData;
+ import com.createtobacco.attachment.WithdrawalTier;
+ import com.createtobacco.registry.ModAttachments;
+@@ -14,7 +13,6 @@ import com.createtobacco.smoking.SmokingProduct;
+ import com.createtobacco.smoking.SmokingProfile;
+ import net.minecraft.core.particles.ParticleTypes;
+ import java.util.List;
+-import java.util.function.Consumer;
+ import net.minecraft.network.chat.Component;
+ import net.minecraft.server.level.ServerLevel;
+ import net.minecraft.server.level.ServerPlayer;
+@@ -33,7 +31,6 @@ import net.minecraft.world.item.TooltipFlag;
+ import net.minecraft.world.level.Level;
+ import net.minecraft.world.phys.Vec3;
+ import net.minecraft.util.Mth;
+-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+ 
+ public abstract class AbstractSmokingItem extends Item {
+     // Phase 8 visual tuning. These offsets are measured from the entity's eye position.
+@@ -61,11 +58,6 @@ public abstract class AbstractSmokingItem extends Item {
+         this.profile = profile;
+     }
+ 
+-    @Override
+-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+-        consumer.accept(SmokingItemClientExtensions.INSTANCE);
+-    }
+-
+     @Override
+     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+         return slotChanged || oldStack.getItem() != newStack.getItem();
+diff --git a/src/main/resources/META-INF/enumextensions.json b/src/main/resources/META-INF/enumextensions.json
+deleted file mode 100644
+index 1432975..0000000
+--- a/src/main/resources/META-INF/enumextensions.json
++++ /dev/null
+@@ -1,13 +0,0 @@
+-{
+-  "entries": [
+-    {
+-      "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+-      "name": "CREATE_TOBACCO_SMOKING",
+-      "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+-      "parameters": {
+-        "class": "com/createtobacco/client/SmokingArmPoseParameters",
+-        "field": "SMOKING_POSE"
+-      }
+-    }
+-  ]
+-}
+diff --git a/src/main/templates/META-INF/neoforge.mods.toml b/src/main/templates/META-INF/neoforge.mods.toml
+index 2623598..7f06239 100644
+--- a/src/main/templates/META-INF/neoforge.mods.toml
++++ b/src/main/templates/META-INF/neoforge.mods.toml
+@@ -7,7 +7,6 @@ modId="${mod_id}"
+ version="${mod_version}"
+ displayName="${mod_name}"
+ authors="Create Tobacco Team"
+-enumExtensions="META-INF/enumextensions.json"
+ description='''
+ An addon skeleton for Create. Phase 0 contains infrastructure only.
+ '''
+@@ -33,3 +32,11 @@ reason="Create: Tobacco is a Create addon."
+ versionRange="[${create_version}]"
+ ordering="AFTER"
+ side="BOTH"
++
++[[dependencies.${mod_id}]]
++modId="player_animation_library"
++type="required"
++reason="Create: Tobacco uses PAL for smoking player animations."
++versionRange="[1.1.5,)"
++ordering="AFTER"
++side="CLIENT"

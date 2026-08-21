@@ -28,3 +28,5 @@ repo/
 .DS_Store
 Thumbs.db
 
+*.patch
+

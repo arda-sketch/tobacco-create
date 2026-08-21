@@ -1,0 +1,178 @@
+diff --git a/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java b/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
+new file mode 100644
+index 0000000..dc87c6a
+--- /dev/null
++++ b/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
+@@ -0,0 +1,102 @@
++package com.createtobacco.client.animation;
++
++import com.createtobacco.CreateTobacco;
++import com.createtobacco.item.AbstractSmokingItem;
++import com.zigythebird.playeranim.animation.PlayerAnimResources;
++import com.zigythebird.playeranim.animation.PlayerAnimationController;
++import com.zigythebird.playeranim.api.PlayerAnimationFactory;
++import com.zigythebird.playeranimcore.animation.Animation;
++import com.zigythebird.playeranimcore.animation.RawAnimation;
++import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonMode;
++import com.zigythebird.playeranimcore.enums.PlayState;
++import net.minecraft.resources.ResourceLocation;
++import net.minecraft.world.InteractionHand;
++import net.minecraft.world.entity.HumanoidArm;
++
++/**
++ * PAL animation layer for active cigarette/cigar use.
++ *
++ * <p>The controller is created once for every client-side player, so the same
++ * state-driven animation is visible both locally and on tracked remote players.
++ * Motion itself lives in assets/create_tobacco/player_animations and can be
++ * edited/exported from Blockbench without changing this class.</p>
++ */
++public final class ModPlayerAnimations {
++    public static final ResourceLocation SMOKING_LAYER = id("smoking");
++    public static final ResourceLocation SMOKING_PUFF_RIGHT = id("smoking_puff_right");
++    public static final ResourceLocation SMOKING_PUFF_LEFT = id("smoking_puff_left");
++
++    private static final int SMOKING_PRIORITY = 1600;
++
++    private ModPlayerAnimations() {
++    }
++
++    public static void register() {
++        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
++                SMOKING_LAYER,
++                SMOKING_PRIORITY,
++                player -> {
++                    AnimationCache cache = new AnimationCache();
++                    PlayerAnimationController controller = new PlayerAnimationController(
++                            player,
++                            (animationController, animationData, animationSetter) -> {
++                                if (!player.isUsingItem()
++                                        || !(player.getUseItem().getItem() instanceof AbstractSmokingItem)) {
++                                    return PlayState.STOP;
++                                }
++
++                                ResourceLocation animationId = physicalUsedArm(player.getUsedItemHand(), player.getMainArm())
++                                        == HumanoidArm.RIGHT
++                                        ? SMOKING_PUFF_RIGHT
++                                        : SMOKING_PUFF_LEFT;
++
++                                RawAnimation animation = cache.resolve(animationId);
++                                return animation == null
++                                        ? PlayState.STOP
++                                        : animationSetter.setAnimation(animation);
++                            }
++                    );
++
++                    controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
++                    controller.setFirstPersonFollowsCamera(true);
++                    controller.setFirstPersonTransitionLength(4);
++                    return controller;
++                }
++        );
++    }
++
++    private static HumanoidArm physicalUsedArm(InteractionHand hand, HumanoidArm mainArm) {
++        return hand == InteractionHand.MAIN_HAND ? mainArm : mainArm.getOpposite();
++    }
++
++    private static ResourceLocation id(String path) {
++        return ResourceLocation.fromNamespaceAndPath(CreateTobacco.MOD_ID, path);
++    }
++
++    /**
++     * PAL recommends caching RawAnimation instances. The underlying Animation
++     * object changes on a resource reload, so rebuild only when that happens.
++     */
++    private static final class AnimationCache {
++        private ResourceLocation id;
++        private Animation source;
++        private RawAnimation raw;
++
++        private RawAnimation resolve(ResourceLocation requestedId) {
++            Animation requested = PlayerAnimResources.getAnimation(requestedId);
++            if (requested == null) {
++                id = null;
++                source = null;
++                raw = null;
++                return null;
++            }
++
++            if (!requestedId.equals(id) || requested != source || raw == null) {
++                id = requestedId;
++                source = requested;
++                raw = RawAnimation.begin().thenPlay(requested);
++            }
++            return raw;
++        }
++    }
++}
+diff --git a/src/main/resources/assets/create_tobacco/player_animations/smoking.json b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+new file mode 100644
+index 0000000..d5ed932
+--- /dev/null
++++ b/src/main/resources/assets/create_tobacco/player_animations/smoking.json
+@@ -0,0 +1,64 @@
++{
++  "format_version": "1.8.0",
++  "animations": {
++    "smoking_puff_right": {
++      "animation_length": 1.2,
++      "bones": {
++        "right_arm": {
++          "rotation": {
++            "0.0": [0, 0, 0],
++            "0.35": [-68, -18, 8],
++            "0.9": [-68, -18, 8],
++            "1.2": [0, 0, 0]
++          }
++        },
++        "right_item": {
++          "rotation": {
++            "0.0": [0, 0, 0],
++            "0.35": [-8, 18, -78],
++            "0.9": [-8, 18, -78],
++            "1.2": [0, 0, 0]
++          }
++        },
++        "head": {
++          "rotation": {
++            "0.0": [0, 0, 0],
++            "0.55": [3, -2, 0],
++            "0.9": [3, -2, 0],
++            "1.2": [0, 0, 0]
++          }
++        }
++      }
++    },
++    "smoking_puff_left": {
++      "animation_length": 1.2,
++      "bones": {
++        "left_arm": {
++          "rotation": {
++            "0.0": [0, 0, 0],
++            "0.35": [-68, 18, -8],
++            "0.9": [-68, 18, -8],
++            "1.2": [0, 0, 0]
++          }
++        },
++        "left_item": {
++          "rotation": {
++            "0.0": [0, 0, 0],
++            "0.35": [-8, -18, 78],
++            "0.9": [-8, -18, 78],
++            "1.2": [0, 0, 0]
++          }
++        },
++        "head": {
++          "rotation": {
++            "0.0": [0, 0, 0],
++            "0.55": [3, 2, 0],
++            "0.9": [3, 2, 0],
++            "1.2": [0, 0, 0]
++          }
++        }
++      }
++    }
++  },
++  "geckolib_format_version": 2
++}

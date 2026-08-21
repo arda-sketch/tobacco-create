@@ -7,7 +7,6 @@ modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 authors="Create Tobacco Team"
-enumExtensions="META-INF/enumextensions.json"
 description='''
 An addon skeleton for Create. Phase 0 contains infrastructure only.
 '''
@@ -33,3 +32,11 @@ reason="Create: Tobacco is a Create addon."
 versionRange="[${create_version}]"
 ordering="AFTER"
 side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="player_animation_library"
+type="required"
+reason="Create: Tobacco uses PAL for smoking player animations."
+versionRange="[1.1.5,)"
+ordering="AFTER"
+side="CLIENT"

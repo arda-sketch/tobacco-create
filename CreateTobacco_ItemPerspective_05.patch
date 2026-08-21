@@ -1,0 +1,143 @@
+diff --git a/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java b/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
+index dc87c6a..5e46b49 100644
+--- a/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
++++ b/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
+@@ -62,2 +62,3 @@ public final class ModPlayerAnimations {
+                     controller.setFirstPersonTransitionLength(4);
++                    controller.addModifierLast(new SmokingItemPerspectiveModifier(player));
+                     return controller;
+diff --git a/src/main/java/com/createtobacco/client/animation/SmokingItemPerspectiveModifier.java b/src/main/java/com/createtobacco/client/animation/SmokingItemPerspectiveModifier.java
+new file mode 100644
+index 0000000..f442e05
+--- /dev/null
++++ b/src/main/java/com/createtobacco/client/animation/SmokingItemPerspectiveModifier.java
+@@ -0,0 +1,84 @@
++package com.createtobacco.client.animation;
++
++import com.createtobacco.item.AbstractSmokingItem;
++import com.zigythebird.playeranimcore.animation.AnimationData;
++import com.zigythebird.playeranimcore.animation.layered.modifier.AbstractModifier;
++import com.zigythebird.playeranimcore.bones.PlayerAnimBone;
++import net.minecraft.world.InteractionHand;
++import net.minecraft.world.entity.HumanoidArm;
++import net.minecraft.world.entity.player.Player;
++import org.jetbrains.annotations.NotNull;
++
++/**
++ * Keeps cigarette/cigar item transforms independent between PAL's first-person
++ * pass and the normal third-person player render.
++ *
++ * <p>PAL's THIRD_PERSON_MODEL mode renders the third-person player model even
++ * in first person, so a JSON thirdperson_* item transform also affects the
++ * first-person smoking view. This modifier moves the smoking-only orientation
++ * correction into PAL, where we can apply it only outside the first-person
++ * pass.</p>
++ */
++final class SmokingItemPerspectiveModifier extends AbstractModifier {
++    // minecraft:item/generated renders held items at 0.55 scale in third person.
++    // Scale the PAL item bone so the resulting smoking item is 0.45 in third
++    // person and 0.90 in PAL first person, as requested.
++    private static final float GENERATED_THIRD_PERSON_SCALE = 0.55F;
++    private static final float THIRD_PERSON_ITEM_SCALE = 0.45F / GENERATED_THIRD_PERSON_SCALE;
++    private static final float FIRST_PERSON_ITEM_SCALE = 0.90F / GENERATED_THIRD_PERSON_SCALE;
++
++    private static final float RIGHT_Y_ROTATION = radians(-90.0F);
++    private static final float RIGHT_Z_ROTATION = radians(-125.0F);
++    private static final float LEFT_Y_ROTATION = radians(90.0F);
++    private static final float LEFT_Z_ROTATION = radians(125.0F);
++
++    private final Player player;
++    private boolean firstPersonPass;
++
++    SmokingItemPerspectiveModifier(Player player) {
++        this.player = player;
++    }
++
++    @Override
++    public void setupAnim(AnimationData state) {
++        super.setupAnim(state);
++        firstPersonPass = state.isFirstPersonPass();
++    }
++
++    @Override
++    public void get3DTransform(@NotNull PlayerAnimBone bone) {
++        super.get3DTransform(bone);
++
++        if (!player.isUsingItem() || !(player.getUseItem().getItem() instanceof AbstractSmokingItem)) {
++            return;
++        }
++
++        HumanoidArm usedArm = physicalUsedArm(player.getUsedItemHand(), player.getMainArm());
++        String itemBone = usedArm == HumanoidArm.RIGHT ? "right_item" : "left_item";
++        if (!itemBone.equals(bone.getName())) {
++            return;
++        }
++
++        if (firstPersonPass) {
++            bone.scale.mul(FIRST_PERSON_ITEM_SCALE);
++            return;
++        }
++
++        bone.scale.mul(THIRD_PERSON_ITEM_SCALE);
++        if (usedArm == HumanoidArm.RIGHT) {
++            bone.rotation.y += RIGHT_Y_ROTATION;
++            bone.rotation.z += RIGHT_Z_ROTATION;
++        } else {
++            bone.rotation.y += LEFT_Y_ROTATION;
++            bone.rotation.z += LEFT_Z_ROTATION;
++        }
++    }
++
++    private static HumanoidArm physicalUsedArm(InteractionHand hand, HumanoidArm mainArm) {
++        return hand == InteractionHand.MAIN_HAND ? mainArm : mainArm.getOpposite();
++    }
++
++    private static float radians(float degrees) {
++        return (float) Math.toRadians(degrees);
++    }
++}
+diff --git a/src/main/resources/assets/create_tobacco/models/item/cigarette_generated.json b/src/main/resources/assets/create_tobacco/models/item/cigarette_generated.json
+index b598579..58416a7 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/cigarette_generated.json
++++ b/src/main/resources/assets/create_tobacco/models/item/cigarette_generated.json
+@@ -1,39 +1,3 @@
+ {
+-  "parent": "minecraft:item/generated",
+-  "display": {
+-    "thirdperson_righthand": {
+-      "rotation": [
+-        0,
+-        -90,
+-        -125
+-      ],
+-      "translation": [
+-        0,
+-        4,
+-        0.5
+-      ],
+-      "scale": [
+-        0.85,
+-        0.85,
+-        0.85
+-      ]
+-    },
+-    "thirdperson_lefthand": {
+-      "rotation": [
+-        0,
+-        90,
+-        125
+-      ],
+-      "translation": [
+-        0,
+-        4,
+-        0.5
+-      ],
+-      "scale": [
+-        0.85,
+-        0.85,
+-        0.85
+-      ]
+-    }
+-  }
++  "parent": "minecraft:item/generated"
+ }

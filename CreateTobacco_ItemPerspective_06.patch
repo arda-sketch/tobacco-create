@@ -1,0 +1,136 @@
+diff --git a/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java b/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
+index 492219c..e853e9d 100644
+--- a/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
++++ b/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
+@@ -10,6 +10,7 @@ import com.zigythebird.playeranimcore.animation.RawAnimation;
+ import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonConfiguration;
+ import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonMode;
+ import com.zigythebird.playeranimcore.enums.PlayState;
++import net.minecraft.client.Minecraft;
+ import net.minecraft.resources.ResourceLocation;
+ import net.minecraft.world.InteractionHand;
+ import net.minecraft.world.entity.HumanoidArm;
+@@ -32,6 +33,14 @@ public final class ModPlayerAnimations {
+ 
+         public static final ResourceLocation SMOKING_HOLD_LEFT = id("smoking_hold_left");
+ 
++        public static final ResourceLocation SMOKING_RAISE_RIGHT_FP = id("smoking_raise_right_fp");
++
++        public static final ResourceLocation SMOKING_HOLD_RIGHT_FP = id("smoking_hold_right_fp");
++
++        public static final ResourceLocation SMOKING_RAISE_LEFT_FP = id("smoking_raise_left_fp");
++
++        public static final ResourceLocation SMOKING_HOLD_LEFT_FP = id("smoking_hold_left_fp");
++
+         private static final int SMOKING_PRIORITY = 1600;
+ 
+         private ModPlayerAnimations() {
+@@ -68,13 +77,30 @@ public final class ModPlayerAnimations {
+                                                                                 player.getUsedItemHand(),
+                                                                                 player.getMainArm()) == HumanoidArm.RIGHT;
+ 
+-                                                                RawAnimation animation = rightArm
+-                                                                                ? cache.resolve(
+-                                                                                                SMOKING_RAISE_RIGHT,
+-                                                                                                SMOKING_HOLD_RIGHT)
+-                                                                                : cache.resolve(
+-                                                                                                SMOKING_RAISE_LEFT,
+-                                                                                                SMOKING_HOLD_LEFT);
++                                                                boolean firstPersonSmoking = player == Minecraft.getInstance().player
++                                                                                && Minecraft.getInstance()
++                                                                                                .options
++                                                                                                .getCameraType()
++                                                                                                .isFirstPerson();
++
++                                                                RawAnimation animation;
++                                                                if (rightArm) {
++                                                                        animation = firstPersonSmoking
++                                                                                        ? cache.resolve(
++                                                                                                        SMOKING_RAISE_RIGHT_FP,
++                                                                                                        SMOKING_HOLD_RIGHT_FP)
++                                                                                        : cache.resolve(
++                                                                                                        SMOKING_RAISE_RIGHT,
++                                                                                                        SMOKING_HOLD_RIGHT);
++                                                                } else {
++                                                                        animation = firstPersonSmoking
++                                                                                        ? cache.resolve(
++                                                                                                        SMOKING_RAISE_LEFT_FP,
++                                                                                                        SMOKING_HOLD_LEFT_FP)
++                                                                                        : cache.resolve(
++                                                                                                        SMOKING_RAISE_LEFT,
++                                                                                                        SMOKING_HOLD_LEFT);
++                                                                }
+ 
+                                                                 return animation == null
+                                                                                 ? PlayState.STOP
+@@ -82,9 +108,7 @@ public final class ModPlayerAnimations {
+                                                                                                 animation);
+                                                         });
+ 
+-                                        controller.addModifierLast(new SmokingFirstPersonItemModifier());
+-
+-                    controller.setFirstPersonMode(
++                                        controller.setFirstPersonMode(
+                                                         FirstPersonMode.THIRD_PERSON_MODEL);
+ 
+                                         // PAL renders only the physical hand which actually contains
+diff --git a/src/main/resources/assets/create_tobacco/models/item/cigarette_generated.json b/src/main/resources/assets/create_tobacco/models/item/cigarette_generated.json
+index 95a345c..c9ae5ee 100644
+--- a/src/main/resources/assets/create_tobacco/models/item/cigarette_generated.json
++++ b/src/main/resources/assets/create_tobacco/models/item/cigarette_generated.json
+@@ -13,9 +13,9 @@
+         0.5
+       ],
+       "scale": [
+-        0.45,
+-        0.45,
+-        0.45
++        0.5,
++        0.5,
++        0.5
+       ]
+     },
+     "thirdperson_lefthand": {
+@@ -30,12 +30,22 @@
+         0.5
+       ],
+       "scale": [
+-        0.45,
+-        0.45,
+-        0.45
++        0.5,
++        0.5,
++        0.5
+       ]
+     },
+     "firstperson_righthand": {
++      "rotation": [
++        0,
++        -90,
++        25
++      ],
++      "translation": [
++        1.13,
++        3.2,
++        1.13
++      ],
+       "scale": [
+         0.9,
+         0.9,
+@@ -43,6 +53,16 @@
+       ]
+     },
+     "firstperson_lefthand": {
++      "rotation": [
++        0,
++        90,
++        -25
++      ],
++      "translation": [
++        1.13,
++        3.2,
++        1.13
++      ],
+       "scale": [
+         0.9,
+         0.9,

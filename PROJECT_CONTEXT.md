@@ -14,7 +14,7 @@
 
 ## Current phase
 
-V1 Polish 02 — wild-tobacco ecology, smoking animation stability, Withdrawal relief, and Microblast tuning.
+PAL Migration 01 — migrate smoking player animation from manual NeoForge arm transforms to Player Animation Library while preserving gameplay.
 
 The Phase 0 skeleton loads with Create on both the development client and the
 dedicated development server. Phase 1 added the requested basic items,
@@ -55,9 +55,12 @@ non-stackable because the state belongs to each ItemStack.
 consumption. An unlit smoking item can only be ignited with vanilla Flint and
 Steel held in the other hand; ignition damages it once and starts its natural
 smoulder timer. A lit item requires 24 ticks (1.2 seconds) of uninterrupted use
-per puff. Early release consumes nothing, successful completion decrements the
-data component and refreshes the smoulder interval, and the final puff removes
-the item without producing a butt. Passive smouldering consumes one puff per
+per puff. Active smoking is one continuous vanilla use action: while the button
+is held, exactly one server-authoritative puff completes every 24 ticks. Releasing
+early leaves the unfinished interval unconsumed; holding continues into the next
+puff without lowering the hand. Each completed puff immediately updates the data
+component and refreshes the smoulder interval, and the final puff removes the item
+without producing a butt. Passive smouldering consumes one puff per
 60 seconds for cigarettes and 90 seconds for cigars while the smoking item is
 in a player's ordinary inventory. Passive burn pauses during an active manual
 puff, so the same interval cannot naturally expire and also be consumed by the
@@ -68,14 +71,9 @@ Phase 8 registers a custom translucent `tobacco_smoke` particle backed by the
 eight vanilla animated smoke sprites. Successful server-authoritative puffs
 send a larger cloud near the player's mouth. While a lit item is actively held
 in its 24-tick use action, the client creates a sparse local wisp near the used
-hand without continuous networking. Smoking uses `UseAnim.NONE` plus a
-client-item extension. First person smoothly brings the item toward the mouth
-and rotates the cigarette silhouette horizontally, then holds a stable pose.
-Third person uses a dedicated NeoForge-extended `CREATE_TOBACCO_SMOKING`
-`HumanoidModel.ArmPose` instead of borrowing the vanilla horn pose. Component
-updates from natural smouldering do not trigger a hand re-equip animation, and
-active use may continue when only the smoking-state component changes. No
-GeckoLib dependency is used.
+hand without continuous networking. Smoking keeps `UseAnim.NONE`, but player posing is now delegated to Player Animation Library (PAL). The client registers a dedicated smoking animation layer and selects physical right/left animations from vanilla-synchronized item-use state. Each use plays a short `smoking_raise` once and then loops `smoking_hold` for as long as the button remains held; the hold loop is 1.2 seconds so its inhale beat stays aligned with the 24-tick server puff cadence. PAL drives the same Blockbench-authored animation in third person and first person (`THIRD_PERSON_MODEL`), including separate `right_item`/`left_item` bones for cigarette orientation. The old manual `IClientItemExtensions` transform and NeoForge ArmPose enum extension are removed. Component updates from natural smouldering still do not trigger a hand re-equip animation, and active use may continue when only the smoking-state component changes.
+
+Rapid smoking is tracked as runtime-only server state: a gap of 30 ticks (1.5 seconds) or more between successful puffs resets the streak. Puff 3 has a 20% chance for Nausea I for 2 seconds; puff 4 has a 40% chance for Nausea II for 2 seconds; puff 5+ has a 60% chance for Nausea II for 5 seconds. The streak is intentionally not serialized and grants no extra benefit.
 
 Phase 9 adds persistent player `SmokingData` through NeoForge 1.21.1 Data
 Attachments. Its codec stores dependence, active satisfaction time, decay

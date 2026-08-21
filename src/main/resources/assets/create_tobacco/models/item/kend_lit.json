@@ -1,0 +1,6 @@
+{
+  "parent": "create_tobacco:item/cigarette_generated",
+  "textures": {
+    "layer0": "create_tobacco:item/kend_lit"
+  }
+}

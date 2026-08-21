@@ -1,0 +1,74 @@
+diff --git a/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java b/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
+--- a/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
++++ b/src/main/java/com/createtobacco/client/animation/ModPlayerAnimations.java
+@@ -77,6 +77,8 @@ public final class ModPlayerAnimations {
+                                         ? PlayState.STOP
+                                         : animationSetter.setAnimation(animation);
+                             });
++
++                    controller.addModifierLast(new SmokingFirstPersonItemModifier());
+
+                     controller.setFirstPersonMode(
+                             FirstPersonMode.THIRD_PERSON_MODEL);
+diff --git a/src/main/java/com/createtobacco/client/animation/SmokingFirstPersonItemModifier.java b/src/main/java/com/createtobacco/client/animation/SmokingFirstPersonItemModifier.java
+new file mode 100644
+--- /dev/null
++++ b/src/main/java/com/createtobacco/client/animation/SmokingFirstPersonItemModifier.java
+@@ -0,0 +1,57 @@
++package com.createtobacco.client.animation;
++
++import com.zigythebird.playeranimcore.animation.layered.modifier.AbstractModifier;
++import com.zigythebird.playeranimcore.bones.PlayerAnimBone;
++import net.minecraft.client.Minecraft;
++
++/**
++ * PAL 1.1.5 / MC 1.21.1 perspective compensation for smoking items.
++ *
++ * cigarette_generated.json intentionally uses third-person transforms with
++ * scale 0.45. PAL first-person mode THIRD_PERSON_MODEL also renders through
++ * that third-person item transform, so while the real camera is first-person
++ * we compensate on the item bone only:
++ *
++ *   0.45 * 2.0 = 0.90
++ *
++ * and undo the third-person item rotation so first-person keeps the original
++ * orientation.
++ */
++final class SmokingFirstPersonItemModifier extends AbstractModifier {
++
++    private static final float FIRST_PERSON_SCALE_COMPENSATION = 2.0F;
++    private static final float DEG_TO_RAD = (float) (Math.PI / 180.0);
++
++    @Override
++    public PlayerAnimBone get3DTransform(PlayerAnimBone bone) {
++        PlayerAnimBone transformed = super.get3DTransform(bone);
++
++        if (!Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
++            return transformed;
++        }
++
++        String name = transformed.getName();
++
++        if ("right_item".equals(name)) {
++            transformed.scaleX *= FIRST_PERSON_SCALE_COMPENSATION;
++            transformed.scaleY *= FIRST_PERSON_SCALE_COMPENSATION;
++            transformed.scaleZ *= FIRST_PERSON_SCALE_COMPENSATION;
++
++            // Undo cigarette_generated.json thirdperson_righthand
++            // rotation [0, -80, -115].
++            transformed.rotY += 80.0F * DEG_TO_RAD;
++            transformed.rotZ += 115.0F * DEG_TO_RAD;
++        } else if ("left_item".equals(name)) {
++            transformed.scaleX *= FIRST_PERSON_SCALE_COMPENSATION;
++            transformed.scaleY *= FIRST_PERSON_SCALE_COMPENSATION;
++            transformed.scaleZ *= FIRST_PERSON_SCALE_COMPENSATION;
++
++            // Undo cigarette_generated.json thirdperson_lefthand
++            // rotation [0, 90, 125].
++            transformed.rotY -= 90.0F * DEG_TO_RAD;
++            transformed.rotZ -= 125.0F * DEG_TO_RAD;
++        }
++
++        return transformed;
++    }
++}
