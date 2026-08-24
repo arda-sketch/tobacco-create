@@ -1,10 +1,6 @@
 {
   "type": "neoforge:add_features",
-  "biomes": [
-    "minecraft:jungle",
-    "minecraft:sparse_jungle",
-    "minecraft:bamboo_jungle"
-  ],
+  "biomes": "#create_tobacco:has_wild_havana_tobacco",
   "features": "create_tobacco:wild_havana_tobacco",
   "step": "vegetal_decoration"
 }

@@ -210,6 +210,20 @@
 | Burley | **0.9** | ≈ 1.1× |
 | Havana | **0.7** | ≈ 1.35× |
 
+**Спавн дикого табака в мире** (`data/create_tobacco/worldgen/` + `neoforge/biome_modifier/` + `tags/worldgen/biome/`):
+
+Биомы задаются тегами `create_tobacco:has_wild_*_tobacco`. Каждый тег содержит явный список ванильных биомов плюс необязательные ссылки на конвенционные теги (`c:is_*` / `minecraft:is_*`) — за счёт них табак автоматически появляется и в кастомных биомах других модов (Terralith, BOP и т.п.), если те прописаны в стандартные теги.
+
+| Сорт | Тег | Явные биомы | Подключённые теги | Шанс на чанк | Попыток в кусте |
+|---|---|---|---|---|---|
+| Virginia | `has_wild_virginia_tobacco` | plains, sunflower_plains, forest, flower_forest, birch_forest, old_growth_birch_forest | `#c:is_plains`, `#c:is_forest` | **1/55** (≈ 1.8 %) | 18 |
+| Burley | `has_wild_burley_tobacco` | meadow, windswept_hills, windswept_forest, savanna, savanna_plateau | `#c:is_savanna`, `#minecraft:is_hill` | **1/65** (≈ 1.5 %) | 15 |
+| Havana | `has_wild_havana_tobacco` | jungle, sparse_jungle, bamboo_jungle | `#c:is_jungle`, `#minecraft:is_jungle` | **1/40** (≈ 2.5 %) | 12 |
+
+Побочный эффект тегов на ванильные биомы: Вирджиния дополнительно появится в dark_forest и grove (входят в `is_forest`), Берли — в windswept_savanna и windswept_gravelly_hills (входят в `is_savanna` / `is_hill`). Все ссылки на теги помечены `"required": false`, так что отсутствие какого-то тега не ломает загрузку. Модпакеры могут расширять/сужать списки датапаком, дописывая свои биомы в теги `create_tobacco:has_wild_*_tobacco`.
+
+Механика: в подходящем биоме (проверяется в центре куста) кубик кидается один раз на чанк (`rarity_filter`). При успехе делается `tries` попыток поставить растение в квадрате `xz_spread` = ±5 блоков по высотной карте; каждая попытка требует два свободных блока и землю/траву под ними (`canSurvive`), поэтому реальный куст обычно заметно меньше числа попыток. Высота отдельно не ограничена — растения всегда на поверхности.
+
 Урожай и переработка (на примере Вирджинии; выходы у всех сортов одинаковые):
 
 | Этап | Рецепт | Выход |
