@@ -34,7 +34,6 @@ public final class WithdrawalSystem {
     }
 
     public static void trigger(ServerPlayer player, SmokingData data, WithdrawalTier tier, boolean rollNausea) {
-        data.beginWithdrawalEpisode();
         data.scheduleWithdrawalEpisode(tier.randomEpisodeIntervalTicks(player.getRandom()));
         player.removeEffect(ModEffects.WITHDRAWAL);
         player.addEffect(new MobEffectInstance(

@@ -147,8 +147,8 @@ public final class CreateTobaccoCommands {
                 + (withdrawal == null ? "" : " (" + formatTicks(withdrawal.getDuration()) + ")"));
         send(source, "Next episode: " + (data.withdrawalEpisodeIsScheduled()
                 ? formatTicks(data.ticksUntilNextWithdrawalEpisode()) : "not scheduled"));
-        send(source, "Relief puffs this episode: " + data.withdrawalReliefPuffs()
-                + (withdrawal == null ? "" : " (each successful puff lowers Withdrawal by one tier)"));
+        send(source, "Relief: " + (withdrawal == null ? "no active episode"
+                : "each successful puff lowers Withdrawal by one tier"));
         send(source, "Cough check: " + (data.coughCheckIsScheduled()
                 ? formatTicks(data.ticksUntilNextCoughCheck()) : "not scheduled"));
         return 1;

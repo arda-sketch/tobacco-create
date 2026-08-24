@@ -245,7 +245,7 @@ public abstract class AbstractSmokingItem extends Item {
         if (livingEntity instanceof ServerPlayer player) {
             SmokingData smokingData = player.getData(ModAttachments.SMOKING_DATA);
             smokingData.addDependence(profile.totalDependence() / profile.puffs());
-            relieveWithdrawal(player, smokingData);
+            relieveWithdrawal(player);
             SmokingEffects.onSuccessfulPuff(player, product);
 
             int rapidPuffStreak = smokingData.recordRapidPuff(level.getGameTime());
@@ -353,19 +353,17 @@ public abstract class AbstractSmokingItem extends Item {
                 .add(0.0D, -HELD_SMOKE_DOWN_OFFSET, 0.0D);
     }
 
-    private static void relieveWithdrawal(ServerPlayer player, SmokingData data) {
+    private static void relieveWithdrawal(ServerPlayer player) {
         var withdrawal = player.getEffect(ModEffects.WITHDRAWAL);
         if (withdrawal == null) {
             return;
         }
 
-        data.recordWithdrawalReliefPuff();
         int currentAmplifier = withdrawal.getAmplifier();
         int remainingDuration = withdrawal.getDuration();
         player.removeEffect(ModEffects.WITHDRAWAL);
 
         if (currentAmplifier <= 0) {
-            data.resetWithdrawalReliefPuffs();
             return;
         }
 

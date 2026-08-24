@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "create_tobacco:item/cut_havana_tobacco"
+    "layer0": "create_tobacco:item/glowstone_cigar_filler"
   }
 }

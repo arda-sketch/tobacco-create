@@ -2,8 +2,8 @@ package com.createtobacco.block;
 
 public enum TobaccoVariety {
     VIRGINIA(1.0F),
-    BURLEY(1.0F),
-    HAVANA(1.0F);
+    BURLEY(0.9F),
+    HAVANA(0.7F);
 
     private final float growthSpeedMultiplier;
 

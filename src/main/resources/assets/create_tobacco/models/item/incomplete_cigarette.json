@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "create_tobacco:item/cigarette_paper"
+    "layer0": "create_tobacco:item/incomplete_cigarette"
   }
 }

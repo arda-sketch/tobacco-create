@@ -43,10 +43,6 @@ public enum WithdrawalTier {
         return SmokingBalance.withdrawal(this).episodeDurationTicks();
     }
 
-    public int reliefPuffsRequired() {
-        return SmokingBalance.withdrawal(this).reliefPuffsRequired();
-    }
-
     public float nauseaChance() {
         return SmokingBalance.withdrawal(this).nauseaChance();
     }

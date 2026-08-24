@@ -15,8 +15,6 @@ public final class SmokingData {
                     .forGetter(SmokingData::dependenceDecayAccumulator),
             Codec.LONG.optionalFieldOf("ticks_until_next_withdrawal_episode", -1L)
                     .forGetter(SmokingData::ticksUntilNextWithdrawalEpisode),
-            Codec.INT.optionalFieldOf("withdrawal_relief_puffs", 0)
-                    .forGetter(SmokingData::withdrawalReliefPuffs),
             Codec.LONG.optionalFieldOf("ticks_until_next_cough_check", -1L)
                     .forGetter(SmokingData::ticksUntilNextCoughCheck)
     ).apply(instance, SmokingData::new));
@@ -25,7 +23,6 @@ public final class SmokingData {
     private long activeTicksSinceSatisfied;
     private long dependenceDecayAccumulator;
     private long ticksUntilNextWithdrawalEpisode;
-    private int withdrawalReliefPuffs;
     private long ticksUntilNextCoughCheck;
 
     // Runtime-only pacing state. Intentionally omitted from CODEC: reconnecting,
@@ -34,7 +31,7 @@ public final class SmokingData {
     private long lastRapidPuffGameTime = Long.MIN_VALUE;
 
     public SmokingData() {
-        this(0.0F, 0L, 0L, -1L, 0, -1L);
+        this(0.0F, 0L, 0L, -1L, -1L);
     }
 
     public SmokingData(
@@ -42,7 +39,6 @@ public final class SmokingData {
             long activeTicksSinceSatisfied,
             long dependenceDecayAccumulator,
             long ticksUntilNextWithdrawalEpisode,
-            int withdrawalReliefPuffs,
             long ticksUntilNextCoughCheck
     ) {
         this.dependence = Mth.clamp(dependence, SmokingBalance.MIN_DEPENDENCE, SmokingBalance.MAX_DEPENDENCE);
@@ -53,7 +49,6 @@ public final class SmokingData {
         this.ticksUntilNextWithdrawalEpisode = ticksUntilNextWithdrawalEpisode <= 0L
                 ? -1L
                 : ticksUntilNextWithdrawalEpisode;
-        this.withdrawalReliefPuffs = Math.max(0, withdrawalReliefPuffs);
         this.ticksUntilNextCoughCheck = ticksUntilNextCoughCheck <= 0L ? -1L : ticksUntilNextCoughCheck;
     }
 
@@ -103,7 +98,6 @@ public final class SmokingData {
 
     public void clearWithdrawalSchedule() {
         ticksUntilNextWithdrawalEpisode = -1L;
-        withdrawalReliefPuffs = 0;
     }
 
     public boolean withdrawalEpisodeIsScheduled() {
@@ -116,18 +110,6 @@ public final class SmokingData {
 
     public void scheduleWithdrawalEpisode(long ticks) {
         ticksUntilNextWithdrawalEpisode = Math.max(1L, ticks);
-    }
-
-    public void beginWithdrawalEpisode() {
-        withdrawalReliefPuffs = 0;
-    }
-
-    public void recordWithdrawalReliefPuff() {
-        withdrawalReliefPuffs++;
-    }
-
-    public void resetWithdrawalReliefPuffs() {
-        withdrawalReliefPuffs = 0;
     }
 
     /**
@@ -161,10 +143,6 @@ public final class SmokingData {
 
     public long ticksUntilNextWithdrawalEpisode() {
         return ticksUntilNextWithdrawalEpisode;
-    }
-
-    public int withdrawalReliefPuffs() {
-        return withdrawalReliefPuffs;
     }
 
     public long ticksUntilNextCoughCheck() {
